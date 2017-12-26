@@ -3,12 +3,19 @@ const AuthController = require("./controllers/authentication");
 const ItemController = require("./controllers/items");
 const SessionController = require("./controllers/sessions");
 const DeckController = require("./controllers/decks");
+const UserController = require("./controllers/users");
 
 const api = express.Router();
 
 api.post("/users/signup", AuthController.signupUser);
 
 api.post("/users/login", AuthController.loginUser);
+
+api.get("/api/users/profile", AuthController.authenticateUser, UserController.getUser);
+
+api.put("/api/users/profile", AuthController.authenticateUser, UserController.editUser);
+
+api.delete("/api/users/profile", AuthController.authenticateUser, UserController.deleteUser);
 
 api.get("/api/decks", AuthController.authenticateUser, DeckController.getDecks);
 

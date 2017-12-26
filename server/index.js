@@ -21,7 +21,7 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 app.use("/", routes);
 
-var server = app.listen(process.env.PORT || 3000, err => {
+var server = app.listen(process.env.PORT || 5000, err => {
   if (err) {
     console.error(err);
   } else {
