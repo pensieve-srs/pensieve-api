@@ -1,5 +1,5 @@
 const request = require("supertest");
-const server = require("./index");
+const server = require("../server/index");
 
 describe("Express server", () => {
   it("responds to /", () => {

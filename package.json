@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha ./server/index.test.js",
-    "start": "node ./server/index.js"
+    "start": "node scripts/start.js",
+    "prod": "node scripts/prod.js",
+    "test": "node scripts/test.js"
   },
   "author": "",
   "license": "ISC",
