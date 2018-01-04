@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const AuthController = require("./authentication");
+const auth = require("../middlewares/auth");
 
 const Deck = require("../models/deck");
 const Item = require("../models/item");
 
 // GET /decks
-router.get("/", AuthController.authenticateUser, function(req, res) {
+router.get("/", auth, function(req, res) {
   const user = req.user._id;
 
   Deck.allByUser(user)
@@ -19,7 +19,7 @@ router.get("/", AuthController.authenticateUser, function(req, res) {
 });
 
 // POST /decks
-router.post("/", AuthController.authenticateUser, function(req, res) {
+router.post("/", auth, function(req, res) {
   const user = req.user._id;
   const body = req.body;
 
@@ -33,7 +33,7 @@ router.post("/", AuthController.authenticateUser, function(req, res) {
 });
 
 // GET /decks/:id
-router.get("/:id", AuthController.authenticateUser, function(req, res) {
+router.get("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
 
@@ -47,7 +47,7 @@ router.get("/:id", AuthController.authenticateUser, function(req, res) {
 });
 
 // PUT /decks/:id
-router.put("/:id", AuthController.authenticateUser, function(req, res) {
+router.put("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
   const body = req.body;
@@ -62,7 +62,7 @@ router.put("/:id", AuthController.authenticateUser, function(req, res) {
 });
 
 // DELETE /deck/:id
-router.delete("/:id", AuthController.authenticateUser, function(req, res) {
+router.delete("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
 
@@ -79,7 +79,7 @@ router.delete("/:id", AuthController.authenticateUser, function(req, res) {
 });
 
 // DELETE /decks/:id/review
-router.delete("/:id/review", AuthController.authenticateUser, function(req, res) {
+router.delete("/:id/review", auth, function(req, res) {
   const deckId = req.params.id;
   const user = req.user._id;
 

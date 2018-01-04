@@ -4,20 +4,20 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const User = require("../../db/schemas/user");
 
-function getCleanUser(user) {
+module.exports.getCleanUser = function getCleanUser(user) {
   return {
-    id: user._id,
+    _id: user._id,
     name: user.name,
     email: user.email,
     is_email_on: user.is_email_on,
   };
-}
+};
 
 function generateHash(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 }
 
-function generateToken(user) {
+module.exports.generateToken = function generateToken(user) {
   return jwt.sign(
     {
       _id: user._id,
@@ -29,7 +29,7 @@ function generateToken(user) {
       expiresIn: 60 * 60 * 48, // expires in 48 hours
     },
   );
-}
+};
 
 function validPassword(password, user) {
   return password && user && bcrypt.compareSync(password, user.password);
@@ -64,7 +64,7 @@ module.exports.create = function(body) {
 
   return User.create(query)
     .then(user => {
-      return { user: getCleanUser(user), token: generateToken(user) };
+      return this.getCleanUser(user);
     })
     .catch(error => {
       return Promise.reject(new Error("Invalid User"));
@@ -74,7 +74,7 @@ module.exports.create = function(body) {
 module.exports.authenticate = function(email, password) {
   return User.findOne({ email: email }).then(user => {
     if (validPassword(password, user)) {
-      return { user: getCleanUser(user), token: generateToken(user) };
+      return this.getCleanUser(user);
     } else {
       return Promise.reject(new Error("Invalid User"));
     }

@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const AuthController = require("./authentication");
+const auth = require("../middlewares/auth");
 
 const User = require("../models/user");
 const Item = require("../models/item");
 const Deck = require("../models/deck");
 
 // GET /users/profile
-router.get("/profile", AuthController.authenticateUser, function(req, res) {
+router.get("/profile", auth, function(req, res) {
   const id = req.user._id;
 
   User.get(id)
@@ -20,7 +20,7 @@ router.get("/profile", AuthController.authenticateUser, function(req, res) {
 });
 
 // PUT /users/profile
-router.put("/profile", AuthController.authenticateUser, function(req, res) {
+router.put("/profile", auth, function(req, res) {
   const id = req.user._id;
   const body = req.body;
 
@@ -34,7 +34,7 @@ router.put("/profile", AuthController.authenticateUser, function(req, res) {
 });
 
 // DELETE /users/profile
-router.delete("/profile", AuthController.authenticateUser, function(req, res) {
+router.delete("/profile", auth, function(req, res) {
   const user = req.user._id;
 
   User.delete(user)
@@ -55,10 +55,16 @@ router.delete("/profile", AuthController.authenticateUser, function(req, res) {
 // POST /users/signup
 router.post("/signup", function(req, res) {
   const body = req.body;
+  let user;
 
   User.create(body)
     .then(response => {
-      res.status(200).json(response);
+      user = response;
+      return User.generateToken(user);
+    })
+    .then(token => {
+      // TODO: move token to request header
+      res.status(200).json({ user, token });
     })
     .catch(error => {
       if (error.message === "Invalid User") {
@@ -73,10 +79,16 @@ router.post("/signup", function(req, res) {
 router.post("/login", function(req, res) {
   const email = req.body.email;
   const password = req.body.password;
+  let user;
 
   User.authenticate(email, password)
     .then(response => {
-      res.status(200).json(response);
+      user = response;
+      return User.generateToken(user);
+    })
+    .then(token => {
+      // TODO: move token to request header
+      res.status(200).json({ user, token });
     })
     .catch(error => {
       if (error.message === "Invalid User") {
