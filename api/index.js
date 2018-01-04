@@ -21,18 +21,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
+app.use(require("./controllers"));
 app.use("/", routes);
 
-var server = function(port) {
-  app.listen(port, err => {
-    if (err) {
-      console.error(err);
-    } else {
-      if (process.env.NODE_ENV === "development") {
-        console.log(chalk.cyan("✨  Starting the server..."));
-      }
+const server = app.listen(process.env.PORT || 5000, err => {
+  if (err) {
+    console.error(err);
+  } else {
+    if (process.env.NODE_ENV === "development") {
+      console.log(chalk.cyan("✨  Starting the server..."));
     }
-  });
-};
+  }
+});
 
 module.exports = server;

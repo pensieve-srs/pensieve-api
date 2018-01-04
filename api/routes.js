@@ -7,18 +7,6 @@ const UserController = require("./controllers/users");
 
 const api = express.Router();
 
-api.post("/users/signup", AuthController.signupUser);
-
-api.post("/users/login", AuthController.loginUser);
-
-api.get("/api/users/profile", AuthController.authenticateUser, UserController.getUser);
-
-api.put("/api/users/profile", AuthController.authenticateUser, UserController.editUser);
-
-api.delete("/api/users/profile", AuthController.authenticateUser, UserController.deleteUser);
-
-api.get("/api/decks", AuthController.authenticateUser, DeckController.getDecks);
-
 api.get("/api/items/:item_id", AuthController.authenticateUser, ItemController.getItem);
 
 api.put("/api/items/:item_id", AuthController.authenticateUser, ItemController.editItem);
@@ -30,20 +18,6 @@ api.post("/api/items", AuthController.authenticateUser, ItemController.createIte
 api.post("/api/items/:item_id/review", AuthController.authenticateUser, ItemController.reviewItem);
 
 api.post("/api/items/:item_id/reset", AuthController.authenticateUser, ItemController.resetItem);
-
-api.get("/api/decks", AuthController.authenticateUser, DeckController.getDecks);
-
-api.post("/api/decks", AuthController.authenticateUser, DeckController.createDeck);
-
-api.get("/api/decks/:deck_id", AuthController.authenticateUser, DeckController.getDeck);
-
-api.put("/api/decks/:deck_id", AuthController.authenticateUser, DeckController.editDeck);
-
-api.post("/api/decks/:deck_id/reset", AuthController.authenticateUser, DeckController.resetDeck);
-
-api.post("/api/decks/:deck_id/study", AuthController.authenticateUser, DeckController.studyDeck);
-
-api.delete("/api/decks/:deck_id", AuthController.authenticateUser, DeckController.deleteDeck);
 
 api.get("/api/sessions/:session_id", AuthController.authenticateUser, SessionController.getSession);
 

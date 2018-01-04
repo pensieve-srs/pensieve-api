@@ -12,5 +12,5 @@ module.exports = {
   dotenv: resolveApp(".env"),
   db: resolveApp("db"),
   server: resolveApp("server"),
-  test: resolveApp("test"),
+  test: resolveApp("test/api"),
 };
