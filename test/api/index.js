@@ -2,15 +2,15 @@ const request = require("supertest");
 const server = require("../../api/index");
 
 describe("Express server", () => {
-  it("responds to /", done => {
+  it("responds 200 to /", done => {
     request(server)
       .get("/")
       .expect(200, done);
   });
 
-  it("404 everything else", done => {
+  it("response to 404 unsupported routes", done => {
     request(server)
-      .get("/foo/bar")
+      .get("/invalid")
       .expect(404, done);
   });
 });

@@ -18,26 +18,19 @@ const mocha = new Mocha();
 
 var testDir = paths.test;
 
-fixtures.clear(function(err) {
-  if (err) {
-    console.log(chalk.red("🔺  Error clearing test database", err));
-  } else {
-    console.log(chalk.cyan("✨  Clearing database"));
-  }
-});
+fixtures.clear(function() {
+  fixtures.load("../test/api/fixtures", function() {
+    console.log(chalk.cyan("✨  Test database loaded"));
 
-fixtures.load("../test/api/fixtures", function() {
-  console.log(chalk.cyan("✨  Test database loaded"));
-});
+    // Add each .js file to the mocha instance
+    glob("test/**/*.js", { realpath: true, ignore: "test/api/fixtures/**" }, function(err, files) {
+      files.forEach(file => mocha.addFile(file));
 
-// Add each .js file to the mocha instance
-glob("test/**/*.js", { realpath: true, ignore: "test/api/fixtures/**" }, function(err, files) {
-  files.forEach(file => mocha.addFile(file));
-
-  // Run the tests.
-  mocha.run(failures => {
-    process.on("exit", function() {
-      process.exit(failures); // exit with non-zero status if there were failures
+      // Run the tests.
+      mocha.run().on("end", function() {
+        fixtures.clear();
+        process.exit();
+      });
     });
   });
 });
