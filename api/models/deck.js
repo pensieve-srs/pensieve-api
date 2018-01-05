@@ -9,13 +9,11 @@ module.exports.allByUser = function(user) {
 };
 
 module.exports.create = function(body, user) {
-  const deck = new Deck({
+  return Deck.create({
     user: user,
     title: body.title,
-    descripton: body.description,
+    description: body.description,
   });
-
-  return deck.save();
 };
 
 module.exports.update = function(id, body, user) {
