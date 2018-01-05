@@ -36,7 +36,11 @@ function validPassword(password, user) {
 }
 
 module.exports.get = function(id) {
-  return User.findOne({ _id: id }).then(user => getCleanUser(user));
+  return User.findOne({ _id: id }).then(user => {
+    if (user) {
+      return this.getCleanUser(user);
+    }
+  });
 };
 
 module.exports.update = function(body, id) {
