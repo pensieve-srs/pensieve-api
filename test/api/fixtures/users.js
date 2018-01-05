@@ -4,13 +4,19 @@ var users = (exports.users = [
   {
     _id: id(),
     name: "Jane Tester",
-    email: "janetester@example.com",
+    email: "jane@example.com",
     password: "1234l",
   },
   {
     _id: id(),
     name: "Joe Tester",
-    email: "joetester@example.com",
+    email: "joe@example.com",
     password: "1234k",
+  },
+  {
+    _id: id(),
+    name: "Sarah Tester",
+    email: "sarah@example.com",
+    password: "1234h",
   },
 ]);

@@ -7,7 +7,7 @@
     "start": "node scripts/start.js",
     "prod": "node scripts/prod.js",
     "test": "node scripts/test.js",
-	"test:watch": "nodemon --watch test/ --exec 'yarn test'"
+    "test:watch": "nodemon --watch . --exec 'yarn test'"
   },
   "author": "",
   "license": "ISC",

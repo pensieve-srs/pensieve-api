@@ -4,6 +4,11 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const User = require("../../db/schemas/user");
 
+function removeEmpty(obj) {
+  Object.keys(obj).forEach(key => obj[key] == null && delete obj[key]);
+  return obj;
+}
+
 module.exports.getCleanUser = function getCleanUser(user) {
   return {
     _id: user._id,
@@ -13,9 +18,9 @@ module.exports.getCleanUser = function getCleanUser(user) {
   };
 };
 
-function generateHash(password) {
+module.exports.generateHash = function generateHash(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-}
+};
 
 module.exports.generateToken = function generateToken(user) {
   return jwt.sign(
@@ -31,9 +36,9 @@ module.exports.generateToken = function generateToken(user) {
   );
 };
 
-function validPassword(password, user) {
+module.exports.validPassword = function validPassword(password, user) {
   return password && user && bcrypt.compareSync(password, user.password);
-}
+};
 
 module.exports.get = function(id) {
   return User.findOne({ _id: id }).then(user => {
@@ -44,11 +49,16 @@ module.exports.get = function(id) {
 };
 
 module.exports.update = function(body, id) {
-  return User.findOneAndUpdate(
-    { _id: id },
-    { name: req.body.name, email: req.body.email },
-    { new: true },
-  );
+  const query = removeEmpty({
+    name: body.name,
+    email: body.email,
+  });
+
+  return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user => {
+    if (user) {
+      return this.getCleanUser(user);
+    }
+  });
 };
 
 module.exports.delete = function(id) {
@@ -63,7 +73,7 @@ module.exports.create = function(body) {
   const query = {
     name: body.name.trim(),
     email: body.email.trim(),
-    password: body.password.trim(),
+    password: this.generateHash(body.password.trim()),
   };
 
   return User.create(query)
@@ -77,7 +87,7 @@ module.exports.create = function(body) {
 
 module.exports.authenticate = function(email, password) {
   return User.findOne({ email: email }).then(user => {
-    if (validPassword(password, user)) {
+    if (this.validPassword(password, user)) {
       return this.getCleanUser(user);
     } else {
       return Promise.reject(new Error("Invalid User"));
