@@ -3,11 +3,8 @@ const jwt = require("jsonwebtoken");
 
 const jwtSecret = process.env.JWT_SECRET;
 const User = require("../../db/schemas/user");
-
-function removeEmpty(obj) {
-  Object.keys(obj).forEach(key => obj[key] == null && delete obj[key]);
-  return obj;
-}
+const isValidEmail = require("../helpers/isValidEmail");
+const removeEmpty = require("../helpers/removeEmpty");
 
 module.exports.getCleanUser = function getCleanUser(user) {
   return {
@@ -66,7 +63,7 @@ module.exports.delete = function(id) {
 };
 
 module.exports.create = function(body) {
-  if (!body.name || !body.email || !body.password) {
+  if (!body.name || !body.email || !body.password || !isValidEmail(body.email)) {
     return Promise.reject(new Error("Invalid User"));
   }
 

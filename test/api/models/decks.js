@@ -52,11 +52,9 @@ describe("Deck model", () => {
       });
     });
     it("should not update fields that are not defined", done => {
-      const newDeck = { title: "New deck", description: "New description" };
+      const newDeck = { title: "New deck", description: undefined };
       Deck.update(deck1._id, newDeck, user1).then(deck => {
-        expect(deck.title).to.equal(newDeck.title);
-        expect(deck.description).to.equal(newDeck.description);
-        expect(deck.user).to.deep.equal(user1);
+        expect(deck.description).to.be.ok;
 
         done();
       });

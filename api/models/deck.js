@@ -1,4 +1,5 @@
 const Deck = require("../../db/schemas/deck");
+const removeEmpty = require("../helpers/removeEmpty");
 
 module.exports.getByUser = function(id, user) {
   return Deck.findOne({ _id: id, user: user });
@@ -19,7 +20,7 @@ module.exports.create = function(body, user) {
 module.exports.update = function(id, body, user) {
   return Deck.findOneAndUpdate(
     { _id: id, user: user },
-    { title: body.title, description: body.description },
+    removeEmpty({ title: body.title, description: body.description }),
     { new: true },
   );
 };
