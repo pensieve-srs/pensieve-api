@@ -18,19 +18,17 @@ const mocha = new Mocha();
 
 var testDir = paths.test;
 
-fixtures.clear(function() {
-  fixtures.load("../test/api/fixtures", function() {
-    console.log(chalk.cyan("✨  Test database loaded"));
+fixtures.clearAllAndLoad("../test/api/fixtures", function() {
+  console.log(chalk.cyan("✨  Test database loaded"));
 
-    // Add each .js file to the mocha instance
-    glob("test/**/*.js", { realpath: true, ignore: "test/api/fixtures/**" }, function(err, files) {
-      files.forEach(file => mocha.addFile(file));
+  // Add each .js file to the mocha instance
+  glob("test/**/*.js", { realpath: true, ignore: "test/api/fixtures/**" }, function(err, files) {
+    files.forEach(file => mocha.addFile(file));
 
-      // Run the tests.
-      mocha.run().on("end", function() {
-        fixtures.clear();
-        process.exit();
-      });
+    // Run the tests.
+    mocha.run().on("end", function() {
+      fixtures.clear();
+      process.exit();
     });
   });
 });

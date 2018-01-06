@@ -1,7 +1,7 @@
 const request = require("supertest");
 const server = require("../../api/index");
 
-describe("Express server", () => {
+describe("Server", () => {
   it("responds 200 to /", done => {
     request(server)
       .get("/")

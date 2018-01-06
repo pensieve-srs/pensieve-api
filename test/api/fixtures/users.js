@@ -1,22 +1,25 @@
-var id = require("pow-mongodb-fixtures").createObjectId;
+const id = require("pow-mongodb-fixtures").createObjectId;
+const User = require("../../../api/models/user");
 
-var users = (exports.users = [
+const password1 = (exports.password1 = "password 1");
+
+const users = (exports.users = [
   {
     _id: id(),
     name: "Jane Tester",
     email: "jane@example.com",
-    password: "1234l",
+    password: User.generateHash(password1),
   },
   {
     _id: id(),
     name: "Joe Tester",
     email: "joe@example.com",
-    password: "1234k",
+    password: User.generateHash("1234k"),
   },
   {
     _id: id(),
     name: "Sarah Tester",
     email: "sarah@example.com",
-    password: "1234h",
+    password: User.generateHash("1234h"),
   },
 ]);
