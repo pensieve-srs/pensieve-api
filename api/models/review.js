@@ -7,3 +7,10 @@ module.exports.create = function(value, card, user) {
     value: value,
   });
 };
+
+module.exports.get = function(id, user) {
+  return Review.findOne({
+    _id: id,
+    user: user,
+  });
+};
