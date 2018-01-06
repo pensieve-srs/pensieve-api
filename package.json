@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "^9.1.0"
+  },
   "scripts": {
     "start": "node scripts/start.js",
     "prod": "node scripts/prod.js",
