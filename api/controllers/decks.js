@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../middlewares/auth");
 
 const Deck = require("../models/deck");
-const Item = require("../models/item");
+const Card = require("../models/card");
 
 // GET /decks
 router.get("/", auth, function(req, res) {
@@ -37,7 +37,7 @@ router.get("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
 
-  Deck.get(deck, user)
+  Deck.get(id, user)
     .then(response => {
       res.status(200).json(response);
     })
@@ -68,7 +68,7 @@ router.delete("/:id", auth, function(req, res) {
 
   Deck.delete(id, user)
     .then(() => {
-      return Item.deleteAllByDeck(id, user);
+      return Card.deleteAllByDeck(id, user);
     })
     .then(response => {
       res.status(200).json(response);
@@ -83,7 +83,7 @@ router.delete("/:id/review", auth, function(req, res) {
   const deckId = req.params.id;
   const user = req.user._id;
 
-  Item.resetAllByDeck(deckId, user)
+  Card.resetAllByDeck(deckId, user)
     .then(response => {
       res.status(200).json(response);
     })

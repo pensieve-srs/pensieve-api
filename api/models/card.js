@@ -1,6 +1,8 @@
 const Card = require("../../db/schemas/card");
 const removeEmpty = require("../helpers/removeEmpty");
-const SM2 = require("../controllers/sm2");
+const SM2 = require("../helpers/sm2");
+
+const Session = require("./session");
 
 module.exports.get = function(id, user) {
   return Card.findOne({ _id: id, user: user });
@@ -12,6 +14,22 @@ module.exports.getAll = function(user) {
 
 module.exports.getAllByDeck = function(deck, user) {
   return Card.find({ user: user, deck: deck });
+};
+
+module.exports.getAllForSessionType = function(type, user, deck) {
+  if (type === Session.types.learn) {
+    return Card.find({ user: user, repetitions: 0 })
+      .populate("deck")
+      .limit(Session.maxSize);
+  } else if (type === Session.types.review) {
+    return Card.find({ user: user })
+      .populate("deck")
+      .where("nextReviewDate")
+      .lt(new Date())
+      .limit(Session.maxSize);
+  } else if (type === Session.types.deck) {
+    return Card.find({ user: user, deck: deck }).populate("deck");
+  }
 };
 
 module.exports.create = function(body, user) {

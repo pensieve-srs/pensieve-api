@@ -43,16 +43,16 @@ function getGrade(value) {
   }
 }
 
-function getNextInterval(item, grade) {
+function getNextInterval(card, grade) {
   if (grade < 3) {
     return 0;
   }
-  if (item.repetitions === 0) {
+  if (card.repetitions === 0) {
     return 1;
-  } else if (item.repetitions === 1) {
+  } else if (card.repetitions === 1) {
     return 6;
   } else {
-    return (item.interval - 1) * item.EF;
+    return (card.interval - 1) * card.EF;
   }
 }
 

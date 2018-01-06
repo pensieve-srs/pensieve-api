@@ -93,4 +93,19 @@ router.delete("/:id/review", auth, function(req, res) {
     });
 });
 
+// GET /cards/count/all
+router.get("/count/all", auth, function(req, res) {
+  // TODO: retrieve number of all cards
+});
+
+// GET /cards/count/new
+router.get("/count/new", auth, function(req, res) {
+  // TODO: retrieve number of new cards
+});
+
+// GET /card/count/due
+router.get("/count/due", auth, function(req, res) {
+  // TODO: retrieve number of due cards
+});
+
 module.exports = router;

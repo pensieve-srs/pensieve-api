@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../middlewares/auth");
 
 const User = require("../models/user");
-const Item = require("../models/item");
+const Card = require("../models/card");
 const Deck = require("../models/deck");
 
 // GET /users/profile
@@ -39,7 +39,7 @@ router.delete("/profile", auth, function(req, res) {
 
   User.delete(user)
     .then(() => {
-      return Item.deleteAll(user);
+      return Card.deleteAll(user);
     })
     .then(() => {
       return Deck.deleteAll(user);

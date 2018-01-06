@@ -9,7 +9,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const db = require("../db");
-const routes = require("./routes");
 
 const app = express();
 
@@ -22,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 app.use(require("./controllers"));
-app.use("/", routes);
 
 const server = app.listen(process.env.PORT || 5000, err => {
   if (err) {

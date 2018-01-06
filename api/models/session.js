@@ -1,14 +1,29 @@
-const mongoose = require("mongoose");
+const Session = require("../../db/schemas/session");
+const Card = require("./Card");
+const shuffle = require("../helpers/shuffle");
 
-const Schema = mongoose.Schema;
+// TODO: Move session size to user model
+module.exports.maxSize = 30;
 
-const SessionSchema = new Schema(
-  {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    items: [{ type: Schema.Types.ObjectId, ref: "Item", required: true }],
-    type: { type: String },
-  },
-  { timestamps: true },
-);
+module.exports.types = {
+  learn: "learn",
+  review: "review",
+  deck: "deck",
+};
 
-module.exports = mongoose.model("ReviewSession", SessionSchema);
+module.exports.get = function(id, user) {
+  return Session.findOne({ _id: id, user: user }).populate({
+    path: "cards",
+    model: "Card",
+    populate: { path: "deck", model: "Deck" },
+  });
+};
+
+module.exports.create = function(type, user, cards) {
+  const cardIds = shuffle(cards).map(card => card._id);
+  return Session.create({
+    user: user,
+    type: type,
+    cards: cardIds,
+  }).populate("cards");
+};

@@ -1,18 +1,18 @@
-import sg, { mail as helper } from 'sendgrid';
-import User from '../models/user';
+import sg, { mail as helper } from "sendgrid";
+import User from "../models/user";
 
-import * as ItemController from './items';
-import { REVIEW_SESSION_SIZE } from './sessions';
+import * as ItemController from "./items";
+import { REVIEW_SESSION_SIZE } from "./sessions";
 
 const sendgrid = sg(process.env.SENDGRID_API_KEY);
 
 const domain = process.env.HOST_URL;
-const sourceEmail = new helper.Email('hello@pensieve.space', 'Pensieve');
+const sourceEmail = new helper.Email("hello@pensieve.space", "Pensieve");
 
 const template = (name, items) => {
   const url = `${domain}/sessions/new`;
   const buttonStyle =
-    'background-color:#2e78ba;border-radius:3px;color:#ffffff;line-height:30px;height:30px;text-align:center;text-decoration:none;width:100px;';
+    "background-color:#2e78ba;border-radius:3px;color:#ffffff;line-height:30px;height:30px;text-align:center;text-decoration:none;width:100px;";
 
   return `<div style='color:#000000;'>
   <p>You have <span style='font-weight:bold;'>${items.length} items</span> that need review. Review them now before you forget.</p>
@@ -29,13 +29,13 @@ const template = (name, items) => {
 };
 
 const constructEmailRequest = (targetName, targetEmail, items) => {
-  const subject = 'You have notes to review - Pensieve';
-  const content = new helper.Content('text/html', template(targetName, items));
+  const subject = "You have notes to review - Pensieve";
+  const content = new helper.Content("text/html", template(targetName, items));
   const mail = new helper.Mail(sourceEmail, subject, new helper.Email(targetEmail), content);
   return sendgrid.emptyRequest({
-    method: 'POST',
-    path: '/v3/mail/send',
-    body: mail.toJSON()
+    method: "POST",
+    path: "/v3/mail/send",
+    body: mail.toJSON(),
   });
 };
 
@@ -71,10 +71,10 @@ export const sendEmail = (user, items) => {
   return sendgrid
     .API(request)
     .then(response => {
-      console.log('Email Success - Status Code:', response.statusCode);
+      console.log("Email Success - Status Code:", response.statusCode);
     })
     .catch(error => {
-      console.log('Emailer Error', error.response.statusCode, error.response);
+      console.log("Emailer Error", error.response.statusCode, error.response);
     });
 };
 
@@ -86,9 +86,9 @@ export const addEmailToPrelaunchList = (req, res) => {
 
   // Step 1. Create SG recipient object
   const createRecipientRequest = sendgrid.emptyRequest({
-    method: 'POST',
-    path: '/v3/contactdb/recipients',
-    body: [{ email: email }]
+    method: "POST",
+    path: "/v3/contactdb/recipients",
+    body: [{ email: email }],
   });
 
   return sendgrid
@@ -98,14 +98,14 @@ export const addEmailToPrelaunchList = (req, res) => {
 
       // Step 2. Add SG recipient id to prelaunch list
       const addToListRequest = sendgrid.emptyRequest({
-        method: 'POST',
+        method: "POST",
         path: `/v3/contactdb/lists/${PRELAUNCH_LIST_ID}/recipients`,
-        body: persisted_recipients
+        body: persisted_recipients,
       });
       return sendgrid.API(addToListRequest);
     })
     .then(response => {
-      return res.status(response.statusCode).json({ message: 'Success!' });
+      return res.status(response.statusCode).json({ message: "Success!" });
     })
     .catch(error => {
       return res.status(500).json({ error });
