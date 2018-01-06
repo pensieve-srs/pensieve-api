@@ -1,5 +1,4 @@
 const Card = require("../../../api/models/card");
-
 const fixtures = require("../fixtures/cards");
 
 const cards = fixtures.cards;
