@@ -7,9 +7,9 @@ const user1 = fixtures.user1;
 const user2 = fixtures.user2;
 
 describe("Deck model", () => {
-  describe("getByUser", () => {
+  describe("get", () => {
     it("should return single deck for user", done => {
-      Deck.getByUser(deck1._id, user1).then(deck => {
+      Deck.get(deck1._id, user1).then(deck => {
         expect(deck._id).to.deep.equal(deck1._id);
         expect(deck.title).to.deep.equal(deck.title);
 
@@ -17,11 +17,11 @@ describe("Deck model", () => {
       });
     });
   });
-  describe("allByUser", () => {
+  describe("all", () => {
     it("should return alls deck by id for user", done => {
       const decksForUser = fixtures.decks.filter(deck => deck.user === user1);
 
-      Deck.allByUser(user1).then(decks => {
+      Deck.all(user1).then(decks => {
         expect(decks.length).to.equal(decksForUser.length);
 
         done();
@@ -62,9 +62,9 @@ describe("Deck model", () => {
   });
   describe("delete", () => {
     it("should delete single deck for user", done => {
-      Deck.allByUser(user1).then(decks => {
+      Deck.all(user1).then(decks => {
         Deck.delete(deck1._id, user1).then(() => {
-          Deck.allByUser(user1).then(newDecks => {
+          Deck.all(user1).then(newDecks => {
             expect(newDecks).to.have.lengthOf(decks.length - 1);
 
             done();
@@ -73,10 +73,10 @@ describe("Deck model", () => {
       });
     });
   });
-  describe("deleteAllByUser", () => {
+  describe("deleteAll", () => {
     it("should delete all decks for user", done => {
-      Deck.deleteAllByUser(user1).then(() => {
-        Deck.allByUser(user1).then(newDecks => {
+      Deck.deleteAll(user1).then(() => {
+        Deck.all(user1).then(newDecks => {
           expect(newDecks).to.have.lengthOf(0);
 
           done();

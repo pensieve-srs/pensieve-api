@@ -39,10 +39,10 @@ router.delete("/profile", auth, function(req, res) {
 
   User.delete(user)
     .then(() => {
-      return Item.deleteAllByUser(user);
+      return Item.deleteAll(user);
     })
     .then(() => {
-      return Deck.deleteAllByUser(user);
+      return Deck.deleteAll(user);
     })
     .then(response => {
       res.status(200).json(response);

@@ -2,28 +2,15 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 
-const Deck = require("../models/deck");
-const Item = require("../models/item");
+const Card = require("../models/card");
+const Review = require("../models/review");
 
-// GET /decks
-router.get("/", auth, function(req, res) {
-  const user = req.user._id;
-
-  Deck.all(user)
-    .then(response => {
-      res.status(200).json(response);
-    })
-    .catch(response => {
-      res.status(500).json(response);
-    });
-});
-
-// POST /decks
+// POST /cards
 router.post("/", auth, function(req, res) {
   const user = req.user._id;
   const body = req.body;
 
-  Deck.create(body, user)
+  Card.create(body, user)
     .then(response => {
       res.status(200).json(response);
     })
@@ -32,12 +19,12 @@ router.post("/", auth, function(req, res) {
     });
 });
 
-// GET /decks/:id
+// GET /cards/:id
 router.get("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
 
-  Deck.get(deck, user)
+  Card.get(id, user)
     .then(response => {
       res.status(200).json(response);
     })
@@ -46,13 +33,12 @@ router.get("/:id", auth, function(req, res) {
     });
 });
 
-// PUT /decks/:id
+// PUT /cards/:id
 router.put("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
-  const body = req.body;
 
-  Deck.update(id, body, user)
+  Card.update(id, body, user)
     .then(response => {
       res.status(200).json(response);
     })
@@ -61,14 +47,29 @@ router.put("/:id", auth, function(req, res) {
     });
 });
 
-// DELETE /deck/:id
+// DELETE /cards/:id
 router.delete("/:id", auth, function(req, res) {
   const id = req.params.id;
   const user = req.user._id;
 
-  Deck.delete(id, user)
+  Card.delete(id, user)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(response => {
+      res.status(500).json(response);
+    });
+});
+
+// POST /cards/:id/review
+router.post("/:id/review", auth, function(req, res) {
+  const card = req.params.id;
+  const user = req.user._id;
+  const value = req.body.value;
+
+  Review.create(value, card, user)
     .then(() => {
-      return Item.deleteAllByDeck(id, user);
+      return Card.review(id, user);
     })
     .then(response => {
       res.status(200).json(response);
@@ -78,12 +79,12 @@ router.delete("/:id", auth, function(req, res) {
     });
 });
 
-// DELETE /decks/:id/review
+// DELETE /cards/:id/review
 router.delete("/:id/review", auth, function(req, res) {
-  const deckId = req.params.id;
+  const id = req.params.id;
   const user = req.user._id;
 
-  Item.resetAllByDeck(deckId, user)
+  Card.reset(id, user)
     .then(response => {
       res.status(200).json(response);
     })

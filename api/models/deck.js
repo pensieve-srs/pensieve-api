@@ -1,11 +1,11 @@
 const Deck = require("../../db/schemas/deck");
 const removeEmpty = require("../helpers/removeEmpty");
 
-module.exports.getByUser = function(id, user) {
+module.exports.get = function(id, user) {
   return Deck.findOne({ _id: id, user: user });
 };
 
-module.exports.allByUser = function(user) {
+module.exports.all = function(user) {
   return Deck.find({ user: user });
 };
 
@@ -29,6 +29,6 @@ module.exports.delete = function(id, user) {
   return Deck.remove({ _id: id, user: user });
 };
 
-module.exports.deleteAllByUser = function(user) {
+module.exports.deleteAll = function(user) {
   return Deck.remove({ user: user });
 };
