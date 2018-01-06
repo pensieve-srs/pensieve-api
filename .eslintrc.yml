@@ -5,3 +5,5 @@ globals:
     expect: true
     describe: true
     it: true
+rules:
+  - comma-dangle: 0
