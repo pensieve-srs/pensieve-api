@@ -3,7 +3,6 @@ const users = require("../fixtures/users").users;
 
 const user1 = users[0];
 const user2 = users[1];
-const user3 = users[2];
 const mockId = require("pow-mongodb-fixtures").createObjectId();
 
 describe("User model", () => {
