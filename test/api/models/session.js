@@ -29,7 +29,7 @@ describe("Session model", () => {
       Session.create(Session.types.learn, user1, cards).then(session => {
         expect(session.cards[0]._id).to.be.ok;
         expect(session.type).to.equal(Session.types.learn);
-        expect(session.user).to.deep.equal(user1);
+        expect(session.user).to.deep.equal(user1._id);
 
         done();
       });
