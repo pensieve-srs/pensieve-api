@@ -18,7 +18,7 @@ describe("Deck model", () => {
     });
   });
   describe("all", () => {
-    it("should return alls deck by id for user", done => {
+    it("should return all decks for user", done => {
       const decksForUser = fixtures.decks.filter(deck => deck.user === user1);
 
       Deck.all(user1).then(decks => {

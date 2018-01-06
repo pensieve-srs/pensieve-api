@@ -2,6 +2,43 @@ const Card = require("../../db/schemas/card");
 const removeEmpty = require("../helpers/removeEmpty");
 const SM2 = require("../controllers/sm2");
 
+module.exports.get = function(id, user) {
+  return Card.findOne({ _id: id, user: user });
+};
+
+module.exports.getAll = function(user) {
+  return Card.find({ user: user });
+};
+
+module.exports.getAllByDeck = function(deck, user) {
+  return Card.find({ user: user, deck: deck });
+};
+
+module.exports.create = function(body, user) {
+  return Card.create({
+    user: user,
+    front: body.front,
+    back: body.back,
+    deck: body.deck,
+  });
+};
+
+module.exports.update = function(id, body, user) {
+  return Card.findOneAndUpdate(
+    { _id: id, user: user },
+    removeEmpty({ front: body.front, back: body.back }),
+    { new: true },
+  );
+};
+
+module.exports.delete = function(id, user) {
+  return Card.remove({ _id: id, user: user });
+};
+
+module.exports.deleteAll = function(user) {
+  return Card.remove({ user: user });
+};
+
 module.exports.deleteAllByDeck = function(deckId, user) {
   return Card.remove({ deck: deckId, user: user });
 };
@@ -22,31 +59,6 @@ module.exports.resetAllByDeck = function(deckId, user) {
     },
     { multi: true, new: true },
   );
-};
-
-module.exports.create = function(body, user) {
-  return Card.create({
-    user: user,
-    front: body.front,
-    back: body.back,
-    deck: body.deck,
-  });
-};
-
-module.exports.get = function(id, user) {
-  return Card.findOne({ _id: id, user: user });
-};
-
-module.exports.update = function(id, body, user) {
-  return Card.findOneAndUpdate(
-    { _id: id, user: user },
-    removeEmpty({ front: body.front, description: body.description }),
-    { new: true },
-  );
-};
-
-module.exports.delete = function(id, user) {
-  return Card.remove({ _id: id, user: user });
 };
 
 module.exports.review = function(id, value, user) {
