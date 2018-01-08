@@ -4,6 +4,7 @@ node_js:
 cache:
     directories:
         - node_modules
+services: mongodb
 script:
-    - npm run build
+    - npm run prod
     - npm test

@@ -6,9 +6,9 @@ const chalk = require('chalk');
 const paths = require('../config/paths');
 const glob = require('glob');
 const fixtures = require('pow-mongodb-fixtures').connect('boreas-test');
-require('chai/register-expect');
 
 require('../config/env');
+require('chai/register-expect');
 
 // Instantiate a Mocha instance.
 const mocha = new Mocha();
