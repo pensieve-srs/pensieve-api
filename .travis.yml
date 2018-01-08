@@ -6,5 +6,4 @@ cache:
         - node_modules
 services: mongodb
 script:
-    - npm run prod
     - npm test
