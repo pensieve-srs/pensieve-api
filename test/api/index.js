@@ -2,10 +2,10 @@ const request = require('supertest');
 const server = require('../../api/index');
 
 describe('Server', () => {
-  it('responds 200 to /', (done) => {
+  it('GET / redirects to /docs', (done) => {
     request(server)
       .get('/')
-      .expect(200, done);
+      .expect(302, done);
   });
 
   it('response to 404 unsupported routes', (done) => {

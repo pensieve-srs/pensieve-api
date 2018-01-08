@@ -20,7 +20,8 @@ describe('Cards controller', () => {
           expect(response.body.back).to.include(newCard.back);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
   describe('DELETE /api/cards/:id', () => {
