@@ -1,0 +1,130 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Pensieve API"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/cards": {
+      "x-swagger-router-controller": "cards",
+      "get": {
+        "description": "Returns all cards",
+        "parameters": [
+          {
+            "name": "deck",
+            "in": "query",
+            "description": "The id of the deck which the card belongs to",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetCardsListResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Error",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedError"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Card": {
+      "type": "object",
+      "properties": {
+        "front": {
+          "type": "string",
+          "description": "task object name"
+        },
+        "back": {
+          "type": "string",
+          "description": "task description"
+        }
+      },
+      "required": ["front", "back"]
+    },
+    "GetCardResponse": {
+      "required": ["_id", "front", "back"],
+      "properties": {
+        "_id": {
+          "type": "ObjectId"
+        },
+        "front": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        }
+      }
+    },
+    "GetCardsListResponse": {
+      "required": ["cards"],
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "ObjectId"
+              },
+              "front": {
+                "type": "string"
+              },
+              "back": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GeneralResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "number",
+          "description": "returns 1 if successful"
+        },
+        "description": {
+          "type": "string",
+          "description": "a short comment"
+        }
+      }
+    },
+    "UnauthorizedError": {
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
