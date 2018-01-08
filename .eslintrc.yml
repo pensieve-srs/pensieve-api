@@ -1,9 +1,13 @@
 env:
     node: true
     es6: true
+extends:
+    - airbnb-base
 globals:
     expect: true
     describe: true
     it: true
 rules:
-  - comma-dangle: 0
+    import/no-extraneous-dependencies: 0
+    no-unused-expressions: 0
+    no-underscore-dangle: 0
