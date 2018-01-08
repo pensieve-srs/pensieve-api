@@ -1,16 +1,16 @@
-const Review = require("../../db/schemas/review");
+const Review = require('../../db/schemas/review');
 
-module.exports.create = function(value, card, user) {
+module.exports.create = function create(value, card, user) {
   return Review.create({
-    user: user,
-    card: card,
-    value: value,
+    user,
+    card,
+    value,
   });
 };
 
-module.exports.get = function(id, user) {
+module.exports.get = function get(id, user) {
   return Review.findOne({
     _id: id,
-    user: user,
+    user,
   });
 };

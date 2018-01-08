@@ -1,16 +1,16 @@
-const request = require("supertest");
-const server = require("../../api/index");
+const request = require('supertest');
+const server = require('../../api/index');
 
-describe("Server", () => {
-  it("responds 200 to /", done => {
+describe('Server', () => {
+  it('responds 200 to /', (done) => {
     request(server)
-      .get("/")
+      .get('/')
       .expect(200, done);
   });
 
-  it("response to 404 unsupported routes", done => {
+  it('response to 404 unsupported routes', (done) => {
     request(server)
-      .get("/invalid")
+      .get('/invalid')
       .expect(404, done);
   });
 });

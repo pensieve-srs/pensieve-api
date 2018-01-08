@@ -1,111 +1,114 @@
-const express = require("express");
-const router = express.Router();
-const auth = require("../middlewares/auth");
+const express = require('express');
+const auth = require('../middlewares/auth');
 
-const Card = require("../models/card");
-const Review = require("../models/review");
+const Card = require('../models/card');
+const Review = require('../models/review');
+
+const router = express.Router();
 
 // POST /cards
-router.post("/", auth, function(req, res) {
+router.post('/', auth, (req, res) => {
   const user = req.user._id;
-  const body = req.body;
+  const { body } = req;
 
   Card.create(body, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // GET /cards/:id
-router.get("/:id", auth, function(req, res) {
-  const id = req.params.id;
+router.get('/:id', auth, (req, res) => {
   const user = req.user._id;
+  const { id } = req.params;
 
   Card.get(id, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // PUT /cards/:id
-router.put("/:id", auth, function(req, res) {
-  const id = req.params.id;
+router.put('/:id', auth, (req, res) => {
   const user = req.user._id;
+  const { id } = req.params;
+  const { body } = req;
 
   Card.update(id, body, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // DELETE /cards/:id
-router.delete("/:id", auth, function(req, res) {
-  const id = req.params.id;
+router.delete('/:id', auth, (req, res) => {
   const user = req.user._id;
+  const { id } = req.params;
 
   Card.delete(id, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // POST /cards/:id/review
-router.post("/:id/review", auth, function(req, res) {
-  const card = req.params.id;
+router.post('/:id/review', auth, (req, res) => {
   const user = req.user._id;
-  const value = req.body.value;
+  const { id } = req.params;
+  const { value } = req.body;
 
-  Review.create(value, card, user)
-    .then(() => {
-      return Card.review(id, user);
-    })
-    .then(response => {
+  Review.create(value, id, user)
+    .then(() => Card.review(id, user))
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // DELETE /cards/:id/review
-router.delete("/:id/review", auth, function(req, res) {
-  const id = req.params.id;
+router.delete('/:id/review', auth, (req, res) => {
   const user = req.user._id;
+  const { id } = req.params;
 
   Card.reset(id, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // GET /cards/count/all
-router.get("/count/all", auth, function(req, res) {
+router.get('/count/all', auth, (req, res) => {
   // TODO: retrieve number of all cards
+  res.status(400);
 });
 
 // GET /cards/count/new
-router.get("/count/new", auth, function(req, res) {
+router.get('/count/new', auth, (req, res) => {
   // TODO: retrieve number of new cards
+  res.status(400);
 });
 
 // GET /card/count/due
-router.get("/count/due", auth, function(req, res) {
+router.get('/count/due', auth, (req, res) => {
   // TODO: retrieve number of due cards
+  res.status(400);
 });
 
 module.exports = router;

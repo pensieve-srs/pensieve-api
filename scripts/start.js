@@ -1,7 +1,7 @@
-"use strict";
 
-process.env.NODE_ENV = "development";
 
-require("../config/env");
+process.env.NODE_ENV = 'development';
 
-require("../api/index");
+require('../config/env');
+
+require('../api/index');

@@ -1,32 +1,27 @@
-"use strict";
+/* eslint-disable no-console */
+process.env.NODE_ENV = 'test';
 
-process.env.NODE_ENV = "test";
+const Mocha = require('mocha');
+const chalk = require('chalk');
+const paths = require('../config/paths');
+const glob = require('glob');
+const fixtures = require('pow-mongodb-fixtures').connect('boreas-test');
+require('chai/register-expect');
 
-const Mocha = require("mocha");
-const fs = require("fs");
-const path = require("path");
-const chalk = require("chalk");
-const paths = require("../config/paths");
-const glob = require("glob");
-const fixtures = require("pow-mongodb-fixtures").connect("boreas-test");
-require("chai/register-expect");
-
-require("../config/env");
+require('../config/env');
 
 // Instantiate a Mocha instance.
 const mocha = new Mocha();
 
-var testDir = paths.test;
-
-fixtures.clearAllAndLoad("../test/api/fixtures", function() {
-  console.log(chalk.cyan("✨  Test database loaded"));
+fixtures.clearAllAndLoad(paths.fixtures, () => {
+  console.log(chalk.cyan('✨  Test database loaded'));
 
   // Add each .js file to the mocha instance
-  glob("test/**/*.js", { realpath: true, ignore: "test/api/fixtures/**" }, function(err, files) {
+  glob('test/**/*.js', { realpath: true, ignore: 'test/api/fixtures/**' }, (err, files) => {
     files.forEach(file => mocha.addFile(file));
 
     // Run the tests.
-    mocha.run().on("end", function() {
+    mocha.run().on('end', () => {
       fixtures.clear();
       process.exit();
     });

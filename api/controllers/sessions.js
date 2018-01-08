@@ -1,38 +1,36 @@
-const express = require("express");
-const router = express.Router();
-const auth = require("../middlewares/auth");
+const express = require('express');
 
-const Session = require("../models/session");
-const Card = require("../models/card");
+const router = express.Router();
+const auth = require('../middlewares/auth');
+
+const Session = require('../models/session');
+const Card = require('../models/card');
 
 // POST /sessions
-router.post("/", auth, function(req, res) {
+router.post('/', auth, (req, res) => {
   const user = req.user._id;
-  const type = req.body.type;
-  const deck = req.body.deck;
+  const { type, deck } = req.body;
 
   Card.getAllForSessionType(type, user, deck)
-    .then(cards => {
-      return Session.create(type, user, cards);
-    })
-    .then(response => {
+    .then(cards => Session.create(type, user, cards))
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });
 
 // GET /sessions/:id
-router.get("/:id", auth, function(req, res) {
+router.get('/:id', auth, (req, res) => {
   const user = req.user._id;
-  const id = req.params.id;
+  const { id } = req.params;
 
   Session.get(id, user)
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response);
     })
-    .catch(response => {
+    .catch((response) => {
       res.status(500).json(response);
     });
 });

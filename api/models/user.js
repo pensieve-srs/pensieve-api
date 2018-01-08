@@ -1,12 +1,13 @@
-const bcrypt = require("bcrypt-nodejs");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt-nodejs');
+const jwt = require('jsonwebtoken');
 
 const jwtSecret = process.env.JWT_SECRET;
-const User = require("../../db/schemas/user");
-const isValidEmail = require("../helpers/isValidEmail");
-const removeEmpty = require("../helpers/removeEmpty");
+const User = require('../../db/schemas/user');
+const isValidEmail = require('../helpers/isValidEmail');
+const removeEmpty = require('../helpers/removeEmpty');
 
 module.exports.getCleanUser = function getCleanUser(user) {
+  if (!user) return false;
   return {
     _id: user._id,
     name: user.name,
@@ -37,34 +38,27 @@ module.exports.validPassword = function validPassword(password, user) {
   return password && user && bcrypt.compareSync(password, user.password);
 };
 
-module.exports.get = function(id) {
-  return User.findOne({ _id: id }).then(user => {
-    if (user) {
-      return this.getCleanUser(user);
-    }
-  });
+module.exports.get = function get(id) {
+  return User.findOne({ _id: id }).then(user => this.getCleanUser(user));
 };
 
-module.exports.update = function(body, id) {
+module.exports.update = function update(body, id) {
   const query = removeEmpty({
     name: body.name,
     email: body.email,
   });
 
-  return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user => {
-    if (user) {
-      return this.getCleanUser(user);
-    }
-  });
+  return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user =>
+    this.getCleanUser(user));
 };
 
-module.exports.delete = function(id) {
+module.exports.delete = function deleteUser(id) {
   return User.remove({ _id: id });
 };
 
-module.exports.create = function(body) {
+module.exports.create = function create(body) {
   if (!body.name || !body.email || !body.password || !isValidEmail(body.email)) {
-    return Promise.reject(new Error("Invalid User"));
+    return Promise.reject(new Error('Invalid User'));
   }
 
   const query = {
@@ -74,20 +68,15 @@ module.exports.create = function(body) {
   };
 
   return User.create(query)
-    .then(user => {
-      return this.getCleanUser(user);
-    })
-    .catch(error => {
-      return Promise.reject(new Error("Invalid User"));
-    });
+    .then(user => this.getCleanUser(user))
+    .catch(error => Promise.reject(new Error('Invalid User', error)));
 };
 
-module.exports.authenticate = function(email, password) {
-  return User.findOne({ email: email }).then(user => {
+module.exports.authenticate = function authenticate(email, password) {
+  return User.findOne({ email }).then((user) => {
     if (this.validPassword(password, user)) {
       return this.getCleanUser(user);
-    } else {
-      return Promise.reject(new Error("Invalid User"));
     }
+    return Promise.reject(new Error('Invalid User'));
   });
 };

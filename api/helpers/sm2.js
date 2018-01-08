@@ -1,10 +1,11 @@
+/* eslint-disable no-mixed-operators */
 const REVIEW_TYPE = {
-  EASY: "easy",
-  GOOD: "good",
-  HARD: "hard",
+  EASY: 'easy',
+  GOOD: 'good',
+  HARD: 'hard',
 };
 
-//=0.75*EXP(0.8*I2) - 0.75
+//= 0.75*EXP(0.8*I2) - 0.75
 function getNextReviewDate(counter) {
   const currentTime = new Date();
   const interval = 0.75 * Math.exp(0.8 * counter) - 0.75;
@@ -51,9 +52,8 @@ function getNextInterval(card, grade) {
     return 1;
   } else if (card.repetitions === 1) {
     return 6;
-  } else {
-    return (card.interval - 1) * card.EF;
   }
+  return (card.interval - 1) * card.EF;
 }
 
 module.exports = {

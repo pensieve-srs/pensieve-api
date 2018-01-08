@@ -1,31 +1,30 @@
-const Session = require("../../db/schemas/session");
-const Card = require("./Card");
-const shuffle = require("../helpers/shuffle");
-const mongoose = require("mongoose");
+const Session = require('../../db/schemas/session');
+const shuffle = require('../helpers/shuffle');
+const mongoose = require('mongoose');
 
 // TODO: Move session size to user model
 module.exports.maxSize = 30;
 
 module.exports.types = {
-  learn: "learn",
-  review: "review",
-  deck: "deck",
+  learn: 'learn',
+  review: 'review',
+  deck: 'deck',
 };
 
-module.exports.get = function(id, user) {
-  return Session.findOne({ _id: id, user: user }).populate({
-    path: "cards",
-    model: "Card",
-    populate: { path: "deck", model: "Deck" },
+module.exports.get = function get(id, user) {
+  return Session.findOne({ _id: id, user }).populate({
+    path: 'cards',
+    model: 'Card',
+    populate: { path: 'deck', model: 'Deck' },
   });
 };
 
-module.exports.create = function(type, user, cards) {
+module.exports.create = function create(type, user, cards) {
   const cardIds = shuffle(cards).map(card => card._id);
 
   const data = {
-    user: user,
-    type: type,
+    user,
+    type,
     cards: cardIds,
   };
 
@@ -34,6 +33,6 @@ module.exports.create = function(type, user, cards) {
     upsert: true,
     runValidators: true,
     setDefaultsOnInsert: true,
-    populate: "cards",
+    populate: 'cards',
   });
 };

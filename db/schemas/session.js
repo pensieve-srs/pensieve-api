@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const SessionSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    cards: [{ type: Schema.ObjectId, ref: "Card", required: true }],
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    cards: [{ type: Schema.ObjectId, ref: 'Card', required: true }],
     type: { type: String },
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model("Session", SessionSchema);
+module.exports = mongoose.model('Session', SessionSchema);

@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const CardSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    deck: { type: Schema.Types.ObjectId, ref: "Deck" },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    deck: { type: Schema.Types.ObjectId, ref: 'Deck' },
     front: { type: String, required: true },
     back: { type: String },
     reviewedAt: { type: Date }, // last review timestamp
@@ -17,4 +17,4 @@ const CardSchema = new Schema(
   { timestamps: true },
 );
 
-module.exports = mongoose.model("Card", CardSchema);
+module.exports = mongoose.model('Card', CardSchema);
