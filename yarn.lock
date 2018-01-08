@@ -3133,6 +3133,10 @@ supports-color@^4.0.0:
   dependencies:
     has-flag "^2.0.0"
 
+swagger-ui-express@^2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-2.0.13.tgz#20343518f2313c7895a6cdff6478e0ef13cb9f64"
+
 table@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/table/-/table-4.0.2.tgz#a33447375391e766ad34d3486e6e2aedc84d2e36"
