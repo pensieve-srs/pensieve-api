@@ -21,9 +21,14 @@ fixtures.clearAllAndLoad(paths.fixtures, () => {
     files.forEach(file => mocha.addFile(file));
 
     // Run the tests.
-    mocha.run().on('end', () => {
-      fixtures.clear();
-      process.exit();
-    });
+    mocha
+      .run((failures) => {
+        process.on('exit', () => {
+          process.exit(failures); // exit with non-zero status if there were failures
+        });
+      })
+      .on('end', () => {
+        process.exit();
+      });
   });
 });

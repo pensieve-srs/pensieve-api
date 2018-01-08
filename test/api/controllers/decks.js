@@ -25,7 +25,8 @@ describe('Decks controller', () => {
           expect(response.body).to.have.lengthOf(expectedDecks.length);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
   describe('POST /api/decks', () => {
@@ -42,7 +43,8 @@ describe('Decks controller', () => {
           expect(response.body.description).to.include(newDeck.description);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
   describe('DELETE /api/decks/:id', () => {

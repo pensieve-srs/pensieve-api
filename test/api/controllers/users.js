@@ -20,7 +20,8 @@ describe('Users controller', () => {
           expect(user.name).to.equal(user1.name);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
     it('should return token if authentication is valid', (done) => {
       request(server)
@@ -32,7 +33,8 @@ describe('Users controller', () => {
           expect(token).to.exist; // eslint-disable-line no-unused-expressions
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
 
@@ -49,7 +51,8 @@ describe('Users controller', () => {
           expect(user.email).to.equal(newUser.email);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
 
@@ -66,7 +69,8 @@ describe('Users controller', () => {
           expect(user.email).to.equal(user1.email);
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
   describe('PUT /api/user/profile', () => {

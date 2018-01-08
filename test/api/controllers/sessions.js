@@ -20,7 +20,8 @@ describe('Sessions controller', () => {
           expect(response.body.user).to.equal(expectedSession.user.toString());
 
           done();
-        });
+        })
+        .catch(error => done(error));
     });
   });
 });
