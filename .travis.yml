@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - "node"
+  - node
 cache:
-    directories:
-        - node_modules
+  directories:
+  - node_modules
 services: mongodb
 script:
-    - npm test
+  - npm test
