@@ -106,22 +106,4 @@ router.delete('/:id/review', auth, (req, res) => {
     });
 });
 
-// GET /cards/count/all
-router.get('/count/all', auth, (req, res) => {
-  // TODO: retrieve number of all cards
-  res.status(400);
-});
-
-// GET /cards/count/new
-router.get('/count/new', auth, (req, res) => {
-  // TODO: retrieve number of new cards
-  res.status(400);
-});
-
-// GET /card/count/due
-router.get('/count/due', auth, (req, res) => {
-  // TODO: retrieve number of due cards
-  res.status(400);
-});
-
 module.exports = router;
