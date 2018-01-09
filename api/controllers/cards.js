@@ -6,6 +6,19 @@ const Review = require('../models/review');
 
 const router = express.Router();
 
+// GET /cards
+router.get('/', auth, (req, res) => {
+  const user = req.user._id;
+
+  Card.getAll(user)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((response) => {
+      res.status(500).json(response);
+    });
+});
+
 // POST /cards
 router.post('/', auth, (req, res) => {
   const user = req.user._id;
