@@ -11,6 +11,7 @@
     "prod": "node scripts/prod.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",
+	"start:watch": "nodemon --watch . --exec 'yarn start'",
     "lint": "eslint ."
   },
   "author": "",

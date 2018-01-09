@@ -3,9 +3,24 @@ const data = require('../fixtures/cards');
 const server = require('../../../api/index');
 const User = require('../../../api/models/user');
 
-const { user2 } = data;
+const { user1, user2 } = data;
 
 describe('Cards controller', () => {
+  describe('GET /api/cards', () => {
+    it('should return array of cards for user', (done) => {
+      const token = User.generateToken(user1);
+      request(server)
+        .get('/api/cards')
+        .set({ Authorization: token })
+        .expect(200)
+        .then((response) => {
+          expect(response.body).to.have.lengthOf(2);
+
+          done();
+        })
+        .catch(error => done(error));
+    });
+  });
   describe('POST /api/cards', () => {
     it('should create single card for user', (done) => {
       const token = User.generateToken(user2);

@@ -19,7 +19,7 @@ describe('Deck model', () => {
     it('should return all decks for user', (done) => {
       const decksForUser = data.decks.filter(deck => deck.user === user1._id);
 
-      Deck.all(user1._id).then((decks) => {
+      Deck.getAll(user1._id).then((decks) => {
         expect(decks.length).to.equal(decksForUser.length);
 
         done();
@@ -60,9 +60,9 @@ describe('Deck model', () => {
   });
   describe('delete', () => {
     it('should delete single deck for user', (done) => {
-      Deck.all(user1).then((decks) => {
+      Deck.getAll(user1).then((decks) => {
         Deck.delete(deck1._id, user1).then(() => {
-          Deck.all(user1).then((newDecks) => {
+          Deck.getAll(user1).then((newDecks) => {
             expect(newDecks).to.have.lengthOf(decks.length - 1);
 
             done();
@@ -74,7 +74,7 @@ describe('Deck model', () => {
   describe('deleteAll', () => {
     it('should delete all decks for user', (done) => {
       Deck.deleteAll(user1).then(() => {
-        Deck.all(user1).then((newDecks) => {
+        Deck.getAll(user1).then((newDecks) => {
           expect(newDecks).to.have.lengthOf(0);
 
           done();

@@ -24,10 +24,12 @@ fixtures.clearAllAndLoad(paths.fixtures, () => {
     mocha
       .run((failures) => {
         process.on('exit', () => {
+          fixtures.clear();
           process.exit(failures); // exit with non-zero status if there were failures
         });
       })
       .on('end', () => {
+        fixtures.clear();
         process.exit();
       });
   });

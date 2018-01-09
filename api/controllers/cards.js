@@ -6,6 +6,19 @@ const Review = require('../models/review');
 
 const router = express.Router();
 
+// GET /cards
+router.get('/', auth, (req, res) => {
+  const user = req.user._id;
+
+  Card.getAll(user)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((response) => {
+      res.status(500).json(response);
+    });
+});
+
 // POST /cards
 router.post('/', auth, (req, res) => {
   const user = req.user._id;
@@ -91,24 +104,6 @@ router.delete('/:id/review', auth, (req, res) => {
     .catch((response) => {
       res.status(500).json(response);
     });
-});
-
-// GET /cards/count/all
-router.get('/count/all', auth, (req, res) => {
-  // TODO: retrieve number of all cards
-  res.status(400);
-});
-
-// GET /cards/count/new
-router.get('/count/new', auth, (req, res) => {
-  // TODO: retrieve number of new cards
-  res.status(400);
-});
-
-// GET /card/count/due
-router.get('/count/due', auth, (req, res) => {
-  // TODO: retrieve number of due cards
-  res.status(400);
 });
 
 module.exports = router;

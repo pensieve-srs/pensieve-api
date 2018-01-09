@@ -5,7 +5,7 @@ module.exports.get = function get(id, user) {
   return Deck.findOne({ _id: id, user });
 };
 
-module.exports.all = function all(user) {
+module.exports.getAll = function getAll(user) {
   return Deck.find({ user });
 };
 

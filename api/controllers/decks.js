@@ -10,7 +10,7 @@ const Card = require('../models/card');
 router.get('/', auth, (req, res) => {
   const user = req.user._id;
 
-  Deck.all(user)
+  Deck.getAll(user)
     .then((response) => {
       res.status(200).json(response);
     })
