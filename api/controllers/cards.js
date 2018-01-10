@@ -11,13 +11,24 @@ router.get('/', auth, (req, res) => {
   const user = req.user._id;
   const { deck } = req.query;
 
-  Card.getAllByDeck(deck, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  if (deck) {
+    console.log('deck', deck);
+    Card.getAllByDeck(deck, user)
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((response) => {
+        res.status(500).json(response);
+      });
+  } else {
+    Card.getAll(user)
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((response) => {
+        res.status(500).json(response);
+      });
+  }
 });
 
 // POST /cards
