@@ -5,7 +5,7 @@ const SM2 = require('../helpers/sm2');
 const Session = require('./session');
 
 module.exports.get = function get(id, user) {
-  return Card.findOne({ _id: id, user });
+  return Card.findOne({ _id: id, user }).populate('deck');
 };
 
 module.exports.getAll = function getAll(user) {
@@ -47,7 +47,7 @@ module.exports.update = function update(id, body, user) {
     { _id: id, user },
     removeEmpty({ front: body.front, back: body.back }),
     { new: true },
-  );
+  ).populate('deck');
 };
 
 module.exports.delete = function deleteCard(id, user) {
