@@ -20,7 +20,7 @@ module.exports.countAll = function countAll(range, user) {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
     return Review.aggregate([
-      { $match: { createdAt: { $gt: oneWeekAgo } } },
+      { $match: { createdAt: { $gt: oneWeekAgo }, user } },
       {
         $project: {
           date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },

@@ -2,9 +2,6 @@ const Session = require('../../db/schemas/session');
 const shuffle = require('../helpers/shuffle');
 const mongoose = require('mongoose');
 
-// TODO: Move session size to user model
-module.exports.maxSize = 30;
-
 module.exports.types = {
   learn: 'learn',
   review: 'review',

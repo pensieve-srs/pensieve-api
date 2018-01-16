@@ -12,7 +12,7 @@ module.exports.getCleanUser = function getCleanUser(user) {
     _id: user._id,
     name: user.name,
     email: user.email,
-    is_email_on: user.is_email_on,
+    prefs: user.prefs,
   };
 };
 
@@ -40,6 +40,10 @@ module.exports.validPassword = function validPassword(password, user) {
 
 module.exports.get = function get(id) {
   return User.findOne({ _id: id }).then(user => this.getCleanUser(user));
+};
+
+module.exports.getSessionSize = function getSessionSize(id) {
+  return User.findOne({ _id: id }).then(user => user.prefs.sessionSize);
 };
 
 module.exports.update = function update(body, id) {

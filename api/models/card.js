@@ -1,5 +1,6 @@
 const Session = require('./session');
 const Card = require('../../db/schemas/card');
+const User = require('./user');
 
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
@@ -32,20 +33,22 @@ module.exports.getAllByDeck = function getAllByDeck(deck, user) {
 };
 
 module.exports.getAllForSessionType = function getAllForSessionType(type, user, deck) {
-  if (type === Session.types.learn) {
-    return Card.find({ user, repetitions: 0 })
-      .populate('deck')
-      .limit(Session.maxSize);
-  } else if (type === Session.types.review) {
-    return Card.find({ user })
-      .populate('deck')
-      .where('nextReviewDate')
-      .lt(new Date())
-      .limit(Session.maxSize);
-  } else if (type === Session.types.deck) {
-    return Card.find({ user, deck }).populate('deck');
-  }
-  return false;
+  User.getSessionSize(user).then((maxSize) => {
+    if (type === Session.types.learn) {
+      return Card.find({ user, repetitions: 0 })
+        .populate('deck')
+        .limit(maxSize);
+    } else if (type === Session.types.review) {
+      return Card.find({ user })
+        .populate('deck')
+        .where('nextReviewDate')
+        .lt(new Date())
+        .limit(maxSize);
+    } else if (type === Session.types.deck) {
+      return Card.find({ user, deck }).populate('deck');
+    }
+    return false;
+  });
 };
 
 module.exports.create = function create(body, user) {
