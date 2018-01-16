@@ -11,6 +11,7 @@ router.post('/', auth, (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.body;
 
+  // TODO: wrap in try/catch
   Card.getAllForSessionType(type, user, deck)
     .then(cards => Session.create(type, user, cards))
     .then((response) => {

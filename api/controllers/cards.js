@@ -9,15 +9,25 @@ const router = express.Router();
 // GET /cards
 router.get('/', auth, (req, res) => {
   const user = req.user._id;
-  const { type } = req.query;
+  const { type, deck } = req.query;
 
-  Card.getAll(user, type)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  if (deck) {
+    Card.getAllByDeck(deck, user)
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((response) => {
+        res.status(500).json(response);
+      });
+  } else {
+    Card.getAll(user, type)
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((response) => {
+        res.status(500).json(response);
+      });
+  }
 });
 
 // POST /cards
@@ -83,8 +93,8 @@ router.post('/:id/review', auth, (req, res) => {
   const cardId = req.params.id;
   const { value } = req.body;
 
-  Review.create(value, cardId, user)
-    .then(() => Card.review(value, cardId, user))
+  Review.create(cardId, value, user)
+    .then(() => Card.review(cardId, value, user))
     .then((response) => {
       res.status(200).json(response);
     })
