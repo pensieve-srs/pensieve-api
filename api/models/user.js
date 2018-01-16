@@ -50,6 +50,7 @@ module.exports.update = function update(body, id) {
   const query = removeEmpty({
     name: body.name,
     email: body.email,
+    prefs: body.prefs,
   });
 
   return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user =>
