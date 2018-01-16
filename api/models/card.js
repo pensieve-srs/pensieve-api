@@ -33,7 +33,7 @@ module.exports.getAllByDeck = function getAllByDeck(deck, user) {
 };
 
 module.exports.getAllForSessionType = function getAllForSessionType(type, user, deck) {
-  User.getSessionSize(user).then((maxSize) => {
+  return User.getSessionSize(user).then((maxSize) => {
     if (type === Session.types.learn) {
       return Card.find({ user, repetitions: 0 })
         .populate('deck')

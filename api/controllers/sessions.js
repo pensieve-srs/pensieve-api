@@ -12,7 +12,16 @@ router.post('/', (req, res) => {
 
   // TODO: wrap in try/catch
   Card.getAllForSessionType(type, user, deck)
-    .then(cards => Session.create(type, user, cards))
+    // eslint-disable-next-line  consistent-return
+    .then((cards) => {
+      if (!cards.length > 0) {
+        res.status(400).json({
+          message: 'No cards available to create session.',
+        });
+      } else {
+        return Session.create(type, user, cards);
+      }
+    })
     .then((response) => {
       res.status(200).json(response);
     })
