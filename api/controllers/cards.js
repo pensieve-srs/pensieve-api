@@ -9,8 +9,9 @@ const router = express.Router();
 // GET /cards
 router.get('/', auth, (req, res) => {
   const user = req.user._id;
+  const { type } = req.query;
 
-  Card.getAll(user)
+  Card.getAll(user, type)
     .then((response) => {
       res.status(200).json(response);
     })
@@ -79,11 +80,11 @@ router.delete('/:id', auth, (req, res) => {
 // POST /cards/:id/review
 router.post('/:id/review', auth, (req, res) => {
   const user = req.user._id;
-  const { id } = req.params;
+  const cardId = req.params.id;
   const { value } = req.body;
 
-  Review.create(value, id, user)
-    .then(() => Card.review(id, user))
+  Review.create(value, cardId, user)
+    .then(() => Card.review(value, cardId, user))
     .then((response) => {
       res.status(200).json(response);
     })

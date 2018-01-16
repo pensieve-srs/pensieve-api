@@ -1,15 +1,32 @@
-const Card = require('../../db/schemas/card');
-const removeEmpty = require('../helpers/removeEmpty');
-const SM2 = require('../helpers/sm2');
+const mongoose = require('mongoose');
 
+const Card = require('../../db/schemas/card');
 const Session = require('./session');
+
+const SM2 = require('../helpers/sm2');
+const removeEmpty = require('../helpers/removeEmpty');
 
 module.exports.get = function get(id, user) {
   return Card.findOne({ _id: id, user });
 };
 
-module.exports.getAll = function getAll(user) {
+module.exports.getAll = function getAll(user, type) {
+  if (type === 'due') {
+    return this.getAllDue(user);
+  } else if (type === 'learn') {
+    return this.getAllNew(user);
+  }
   return Card.find({ user });
+};
+
+module.exports.getAllNew = function getAllNew(user) {
+  return Card.find({ user, repetitions: 0 });
+};
+
+module.exports.getAllDue = function getAllDue(user) {
+  return Card.find({ user })
+    .where('nextReviewDate')
+    .lt(new Date());
 };
 
 module.exports.getAllByDeck = function getAllByDeck(deck, user) {
@@ -80,7 +97,7 @@ module.exports.resetAllByDeck = function resetAllByDeck(deckId, user) {
   );
 };
 
-module.exports.review = function review(id, value, user) {
+module.exports.review = function review(value, id, user) {
   return Card.findOne({ _id: id, user }).then((card) => {
     const grade = SM2.getGrade(value);
     card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign
