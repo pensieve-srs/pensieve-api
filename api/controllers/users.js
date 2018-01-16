@@ -1,11 +1,11 @@
 const express = require('express');
-
-const router = express.Router();
 const auth = require('../middlewares/auth');
 
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
+
+const router = express.Router();
 
 // POST /users/signup
 router.post('/signup', (req, res) => {

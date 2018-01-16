@@ -1,5 +1,4 @@
 const express = require('express');
-const auth = require('../middlewares/auth');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
@@ -7,7 +6,7 @@ const Review = require('../models/review');
 const router = express.Router();
 
 // GET /cards
-router.get('/', auth, (req, res) => {
+router.get('/', (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.query;
 
@@ -31,7 +30,7 @@ router.get('/', auth, (req, res) => {
 });
 
 // POST /cards
-router.post('/', auth, (req, res) => {
+router.post('/', (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
@@ -45,7 +44,7 @@ router.post('/', auth, (req, res) => {
 });
 
 // GET /cards/:id
-router.get('/:id', auth, (req, res) => {
+router.get('/:id', (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -59,7 +58,7 @@ router.get('/:id', auth, (req, res) => {
 });
 
 // PUT /cards/:id
-router.put('/:id', auth, (req, res) => {
+router.put('/:id', (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
@@ -74,7 +73,7 @@ router.put('/:id', auth, (req, res) => {
 });
 
 // DELETE /cards/:id
-router.delete('/:id', auth, (req, res) => {
+router.delete('/:id', (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -88,7 +87,7 @@ router.delete('/:id', auth, (req, res) => {
 });
 
 // POST /cards/:id/review
-router.post('/:id/review', auth, (req, res) => {
+router.post('/:id/review', (req, res) => {
   const user = req.user._id;
   const cardId = req.params.id;
   const { value } = req.body;
@@ -104,7 +103,7 @@ router.post('/:id/review', auth, (req, res) => {
 });
 
 // DELETE /cards/:id/review
-router.delete('/:id/review', auth, (req, res) => {
+router.delete('/:id/review', (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 

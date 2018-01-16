@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
-
-const Card = require('../../db/schemas/card');
 const Session = require('./session');
+const Card = require('../../db/schemas/card');
 
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
@@ -97,7 +95,7 @@ module.exports.resetAllByDeck = function resetAllByDeck(deckId, user) {
   );
 };
 
-module.exports.review = function review(value, id, user) {
+module.exports.review = function review(id, value, user) {
   return Card.findOne({ _id: id, user }).then((card) => {
     const grade = SM2.getGrade(value);
     card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign

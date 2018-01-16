@@ -1,13 +1,12 @@
 const express = require('express');
 
-const router = express.Router();
-const auth = require('../middlewares/auth');
-
 const Session = require('../models/session');
 const Card = require('../models/card');
 
+const router = express.Router();
+
 // POST /sessions
-router.post('/', auth, (req, res) => {
+router.post('/', (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.body;
 
@@ -23,7 +22,7 @@ router.post('/', auth, (req, res) => {
 });
 
 // GET /sessions/:id
-router.get('/:id', auth, (req, res) => {
+router.get('/:id', (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
