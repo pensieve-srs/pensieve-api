@@ -12,7 +12,7 @@ module.exports.getCleanUser = function getCleanUser(user) {
     _id: user._id,
     name: user.name,
     email: user.email,
-    is_email_on: user.is_email_on,
+    prefs: user.prefs,
   };
 };
 
@@ -42,10 +42,15 @@ module.exports.get = function get(id) {
   return User.findOne({ _id: id }).then(user => this.getCleanUser(user));
 };
 
+module.exports.getSessionSize = function getSessionSize(id) {
+  return User.findOne({ _id: id }).then(user => user.prefs.sessionSize);
+};
+
 module.exports.update = function update(body, id) {
   const query = removeEmpty({
     name: body.name,
     email: body.email,
+    prefs: body.prefs,
   });
 
   return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user =>
