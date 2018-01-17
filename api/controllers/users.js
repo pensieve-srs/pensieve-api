@@ -61,7 +61,7 @@ router.get('/profile', auth, async (req, res) => {
 
   try {
     const user = await User.get(id);
-    if (fields.includes('counts')) {
+    if (fields && fields.includes('counts')) {
       user.counts = {
         cards: {
           all: await Card.countAll(id),
