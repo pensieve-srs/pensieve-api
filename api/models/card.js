@@ -5,28 +5,38 @@ const User = require('./user');
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
 
-module.exports.get = function get(id, user) {
-  return Card.findOne({ _id: id, user }).populate('deck');
-};
+module.exports.get = (id, user) => Card.findOne({ _id: id, user }).populate('deck');
 
-module.exports.getAll = function getAll(user, type) {
-  if (type === 'due') {
-    return this.getAllDue(user);
-  } else if (type === 'learn') {
-    return this.getAllNew(user);
+module.exports.getAll = user => Card.find({ user });
+
+module.exports.countAll = user => Card.count({ user });
+
+module.exports.getAllForType = (type, user) => {
+  switch (type) {
+    case 'due':
+      return this.getAllDue(user);
+    case 'learn':
+      return this.getAllNew(user);
+    default:
+      return Card.find({ user });
   }
-  return Card.find({ user });
 };
 
 module.exports.getAllNew = function getAllNew(user) {
   return Card.find({ user, repetitions: 0 });
 };
 
-module.exports.getAllDue = function getAllDue(user) {
-  return Card.find({ user })
+module.exports.countAllNew = user => Card.count({ user, repetitions: 0 });
+
+module.exports.getAllDue = user =>
+  Card.find({ user })
     .where('nextReviewDate')
     .lt(new Date());
-};
+
+module.exports.countAllDue = user =>
+  Card.count({ user })
+    .where('nextReviewDate')
+    .lt(new Date());
 
 module.exports.getAllByDeck = function getAllByDeck(deck, user) {
   return Card.find({ user, deck });
@@ -34,20 +44,22 @@ module.exports.getAllByDeck = function getAllByDeck(deck, user) {
 
 module.exports.getAllForSessionType = function getAllForSessionType(type, user, deck) {
   return User.getSessionSize(user).then((maxSize) => {
-    if (type === Session.types.learn) {
-      return Card.find({ user, repetitions: 0 })
-        .populate('deck')
-        .limit(maxSize);
-    } else if (type === Session.types.review) {
-      return Card.find({ user })
-        .populate('deck')
-        .where('nextReviewDate')
-        .lt(new Date())
-        .limit(maxSize);
-    } else if (type === Session.types.deck) {
-      return Card.find({ user, deck }).populate('deck');
+    switch (type) {
+      case Session.types.learn:
+        return Card.find({ user, repetitions: 0 })
+          .populate('deck')
+          .limit(maxSize);
+      case Session.types.review:
+        return Card.find({ user })
+          .populate('deck')
+          .where('nextReviewDate')
+          .lt(new Date())
+          .limit(maxSize);
+      case Session.types.deck:
+        return Card.find({ user, deck }).populate('deck');
+      default:
+        return false;
     }
-    return false;
   });
 };
 
