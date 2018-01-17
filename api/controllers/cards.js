@@ -6,26 +6,23 @@ const Review = require('../models/review');
 const router = express.Router();
 
 // GET /cards
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.query;
 
-  if (deck) {
-    Card.getAllByDeck(deck, user)
-      .then((response) => {
-        res.status(200).json(response);
-      })
-      .catch((response) => {
-        res.status(500).json(response);
-      });
-  } else {
-    Card.getAll(user, type)
-      .then((response) => {
-        res.status(200).json(response);
-      })
-      .catch((response) => {
-        res.status(500).json(response);
-      });
+  try {
+    let cards;
+    if (deck) {
+      cards = await Card.getAllByDeck(deck, user);
+    } else if (type) {
+      cards = await Card.getAllForType(type, user);
+    } else {
+      cards = await Card.getAll(user);
+    }
+
+    res.status(200).json(cards);
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 

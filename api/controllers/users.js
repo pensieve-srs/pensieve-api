@@ -4,6 +4,7 @@ const auth = require('../middlewares/auth');
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
+const Review = require('../models/review');
 
 const router = express.Router();
 
@@ -54,30 +55,45 @@ router.post('/login', (req, res) => {
 });
 
 // GET /users/profile
-router.get('/profile', auth, (req, res) => {
+router.get('/profile', auth, async (req, res) => {
   const id = req.user._id;
+  const { fields } = req.query;
 
-  User.get(id)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const user = await User.get(id);
+    if (fields && fields.includes('counts')) {
+      user.counts = {
+        cards: {
+          all: await Card.countAll(id),
+          due: await Card.countAllDue(id),
+          new: await Card.countAllNew(id),
+        },
+        decks: {
+          all: await Deck.countAll(id),
+        },
+        reviews: {
+          all: await Review.countAll(id),
+        },
+      };
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // PUT /users/profile
-router.put('/profile', auth, (req, res) => {
+router.put('/profile', auth, async (req, res) => {
   const id = req.user._id;
   const { body } = req;
 
-  User.update(body, id)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const user = await User.update(body, id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /users/profile

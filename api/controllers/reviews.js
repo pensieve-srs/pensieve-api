@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   const user = req.user._id;
   const { range } = req.query;
 
-  Review.countAll(range, user)
+  Review.countAllForRange(range, user)
     .then((response) => {
       res.status(200).json(response);
     })
