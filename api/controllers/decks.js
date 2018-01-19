@@ -77,17 +77,17 @@ router.delete('/:id', (req, res) => {
 });
 
 // DELETE /decks/:id/review
-router.delete('/:id/review', (req, res) => {
+router.delete('/:id/review', async (req, res) => {
   const deckId = req.params.id;
   const user = req.user._id;
 
-  Card.resetAllByDeck(deckId, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    await Card.resetAllByDeck(deckId, user);
+    const cards = await Card.getAllByDeck(deckId, user);
+    return res.status(200).json(cards);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 });
 
 module.exports = router;
