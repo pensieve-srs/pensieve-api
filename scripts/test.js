@@ -7,7 +7,7 @@ const paths = require('../config/paths');
 const glob = require('glob');
 const fixtures = require('pow-mongodb-fixtures').connect('boreas-test');
 
-require('../config/env');
+require('../config/env').config();
 require('chai/register-expect');
 
 // Instantiate a Mocha instance.

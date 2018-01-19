@@ -5,10 +5,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 const db = require('../db');
 
 const app = express();

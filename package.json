@@ -11,12 +11,14 @@
     "prod": "node scripts/prod.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",
-	"start:watch": "nodemon --watch . --exec 'yarn start'",
-    "lint": "eslint ."
+    "start:watch": "nodemon --watch . --exec 'yarn start'",
+    "lint": "eslint .",
+    "email:test": "node scripts/mailer_test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.2.1",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
