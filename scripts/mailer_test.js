@@ -8,4 +8,4 @@ db.connect();
 
 const cardsMailer = new CardsMailer();
 
-cardsMailer.sendDueCardsReminder();
+cardsMailer.sendDueCardsReminder('');

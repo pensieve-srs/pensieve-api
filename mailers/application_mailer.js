@@ -13,7 +13,7 @@ class ApplicationMailer {
       throw new Error('Mailer invalid arguments');
     }
 
-    this.mailer.send({
+    return this.mailer.send({
       to,
       from,
       subject,
