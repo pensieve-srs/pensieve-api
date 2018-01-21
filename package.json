@@ -13,7 +13,7 @@
     "test:watch": "nodemon --watch . --exec 'yarn test'",
     "start:watch": "nodemon --watch . --exec 'yarn start'",
     "lint": "eslint .",
-    "email:test": "node scripts/mailer_test.js"
+    "task": "node scripts/task.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +23,6 @@
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
     "cors": "^2.8.4",
-    "cron": "^1.3.0",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.0",

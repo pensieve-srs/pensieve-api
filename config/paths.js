@@ -12,4 +12,5 @@ module.exports = {
   server: resolveApp('server'),
   test: resolveApp('test/api'),
   fixtures: resolveApp('test/api/fixtures'),
+  tasks: resolveApp('tasks'),
 };
