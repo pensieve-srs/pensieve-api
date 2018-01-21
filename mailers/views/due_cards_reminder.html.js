@@ -10,11 +10,6 @@ module.exports = (name, numCards, url) => `
                 <tr>
                   <td valign="top" style="padding-top:9px">
                     <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%;min-width:100%;border-collapse:collapse" width="100%" >
-                      <tbody><tr>
-                        <td valign="top" style="padding:0px 18px 9px;text-align:center;word-break:break-word;color:#656565;font-family:Helvetica;font-size:12px;line-height:150%">
-
-                          <a style="color:#656565;font-weight:normal;text-decoration:underline">View this email in your browser</a>
-                        </td>
                       </tr>
                     </tbody></table>
                   </td>
