@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const tasks = require('../tasks');
 
 const db = require('../db');
 
@@ -25,6 +26,7 @@ const server = app.listen(process.env.PORT || 5000, (err) => {
   } else if (process.env.NODE_ENV === 'development') {
     console.log(chalk.cyan('✨  Starting the server...'));
   }
+  tasks.start();
 });
 
 module.exports = server;

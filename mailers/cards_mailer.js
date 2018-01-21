@@ -12,12 +12,14 @@ class CardsMailer extends ApplicationMailer {
     const url = 'http://pensieve.space/sessions/new';
     const numCards = await Card.countAllDue(userId);
 
-    this.send({
-      to: user.email,
-      subject: `You have ${numCards} cards to review`,
-      text: text(user.name, numCards, url),
-      html: html(user.name, numCards, url),
-    });
+    if (numCards >= user.prefs.sessionSize) {
+      this.send({
+        to: user.email,
+        subject: `You have ${numCards} cards to review`,
+        text: text(user.name, numCards, url),
+        html: html(user.name, numCards, url),
+      });
+    }
   }
 }
 
