@@ -1,5 +1,5 @@
 const User = require('../../../api/models/user');
-const data = require('../fixtures/users');
+const data = require('../../fixtures/users');
 
 const { users } = data;
 const user1 = users[0];

@@ -14,6 +14,7 @@ class ApplicationMailer {
     html,
     from = new EmailAddress({ name: 'Pensieve', email: 'niko@pensieve.space' }),
   }) {
+    console.log('this', this);
     if (!to || !subject) {
       throw new Error('Mailer invalid arguments');
     }

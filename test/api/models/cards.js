@@ -1,5 +1,5 @@
 const Card = require('../../../api/models/card');
-const data = require('../fixtures/cards');
+const data = require('../../fixtures/cards');
 
 const {
   cards, deck1, deck3, user1, user2,

@@ -1,7 +1,7 @@
 const request = require('supertest');
-const data = require('../fixtures/users');
 const User = require('../../../api/models/user');
 const server = require('../../../api/index');
+const data = require('../../fixtures/users');
 
 const { users, password1 } = data;
 const user1 = users[0];

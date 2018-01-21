@@ -2,9 +2,21 @@
 /* eslint-disable no-unused-vars */
 
 const id = require('pow-mongodb-fixtures').createObjectId;
-const User = require('../../../api/models/user');
+const User = require('../../api/models/user');
 
 const password1 = (exports.password1 = 'password 1');
+
+const userWithPrefs = (exports.userWithPrefs = {
+  _id: id(),
+  name: 'Greg Tester',
+  // TODO change back to example email
+  email: 'nikolazaris@gmail.com',
+  password: User.generateHash('1234k'),
+  prefs: {
+    emailNotifs: true,
+    sessionSize: 1,
+  },
+});
 
 const users = (exports.users = [
   {
@@ -25,4 +37,5 @@ const users = (exports.users = [
     email: 'sarah@example.com',
     password: User.generateHash('1234h'),
   },
+  userWithPrefs,
 ]);
