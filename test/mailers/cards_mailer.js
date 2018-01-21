@@ -13,11 +13,11 @@ describe('Cards mailer', () => {
     });
 
     it('should not send email if user`s notification preference is off', () => {
-      expect(true).to.equal(true);
+      expect(true).to.equal(false);
     });
 
     it('should not send email if number of due cards are less than user`s session size', () => {
-      expect(true).to.equal(true);
+      expect(true).to.equal(false);
     });
   });
 });
