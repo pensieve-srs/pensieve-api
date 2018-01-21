@@ -2,7 +2,7 @@
 const chalk = require('chalk');
 const mongoose = require('mongoose');
 
-module.exports.connect = function connect() {
+module.exports.connect = () => {
   const mongoURI = process.env.MONGODB_URI;
   const mongoDB = mongoose.connect(mongoURI, { useMongoClient: true });
   mongoose.Promise = Promise;

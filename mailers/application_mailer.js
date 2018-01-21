@@ -1,4 +1,5 @@
 const mailer = require('@sendgrid/mail');
+const { classes: { EmailAddress } } = require('@sendgrid/helpers');
 
 class ApplicationMailer {
   constructor() {
@@ -7,7 +8,11 @@ class ApplicationMailer {
   }
 
   send({
-    to, subject, text, html, from = 'niko@pensieve.space',
+    to,
+    subject,
+    text,
+    html,
+    from = new EmailAddress({ name: 'Pensieve', email: 'niko@pensieve.space' }),
   }) {
     if (!to || !subject) {
       throw new Error('Mailer invalid arguments');
