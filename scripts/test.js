@@ -17,11 +17,15 @@ chai.use(sinonChai);
 // Instantiate a Mocha instance.
 const mocha = new Mocha();
 
+const fileName = process.argv.slice(2)[0];
+
+const fileExp = fileName ? `test/**/${fileName}.js` : 'test/**/*.js';
+
 fixtures.clearAllAndLoad(paths.fixtures, () => {
   console.log(chalk.cyan('✨  Test database loaded'));
 
   // Add each .js file to the mocha instance
-  glob('test/**/*.js', { realpath: true, ignore: 'test/fixtures/**' }, (err, files) => {
+  glob(fileExp, { realpath: true, ignore: 'test/fixtures/**' }, (err, files) => {
     files.forEach(file => mocha.addFile(file));
 
     // Run the tests.

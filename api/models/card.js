@@ -5,8 +5,6 @@ const User = require('./user');
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
 
-module.exports = Card;
-
 module.exports.get = (id, user) => Card.findOne({ _id: id, user }).populate('deck');
 
 module.exports.getAll = user => Card.find({ user });

@@ -6,8 +6,6 @@ const User = require('../../db/schemas/user');
 const isValidEmail = require('../helpers/isValidEmail');
 const removeEmpty = require('../helpers/removeEmpty');
 
-module.exports = User;
-
 module.exports.getCleanUser = function getCleanUser(user) {
   if (!user) return false;
   return {

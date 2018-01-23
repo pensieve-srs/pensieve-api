@@ -1,4 +1,4 @@
-const User = require('../api/models/user');
+const User = require('../db/schemas/user');
 const Card = require('../api/models/card');
 const text = require('./views/due_cards_reminder.text.js');
 const html = require('./views/due_cards_reminder.html.js');
@@ -20,7 +20,6 @@ module.exports.sendDueCardsReminder = async (userId) => {
     return;
   }
 
-  console.log('✅ sent!');
   mailer.send({
     to: user.email,
     from: fromAddress,

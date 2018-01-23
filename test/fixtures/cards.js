@@ -1,7 +1,7 @@
 /* eslint-disable no-multi-assign */
 /* eslint-disable no-unused-vars */
 const id = require('pow-mongodb-fixtures').createObjectId;
-const { userWithPrefs } = require('./users');
+const { userWithEmailNotifs, userWithoutEmailNotifs } = require('./users');
 
 const deck1 = (exports.deck1 = id());
 const deck2 = (exports.deck2 = id());
@@ -54,7 +54,7 @@ const cards = (exports.cards = [
     _id: id(),
     front: 'Card front 5',
     back: 'Card back 5',
-    user: userWithPrefs._id,
+    user: userWithEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
   },
@@ -62,7 +62,23 @@ const cards = (exports.cards = [
     _id: id(),
     front: 'Card front 6',
     back: 'Card back 6',
-    user: userWithPrefs._id,
+    user: userWithEmailNotifs._id,
+    deck: deck3,
+    nextReviewDate: oneWeekAgo,
+  },
+  {
+    _id: id(),
+    front: 'Card front 7',
+    back: 'Card back 7',
+    user: userWithoutEmailNotifs._id,
+    deck: deck3,
+    nextReviewDate: oneWeekAgo,
+  },
+  {
+    _id: id(),
+    front: 'Card front 8',
+    back: 'Card back 8',
+    user: userWithoutEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
   },

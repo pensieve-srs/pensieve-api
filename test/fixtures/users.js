@@ -6,11 +6,32 @@ const User = require('../../api/models/user');
 
 const password1 = (exports.password1 = 'password 1');
 
-const userWithPrefs = (exports.userWithPrefs = {
+const userWithEmailNotifs = (exports.userWithEmailNotifs = {
   _id: id(),
-  name: 'Greg Tester',
-  // TODO change back to example email
-  email: 'nikolazaris@gmail.com',
+  name: 'Tester 1',
+  email: 'tester1@example.com',
+  password: User.generateHash('1234k'),
+  prefs: {
+    emailNotifs: true,
+    sessionSize: 1,
+  },
+});
+
+const userWithoutEmailNotifs = (exports.userWithoutEmailNotifs = {
+  _id: id(),
+  name: 'Tester 2',
+  email: 'tester2@example.com',
+  password: User.generateHash('1234k'),
+  prefs: {
+    emailNotifs: false,
+    sessionSize: 1,
+  },
+});
+
+const userWithoutCards = (exports.userWithoutCards = {
+  _id: id(),
+  name: 'Tester 3',
+  email: 'tester3@example.com',
   password: User.generateHash('1234k'),
   prefs: {
     emailNotifs: true,
@@ -37,5 +58,7 @@ const users = (exports.users = [
     email: 'sarah@example.com',
     password: User.generateHash('1234h'),
   },
-  userWithPrefs,
+  userWithEmailNotifs,
+  userWithoutEmailNotifs,
+  userWithoutCards,
 ]);
