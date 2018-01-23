@@ -13,6 +13,7 @@ class CardsMailer extends ApplicationMailer {
     const numCards = await Card.countAllDue(userId);
 
     if (numCards >= user.prefs.sessionSize) {
+      console.log('✅ sent!');
       this.send({
         to: user.email,
         subject: `You have ${numCards} cards to review`,

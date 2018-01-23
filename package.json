@@ -9,16 +9,17 @@
   "scripts": {
     "start": "node scripts/start.js",
     "prod": "node scripts/prod.js",
+    "job": "node scripts/job.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",
     "start:watch": "nodemon --watch . --exec 'yarn start'",
-    "lint": "eslint .",
-    "task": "node scripts/task.js"
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^6.2.1",
+    "agenda": "^1.0.3",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
