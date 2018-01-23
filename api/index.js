@@ -27,8 +27,9 @@ const server = app.listen(process.env.PORT || 5000, (err) => {
     console.log(chalk.cyan('✨  Starting the server...'));
   }
   agenda.on('ready', () => {
-    // TODO: update schedule for every day
-    agenda.now('sendDueCardsReminder');
+    agenda.repeatEvery('00 00 8 * * *', {
+      timezone: 'America/New_York',
+    });
   });
 });
 
