@@ -1,6 +1,8 @@
 const Deck = require('../../db/schemas/deck');
 const removeEmpty = require('../helpers/removeEmpty');
 
+module.exports = Deck;
+
 module.exports.get = function get(id, user) {
   return Deck.findOne({ _id: id, user });
 };

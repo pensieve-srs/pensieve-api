@@ -2,6 +2,8 @@ const Session = require('../../db/schemas/session');
 const shuffle = require('../helpers/shuffle');
 const mongoose = require('mongoose');
 
+module.exports = Session;
+
 module.exports.types = {
   learn: 'learn',
   review: 'review',

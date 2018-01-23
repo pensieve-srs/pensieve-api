@@ -1,5 +1,7 @@
 const Review = require('../../db/schemas/review');
 
+module.exports = Review;
+
 module.exports.create = (card, value, user) => Review.create({ user, card, value });
 
 module.exports.get = (id, user) => Review.findOne({ _id: id, user });
