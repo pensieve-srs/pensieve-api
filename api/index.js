@@ -27,12 +27,7 @@ const server = app.listen(process.env.PORT || 5000, (err) => {
     console.log(chalk.cyan('✨  Starting the server...'));
   }
   agenda.on('ready', () => {
-    const emailReminder = agenda.create('dueCardsEmail');
-    emailReminder
-      .repeatEvery('00 00 8 * * *', {
-        timezone: 'America/New_York',
-      })
-      .save();
+    agenda.every('00 00 8 * * *', 'dueCardsEmail');
     agenda.start();
   });
 });
