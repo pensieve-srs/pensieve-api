@@ -1,5 +1,5 @@
 const Deck = require('../../../api/models/deck');
-const data = require('../fixtures/decks');
+const data = require('../../fixtures/decks');
 
 const deck1 = data.decks[0];
 const { user1 } = data;

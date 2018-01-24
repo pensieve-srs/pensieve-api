@@ -1,5 +1,5 @@
 const request = require('supertest');
-const data = require('../fixtures/sessions');
+const data = require('../../fixtures/sessions');
 const server = require('../../../api/index');
 const User = require('../../../api/models/user');
 

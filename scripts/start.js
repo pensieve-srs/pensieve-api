@@ -1,5 +1,5 @@
 process.env.NODE_ENV = 'development';
 
-require('../config/env');
+require('../config/env').config();
 
 require('../api/index');
