@@ -1,7 +1,10 @@
 const User = require('../db/schemas/user');
 const Card = require('../api/models/card');
-const text = require('./views/due_cards_reminder.text.js');
-const html = require('./views/due_cards_reminder.html.js');
+const CardSchema = require('../db/schemas/card');
+const dueCardEmailText = require('./views/due_cards_email.text.js');
+const dueCardEmailHtml = require('./views/due_cards_email.html.js');
+const newCardEmailText = require('./views/new_cards_email.text.js');
+const newCardEmailHtml = require('./views/new_cards_email.html.js');
 const mailer = require('@sendgrid/mail');
 const { classes: { EmailAddress } } = require('@sendgrid/helpers');
 
@@ -9,7 +12,7 @@ mailer.setApiKey(process.env.SENDGRID_API_KEY);
 
 const fromAddress = new EmailAddress({ name: 'Pensieve', email: 'niko@pensieve.space' });
 
-module.exports.sendDueCardsReminder = async (userId) => {
+module.exports.sendDueCardsEmail = async (userId) => {
   if (!userId) return;
 
   const user = await User.findOne({ _id: userId, 'prefs.emailNotifs': true });
@@ -24,7 +27,31 @@ module.exports.sendDueCardsReminder = async (userId) => {
     to: user.email,
     from: fromAddress,
     subject: `You have ${numCards} cards to review`,
-    text: text(user.name, numCards, url),
-    html: html(user.name, numCards, url),
+    text: dueCardEmailText(user.name, numCards, url),
+    html: dueCardEmailHtml(user.name, numCards, url),
+  });
+};
+
+module.exports.sendNewCardsEmail = async (userId) => {
+  if (!userId) return;
+
+  const user = await User.findOne({ _id: userId, 'prefs.emailNotifs': true });
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+  const url = 'http://pensieve.space/sessions/new';
+  const numCards = await CardSchema.count({ user: userId })
+    .where('createdAt')
+    .gt(oneDayAgo);
+
+  if (!user || numCards < 4) {
+    return;
+  }
+
+  mailer.send({
+    to: user.email,
+    from: fromAddress,
+    subject: `You have ${numCards} new cards`,
+    text: newCardEmailText(user.name, numCards, url),
+    html: newCardEmailHtml(user.name, numCards, url),
   });
 };

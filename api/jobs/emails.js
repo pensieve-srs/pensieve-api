@@ -8,7 +8,21 @@ module.exports = (agenda) => {
       const users = await User.find({ 'prefs.emailNotifs': true });
 
       users.forEach((user) => {
-        CardsMailer.sendDueCardsReminder(user._id);
+        CardsMailer.sendDueCardsEmail(user._id);
+      });
+      done();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('error', error);
+    }
+  });
+
+  agenda.define('newCardsEmail', async (job, done) => {
+    try {
+      const users = await User.find({ 'prefs.emailNotifs': true });
+
+      users.forEach((user) => {
+        CardsMailer.sendNewCardsEmail(user._id);
       });
       done();
     } catch (error) {
