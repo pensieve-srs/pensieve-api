@@ -1,4 +1,5 @@
 const Review = require('../../db/schemas/review');
+const mongoose = require('mongoose');
 
 module.exports.create = (card, value, user) => Review.create({ user, card, value });
 
@@ -13,7 +14,7 @@ module.exports.countAllForRange = function countAllForRange(range, user) {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
     return Review.aggregate([
-      { $match: { createdAt: { $gt: oneWeekAgo }, user } },
+      { $match: { user: mongoose.Types.ObjectId(user), createdAt: { $gt: oneWeekAgo } } },
       {
         $project: {
           date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
