@@ -18,8 +18,11 @@ const user2 = (exports.user2 = {
   name: 'Joe Tester',
   email: 'joe@example.com',
 });
+
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+const oneDayAgo = new Date();
+oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
 const cards = (exports.cards = [
   {
@@ -57,6 +60,7 @@ const cards = (exports.cards = [
     user: userWithEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
   },
   {
     _id: id(),
@@ -65,6 +69,7 @@ const cards = (exports.cards = [
     user: userWithEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
   },
   {
     _id: id(),
@@ -73,6 +78,7 @@ const cards = (exports.cards = [
     user: userWithoutEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
   },
   {
     _id: id(),
@@ -81,5 +87,24 @@ const cards = (exports.cards = [
     user: userWithoutEmailNotifs._id,
     deck: deck3,
     nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
+  },
+  {
+    _id: id(),
+    front: 'Card front 9',
+    back: 'Card back 9',
+    user: userWithEmailNotifs._id,
+    deck: deck3,
+    nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
+  },
+  {
+    _id: id(),
+    front: 'Card front 10',
+    back: 'Card back 10',
+    user: userWithEmailNotifs._id,
+    deck: deck3,
+    nextReviewDate: oneWeekAgo,
+    createdAt: new Date(),
   },
 ]);
