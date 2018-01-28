@@ -28,6 +28,7 @@ const server = app.listen(process.env.PORT || 5000, (err) => {
   }
   agenda.on('ready', () => {
     agenda.every('00 00 8 * * *', 'dueCardsEmail');
+    agenda.every('00 00 21 * * *', 'newCardsEmail');
     agenda.start();
   });
 });

@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../middlewares/auth');
+const AdminMailer = require('../../mailers/admin_mailer');
 
 const User = require('../models/user');
 const Card = require('../models/card');
@@ -19,6 +20,8 @@ router.post('/signup', (req, res) => {
       return User.generateToken(user);
     })
     .then((token) => {
+      // Signup was successful
+      AdminMailer.sendSignupAlert();
       // TODO: move token to request header
       res.status(200).json({ user, token });
     })

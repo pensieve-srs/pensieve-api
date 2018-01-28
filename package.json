@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "prod": "node scripts/prod.js",
-    "job": "node scripts/job.js",
+    "jobs": "node scripts/jobs.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",
     "start:watch": "nodemon --watch . --exec 'yarn start'",
