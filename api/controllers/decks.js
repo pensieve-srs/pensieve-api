@@ -6,16 +6,23 @@ const Card = require('../models/card');
 const router = express.Router();
 
 // GET /decks
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const user = req.user._id;
 
-  Deck.getAll(user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const decks = await Deck.getAll(user);
+
+    const decksWithCount = await Promise.all(decks.map(async (deck) => {
+      const numCards = await Card.countAllForDeck(deck, user);
+      // eslint-disable-next-line no-param-reassign
+      deck.numCards = numCards;
+      return deck;
+    }));
+
+    res.status(200).json(decksWithCount);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // POST /decks

@@ -11,6 +11,8 @@ module.exports.getAll = user => Card.find({ user });
 
 module.exports.countAll = user => Card.count({ user });
 
+module.exports.countAllForDeck = (deck, user) => Card.count({ user, deck });
+
 module.exports.getAllForType = (type, user) => {
   switch (type) {
     case 'due':
