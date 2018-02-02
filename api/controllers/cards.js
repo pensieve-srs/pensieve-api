@@ -2,7 +2,7 @@ const express = require('express');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
-const halfLife = require('../helpers/halfLife');
+const recallRate = require('../helpers/recallRate');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
         // eslint-disable-next-line no-param-reassign
-        card.strength = halfLife.getRecallRate(card) * 100;
+        card.strength = recallRate.getRecallRate(card);
         return card;
       });
     } else if (type) {
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
     const card = await Card.get(id, user);
 
     // eslint-disable-next-line no-param-reassign
-    card.strength = halfLife.getRecallRate(card) * 100;
+    card.strength = recallRate.getRecallRate(card);
 
     res.status(200).json(card);
   } catch (error) {
