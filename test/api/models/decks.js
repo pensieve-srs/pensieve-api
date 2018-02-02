@@ -19,17 +19,17 @@ describe('Deck model', () => {
     it('should return all decks for user', (done) => {
       const decksForUser = data.decks.filter(deck => deck.user === user1._id);
 
-      Deck.getAll(user1._id).then((decks) => {
+      Deck.find({ user: user1._id }).then((decks) => {
         expect(decks.length).to.equal(decksForUser.length);
 
         done();
       });
     });
   });
-  describe('create', () => {
+  describe('new', () => {
     it('should create single deck for user', (done) => {
       const newDeck = { title: 'New deck', description: 'New description' };
-      Deck.create(newDeck, user1._id).then((deck) => {
+      Deck.new(newDeck, user1._id).then((deck) => {
         expect(deck.title).to.equal(newDeck.title);
         expect(deck.description).to.equal(newDeck.description);
         expect(deck.user).to.deep.equal(user1._id);

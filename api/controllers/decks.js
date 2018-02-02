@@ -2,6 +2,7 @@ const express = require('express');
 
 const Deck = require('../models/deck');
 const Card = require('../models/card');
+const halfLife = require('../helpers/halfLife');
 
 const router = express.Router();
 
@@ -10,16 +11,20 @@ router.get('/', async (req, res) => {
   const user = req.user._id;
 
   try {
-    const decks = await Deck.getAll(user);
+    let decks = await Deck.find({ user });
 
-    const decksWithCount = await Promise.all(decks.map(async (deck) => {
-      const numCards = await Card.countAllForDeck(deck, user);
+    decks = await Promise.all(decks.map(async (deck) => {
+      const cards = await Card.getAllByDeck(deck, user);
+
       // eslint-disable-next-line no-param-reassign
-      deck.numCards = numCards;
+      deck.strength = halfLife.getCardAverage(cards) * 100;
+      // eslint-disable-next-line no-param-reassign
+      deck.cardsCount = cards.length;
+
       return deck;
     }));
 
-    res.status(200).json(decksWithCount);
+    res.status(200).json(decks);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -30,7 +35,7 @@ router.post('/', (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
-  Deck.create(body, user)
+  Deck.new(body, user)
     .then((response) => {
       res.status(200).json(response);
     })
