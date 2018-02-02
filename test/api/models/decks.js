@@ -58,28 +58,4 @@ describe('Deck model', () => {
       });
     });
   });
-  describe('delete', () => {
-    it('should delete single deck for user', (done) => {
-      Deck.getAll(user1).then((decks) => {
-        Deck.delete(deck1._id, user1).then(() => {
-          Deck.getAll(user1).then((newDecks) => {
-            expect(newDecks).to.have.lengthOf(decks.length - 1);
-
-            done();
-          });
-        });
-      });
-    });
-  });
-  describe('deleteAll', () => {
-    it('should delete all decks for user', (done) => {
-      Deck.deleteAll(user1).then(() => {
-        Deck.getAll(user1).then((newDecks) => {
-          expect(newDecks).to.have.lengthOf(0);
-
-          done();
-        });
-      });
-    });
-  });
 });

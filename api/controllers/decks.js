@@ -74,18 +74,17 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /deck/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Deck.delete(id, user)
-    .then(() => Card.deleteAllByDeck(id, user))
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    let response = await Deck.remove({ _id: id, user });
+    response = await Card.deleteAllByDeck(id, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /decks/:id/review
