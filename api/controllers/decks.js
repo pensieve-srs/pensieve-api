@@ -45,17 +45,24 @@ router.post('/', (req, res) => {
 });
 
 // GET /decks/:id
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Deck.get(id, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const deck = await Deck.get(id, user);
+
+    const cards = await Card.getAllByDeck(deck, user);
+
+    // eslint-disable-next-line no-param-reassign
+    deck.strength = halfLife.getCardAverage(cards) * 100;
+    // eslint-disable-next-line no-param-reassign
+    deck.cardsCount = cards.length;
+
+    res.status(200).json(deck);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // PUT /decks/:id
