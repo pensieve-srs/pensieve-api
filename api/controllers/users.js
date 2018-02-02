@@ -72,7 +72,7 @@ router.get('/profile', auth, async (req, res) => {
           new: await Card.countAllNew(id),
         },
         decks: {
-          all: await Deck.countAll(id),
+          all: await Deck.count({ user: id }),
         },
         reviews: {
           all: await Review.countAll(id),
@@ -105,7 +105,7 @@ router.delete('/profile', auth, (req, res) => {
 
   User.delete(user)
     .then(() => Card.deleteAll(user))
-    .then(() => Deck.deleteAll(user))
+    .then(() => Deck.remove({ user }))
     .then((response) => {
       res.status(200).json(response);
     })

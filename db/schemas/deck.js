@@ -7,8 +7,12 @@ const DeckSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String },
+    cardsCount: { type: Number },
+    recallRate: { type: Number },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 );
 
-module.exports = mongoose.model('Deck', DeckSchema);
+module.exports = DeckSchema;

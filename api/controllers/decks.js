@@ -2,20 +2,32 @@ const express = require('express');
 
 const Deck = require('../models/deck');
 const Card = require('../models/card');
+const recallRate = require('../helpers/recallRate');
 
 const router = express.Router();
 
 // GET /decks
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const user = req.user._id;
 
-  Deck.getAll(user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    let decks = await Deck.find({ user });
+
+    decks = await Promise.all(decks.map(async (deck) => {
+      const cards = await Card.getAllByDeck(deck, user);
+
+      // eslint-disable-next-line no-param-reassign
+      deck.recallRate = recallRate.getCardAverage(cards);
+      // eslint-disable-next-line no-param-reassign
+      deck.cardsCount = cards.length;
+
+      return deck;
+    }));
+
+    res.status(200).json(decks);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // POST /decks
@@ -23,7 +35,7 @@ router.post('/', (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
-  Deck.create(body, user)
+  Deck.new(body, user)
     .then((response) => {
       res.status(200).json(response);
     })
@@ -33,17 +45,24 @@ router.post('/', (req, res) => {
 });
 
 // GET /decks/:id
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Deck.get(id, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const deck = await Deck.get(id, user);
+
+    const cards = await Card.getAllByDeck(deck, user);
+
+    // eslint-disable-next-line no-param-reassign
+    deck.recallRate = recallRate.getCardAverage(cards);
+    // eslint-disable-next-line no-param-reassign
+    deck.cardsCount = cards.length;
+
+    res.status(200).json(deck);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // PUT /decks/:id
@@ -62,18 +81,17 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /deck/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Deck.delete(id, user)
-    .then(() => Card.deleteAllByDeck(id, user))
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    let response = await Deck.remove({ _id: id, user });
+    response = await Card.deleteAllByDeck(id, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /decks/:id/review
