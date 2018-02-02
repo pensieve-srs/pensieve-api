@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       const cards = await Card.getAllByDeck(deck, user);
 
       // eslint-disable-next-line no-param-reassign
-      deck.strength = recallRate.getCardAverage(cards);
+      deck.recallRate = recallRate.getCardAverage(cards);
       // eslint-disable-next-line no-param-reassign
       deck.cardsCount = cards.length;
 
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
     const cards = await Card.getAllByDeck(deck, user);
 
     // eslint-disable-next-line no-param-reassign
-    deck.strength = recallRate.getCardAverage(cards);
+    deck.recallRate = recallRate.getCardAverage(cards);
     // eslint-disable-next-line no-param-reassign
     deck.cardsCount = cards.length;
 
