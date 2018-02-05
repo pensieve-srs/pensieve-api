@@ -1,8 +1,8 @@
 /* eslint-disable no-mixed-operators */
 const REVIEW_TYPE = {
-  EASY: 'easy',
-  GOOD: 'good',
+  REDO: 'redo',
   HARD: 'hard',
+  EASY: 'easy',
 };
 
 //= 0.75*EXP(0.8*I2) - 0.75
@@ -22,9 +22,9 @@ function getNewCounter(value, prevCount) {
   switch (value) {
     case REVIEW_TYPE.EASY:
       return prevCount + 1;
-    case REVIEW_TYPE.GOOD:
-      return prevCount;
     case REVIEW_TYPE.HARD:
+      return prevCount;
+    case REVIEW_TYPE.REDO:
       return 0;
     default:
       return prevCount;
@@ -35,9 +35,9 @@ function getGrade(value) {
   switch (value) {
     case REVIEW_TYPE.EASY:
       return 5;
-    case REVIEW_TYPE.GOOD:
-      return 3;
     case REVIEW_TYPE.HARD:
+      return 3;
+    case REVIEW_TYPE.REDO:
       return 0;
     default:
       return 3;
@@ -48,12 +48,12 @@ function getNextInterval(card, grade) {
   if (grade < 3) {
     return 0;
   }
-  if (card.repetitions === 0) {
+  if (card.repetitions === 1) {
     return 1;
-  } else if (card.repetitions === 1) {
-    return 6;
+  } else if (card.repetitions === 2) {
+    return 3;
   }
-  return (card.interval - 1) * card.EF;
+  return card.interval * card.EF;
 }
 
 module.exports = {
