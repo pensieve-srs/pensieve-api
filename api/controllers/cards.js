@@ -100,8 +100,11 @@ router.post('/:id/review', (req, res) => {
 
   Review.create(cardId, value, user)
     .then(() => Card.review(cardId, value, user))
-    .then((response) => {
-      res.status(200).json(response);
+    .then((card) => {
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = recallRate.getRecallRate(card);
+
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
