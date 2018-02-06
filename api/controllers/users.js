@@ -91,11 +91,15 @@ router.put('/profile', auth, async (req, res) => {
   const id = req.user._id;
   const { body } = req;
 
-  try {
-    const user = await User.update(body, id);
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json(error);
+  if (!body.email) {
+    res.status(400).json('Email is required');
+  } else {
+    try {
+      const user = await User.update(body, id);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 });
 
