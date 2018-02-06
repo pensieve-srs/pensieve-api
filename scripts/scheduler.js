@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
+process.env.NODE_ENV = 'production';
+require('../config/env').config();
+
 const Agenda = require('agenda');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
 async function run() {
-  const db = await MongoClient.connect(process.env.MONGODB_URI);
+  mongoose.Promise = global.Promise;
+  const db = await mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true });
 
   const agenda = new Agenda().mongo(db, 'jobs');
 
@@ -13,6 +17,7 @@ async function run() {
 
   await new Promise(resolve => agenda.once('ready', resolve));
 
+  agenda.every('* * 8 * * *', 'dueCardsEmail');
   agenda.start();
 }
 
