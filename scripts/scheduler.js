@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 require('../config/env').config();
 
 const Agenda = require('agenda');
@@ -11,16 +11,13 @@ async function run() {
 
   const agenda = new Agenda().mongo(db, 'jobs');
 
-  const jobNames = process.argv.slice(2);
-
+  /* Define jobs */
   // eslint-disable-next-line global-require
   require('../api/jobs')(agenda);
 
   await new Promise(resolve => agenda.once('ready', resolve));
 
-  jobNames.forEach((job) => {
-    agenda.now(job);
-  });
+  agenda.every('* * 8 * * *', 'dueCardsEmail');
   agenda.start();
 }
 

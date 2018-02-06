@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "prod": "node scripts/prod.js",
+    "start:prod": "node scripts/prod.js",
+    "start:scheduler": "node scripts/scheduler.js",
     "jobs": "node scripts/jobs.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",

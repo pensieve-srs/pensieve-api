@@ -23,7 +23,7 @@ module.exports.sendDueCardsEmail = async (userId) => {
     return;
   }
 
-  mailer.send({
+  await mailer.send({
     to: user.email,
     from: fromAddress,
     subject: `You have ${numCards} cards to review`,
@@ -47,7 +47,7 @@ module.exports.sendNewCardsEmail = async (userId) => {
     return;
   }
 
-  mailer.send({
+  await mailer.send({
     to: user.email,
     from: fromAddress,
     subject: `You have ${numCards} new cards`,
