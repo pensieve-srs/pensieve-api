@@ -3,41 +3,45 @@ const CardsMailer = require('../../mailers/cards_mailer');
 const AdminMailer = require('../../mailers/admin_mailer');
 
 module.exports = (agenda) => {
-  agenda.define('dueCardsEmail', async (job, done) => {
+  agenda.define('dueCardsEmail', async () => {
     try {
       const users = await User.find({ 'prefs.emailNotifs': true });
 
-      users.forEach((user) => {
-        CardsMailer.sendDueCardsEmail(user._id);
-      });
-      done();
+      await Promise.all(users.map(async (user) => {
+        await CardsMailer.sendDueCardsEmail(user._id);
+      }));
+
+      process.exit(0);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('error', error);
+      process.exit(-1);
     }
   });
 
-  agenda.define('newCardsEmail', async (job, done) => {
+  agenda.define('newCardsEmail', async () => {
     try {
       const users = await User.find({ 'prefs.emailNotifs': true });
 
-      users.forEach((user) => {
-        CardsMailer.sendNewCardsEmail(user._id);
-      });
-      done();
+      await Promise.all(users.map(async (user) => {
+        await CardsMailer.sendNewCardsEmail(user._id);
+      }));
+      process.exit(0);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('error', error);
+      process.exit(-1);
     }
   });
 
-  agenda.define('signupAlert', async (job, done) => {
+  agenda.define('signupAlert', async () => {
     try {
-      AdminMailer.sendSignupAlert();
-      done();
+      await AdminMailer.sendSignupAlert();
+      process.exit(0);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('error', error);
+      process.exit(-1);
     }
   });
 };

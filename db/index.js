@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 
 module.exports.connect = () => {
   const mongoURI = process.env.MONGODB_URI;
+
+  mongoose.Promise = global.Promise;
   const mongoDB = mongoose.connect(mongoURI, { useMongoClient: true });
-  mongoose.Promise = Promise;
 
   if (process.env.NODE_ENV === 'development') {
     mongoDB.on('error', (err) => {
