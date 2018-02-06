@@ -1,17 +1,30 @@
+/* eslint-disable no-console */
 process.env.NODE_ENV = 'development';
 require('../config/env').config();
-require('../db').connect();
-const agenda = require('../lib/agenda');
 
-const jobNames = process.argv.slice(2);
+const Agenda = require('agenda');
+const mongoose = require('mongoose');
 
-agenda.on('ready', () => {
+async function run() {
+  mongoose.Promise = global.Promise;
+  const db = await mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true });
+
+  const agenda = new Agenda().mongo(db, 'jobs');
+
+  const jobNames = process.argv.slice(2);
+
+  // eslint-disable-next-line global-require
+  require('../api/jobs')(agenda);
+
+  await new Promise(resolve => agenda.once('ready', resolve));
+
   jobNames.forEach((job) => {
     agenda.now(job);
   });
-});
+  agenda.start();
+}
 
-agenda.on('complete', (job) => {
-  // eslint-disable-next-line no-console
-  console.log(`✨ Job: ${job.attrs.name} completed!`);
+run().catch((error) => {
+  console.log(error);
+  process.exit(-1);
 });
