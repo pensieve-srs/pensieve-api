@@ -1,1 +1,2 @@
-web: npm run start:prod && npm run start:scheduler
+web: npm run start:prod
+worker: npm run start:scheduler
