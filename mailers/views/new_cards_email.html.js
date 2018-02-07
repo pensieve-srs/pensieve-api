@@ -87,7 +87,7 @@ module.exports = (name, numCards, url) => `
                     <br>
                       <br>
                         Want to change how you receive these emails?<br>
-                        You can <a href="http://pensieve.space/account" style="color:#656565;font-weight:normal;text-decoration:underline">update your preferences and unsubscribe here</a>.
+                        You can <a href="http://pensieve.space/settings#notifications" style="color:#656565;font-weight:normal;text-decoration:underline">update your preferences and unsubscribe here</a>.
                         <br>
                           <br>
                           </td>
