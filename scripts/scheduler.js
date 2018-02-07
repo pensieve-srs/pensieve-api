@@ -17,7 +17,8 @@ async function run() {
 
   await new Promise(resolve => agenda.once('ready', resolve));
 
-  agenda.every('* * 8 * * *', 'dueCardsEmail');
+  // agenda.every('* * 8 * * *', 'dueCardsEmail');
+  agenda.schedule(new Date(Date.now() + 1000), 'dueCardsEmail');
   agenda.start();
 }
 
