@@ -17,7 +17,7 @@ async function run() {
 
   await new Promise(resolve => agenda.once('ready', resolve));
 
-  agenda.every('* * 8 * * *', 'dueCardsEmail');
+  agenda.every('1 day', 'dueCardsEmail');
   agenda.start();
 }
 
