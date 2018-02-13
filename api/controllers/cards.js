@@ -38,8 +38,11 @@ router.post('/', (req, res) => {
   const { body } = req;
 
   Card.create(body, user)
-    .then((response) => {
-      res.status(200).json(response);
+    .then((card) => {
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = recallRate.getRecallRate(card);
+
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
@@ -70,8 +73,11 @@ router.put('/:id', (req, res) => {
   const { body } = req;
 
   Card.update(id, body, user)
-    .then((response) => {
-      res.status(200).json(response);
+    .then((card) => {
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = recallRate.getRecallRate(card);
+
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
