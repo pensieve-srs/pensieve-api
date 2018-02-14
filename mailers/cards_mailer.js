@@ -10,7 +10,7 @@ const { classes: { EmailAddress } } = require('@sendgrid/helpers');
 
 mailer.setApiKey(process.env.SENDGRID_API_KEY);
 
-const fromAddress = new EmailAddress({ name: 'Pensieve', email: 'niko@pensieve.space' });
+const fromAddress = new EmailAddress({ name: 'Pensieve', email: 'hello@pensieve.space' });
 
 module.exports.sendDueCardsEmail = async (userId) => {
   if (!userId) return;
