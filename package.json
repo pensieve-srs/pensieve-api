@@ -32,6 +32,7 @@
     "moment": "^2.20.1",
     "mongoose": "^4.13.7",
     "morgan": "^1.9.0",
+    "pluralize": "^7.0.0",
     "swagger-ui-express": "^2.0.13"
   },
   "devDependencies": {
