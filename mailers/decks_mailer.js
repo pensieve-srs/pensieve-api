@@ -18,6 +18,8 @@ mailer.setApiKey(process.env.SENDGRID_API_KEY);
 const fromAddress = new EmailAddress({ name: 'Pensieve', email: 'hello@pensieve.space' });
 
 const getIsExpiredAtThreshold = (allCards, expiredCards, threshold) => {
+  if (allCards.length === expiredCards.length) return true;
+
   const activeCards = allCards.filter(card => !expiredCards.find(el => el._id.equals(card._id)));
 
   const avgRecall = recallRate.getCardAverage(allCards);
