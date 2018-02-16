@@ -4,6 +4,7 @@ const DecksMailer = require('../../mailers/decks_mailer');
 module.exports = (agenda) => {
   agenda.define('reviewDecksEmail', async () => {
     // Handles logic for email of decks at 50% strength
+    console.log('✨ DEBUG - reviewDecksEmail');
     try {
       const users = await User.find({ 'prefs.emailNotifs': true });
 
