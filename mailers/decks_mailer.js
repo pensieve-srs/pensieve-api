@@ -8,8 +8,6 @@ const recallRate = require('../api/helpers/recallRate');
 const expiredDeckEmailText = require('./views/expired_decks_email.text.js');
 const expiredDeckEmailHTML = require('./views/expired_decks_email.html.js');
 
-const oneHourAgo = moment().subtract(1, 'hours');
-
 const mailer = require('@sendgrid/mail');
 const { classes: { EmailAddress } } = require('@sendgrid/helpers');
 
@@ -41,7 +39,7 @@ module.exports.sendExpiredDeckEmail = async (userId) => {
   const expiredDecks = await Promise.all(decks.map(async (deck) => {
     const cardsExpiredInPastHour = await Card.find({
       deck: deck._id,
-      nextReviewDate: { $gt: oneHourAgo, $lt: new Date() },
+      nextReviewDate: { $gt: moment().subtract(1, 'hours'), $lt: moment() },
     });
     const allCards = await Card.find({ deck: deck._id });
 
