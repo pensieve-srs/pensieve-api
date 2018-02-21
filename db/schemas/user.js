@@ -8,7 +8,7 @@ const UserSchema = new Schema(
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     prefs: {
-      emailNotifs: { type: Boolean, default: false },
+      emailNotifs: { type: Boolean, default: true },
       sessionSize: { type: Number, default: 30 },
     },
   },
