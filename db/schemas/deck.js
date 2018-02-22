@@ -9,6 +9,7 @@ const DeckSchema = new Schema(
     description: { type: String },
     cardsCount: { type: Number },
     recallRate: { type: Number },
+    hidden: { type: Boolean, default: false },
   },
   {
     timestamps: true,
