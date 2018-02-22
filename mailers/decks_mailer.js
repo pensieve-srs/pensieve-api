@@ -54,7 +54,7 @@ module.exports.sendExpiredDeckEmail = async (userId) => {
     return;
   }
 
-  const url = `http://pensieve.space/sessions/new?deckId=${expiredDecks[0]._id}`;
+  const url = `https://www.pensieve.space/sessions/new?deckId=${expiredDecks[0]._id}`;
 
   const subject =
     expiredDecks.length > 1

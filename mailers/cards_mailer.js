@@ -16,7 +16,7 @@ module.exports.sendDueCardsEmail = async (userId) => {
   if (!userId) return;
 
   const user = await User.findOne({ _id: userId, 'prefs.emailNotifs': true });
-  const url = 'http://pensieve.space/sessions/new';
+  const url = 'https://www.pensieve.space/sessions/new';
   const numCards = await Card.countAllDue(userId);
 
   if (!user || !numCards || numCards < user.prefs.sessionSize) {
@@ -38,7 +38,7 @@ module.exports.sendNewCardsEmail = async (userId) => {
   const user = await User.findOne({ _id: userId, 'prefs.emailNotifs': true });
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-  const url = 'http://pensieve.space/sessions/new';
+  const url = 'https://www.pensieve.space/sessions/new';
   const numCards = await CardSchema.count({ user: userId })
     .where('createdAt')
     .gt(oneDayAgo);

@@ -26,6 +26,6 @@ module.exports = (name, expiredDecks, url) => {
   You are subscribed to this notification based on your preferences
 
   Want to change how you receive these emails?
-  You can [update your preferences and unsubscribe here][https://pensieve.space/settings#notifications].
+  You can [update your preferences and unsubscribe here][https://www.pensieve.space/settings#notifications].
   `;
 };
