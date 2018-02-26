@@ -58,7 +58,10 @@ module.exports.getAllForSessionType = function getAllForSessionType(type, user, 
           .lt(new Date())
           .limit(maxSize);
       case Session.types.deck:
-        return Card.find({ user, deck }).populate('deck');
+        return Card.find({ user, deck })
+          .populate('deck')
+          .where('nextReviewDate')
+          .lt(new Date());
       default:
         return false;
     }

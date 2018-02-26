@@ -8,7 +8,7 @@ module.exports.getRecallRate = (card) => {
   const delta = moment().diff(moment(anchorDate));
   const interval = Math.abs(moment(anchorDate).diff(moment(card.nextReviewDate)));
   const recall = 2 ** (-delta / interval);
-  return Math.round(recall * 100) / 100;
+  return Math.ceil(recall * 100) / 100;
 };
 
 module.exports.getCardAverage = (cards) => {
