@@ -103,6 +103,18 @@ router.put('/profile', auth, async (req, res) => {
   }
 });
 
+router.put('/profile/security', auth, async (req, res) => {
+  const id = req.user._id;
+  const { body } = req;
+
+  try {
+    const user = await User.updatePassword(id, body.currentPassword, body.newPassword);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // DELETE /users/profile
 router.delete('/profile', auth, (req, res) => {
   const user = req.user._id;

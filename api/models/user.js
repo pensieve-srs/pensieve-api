@@ -77,6 +77,20 @@ module.exports.create = function create(body) {
     .catch(error => Promise.reject(new Error('Invalid User', error)));
 };
 
+module.exports.updatePassword = function updatePassword(id, currentPassword, newPassword) {
+  return User.findOne({ _id: id }).then((user) => {
+    if (this.validPassword(currentPassword, user)) {
+      user.set({ password: this.generateHash(newPassword) });
+      user.save((err, updatedUser) => {
+        if (err) return Promise.reject(new Error('Invalid Password'));
+        return this.getCleanUser(updatedUser);
+      });
+    } else {
+      return Promise.reject(new Error('Invalid User'));
+    }
+  });
+};
+
 module.exports.authenticate = function authenticate(email, password) {
   return User.findOne({ email }).then((user) => {
     if (this.validPassword(password, user)) {
