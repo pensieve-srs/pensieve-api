@@ -34,7 +34,7 @@ module.exports.sendExpiredDeckEmail = async (userId) => {
 
   const user = await User.findOne({ _id: userId, 'prefs.emailNotifs': true });
 
-  const decks = await Deck.find({ user: user._id, hidden: false });
+  const decks = await Deck.find({ user: user._id, hidden: { $ne: true } });
 
   const expiredDecks = await Promise.all(decks.map(async (deck) => {
     const cardsExpiredInPastHour = await Card.find({
