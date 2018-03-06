@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../middlewares/auth');
 const AdminMailer = require('../../mailers/admin_mailer');
+const createDefaultDeck = require('../helpers/createDefaultDeck');
 
 const User = require('../models/user');
 const Card = require('../models/card');
@@ -10,28 +11,23 @@ const Review = require('../models/review');
 const router = express.Router();
 
 // POST /users/signup
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
   const { body } = req;
-  let user;
 
-  User.create(body)
-    .then((response) => {
-      user = response;
-      return User.generateToken(user);
-    })
-    .then((token) => {
-      // Signup was successful
-      AdminMailer.sendSignupAlert();
-      // TODO: move token to request header
-      res.status(200).json({ user, token });
-    })
-    .catch((error) => {
-      if (error.message === 'Invalid User') {
-        res.status(400).json(error);
-      } else {
-        res.status(500).json(error);
-      }
-    });
+  try {
+    const user = await User.create(body);
+    const token = await User.generateToken(user);
+    await createDefaultDeck(user);
+    AdminMailer.sendSignupAlert(user);
+    // TODO: move token to request header
+    res.status(200).json({ user, token });
+  } catch (error) {
+    if (error.message === 'Invalid User') {
+      res.status(400).json(error);
+    } else {
+      res.status(500).json(error);
+    }
+  }
 });
 
 // POST /users/login
