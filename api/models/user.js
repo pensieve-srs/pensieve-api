@@ -29,7 +29,7 @@ module.exports.generateToken = function generateToken(user) {
     },
     jwtSecret,
     {
-      expiresIn: 60 * 60 * 48, // expires in 48 hours
+      expiresIn: 60 * 60 * 72, // expires in 72 hours
     },
   );
 };
