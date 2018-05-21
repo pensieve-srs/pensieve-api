@@ -1,6 +1,7 @@
 # [Pensieve](https://www.pensieve.space/) &middot; ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactjs.org/docs/how-to-contribute.html#your-first-pull-request)
 
 > "I use Pensieve. One simply siphons the excess thoughts from one's mind, pours them into the basin, and examines them at one's leisure. It becomes easier to spot patterns and links, you understand, when they are in this form."
+>
 > _Albus Dumbledore_
 
 This project contains the backend for Pensieve providing the API for accessing data using NodeJS and MongoDB.
