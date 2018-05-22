@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const oneDayFuture = new Date();
-oneDayFuture.setDate(oneDayFuture.getDate() + 1);
-const oneHourFuture = new Date();
-oneHourFuture.setHours(oneHourFuture.getHours() + 1);
 
 const CardSchema = new Schema(
   {
@@ -15,7 +11,7 @@ const CardSchema = new Schema(
     reviewedAt: { type: Date }, // last review timestamp
     interval: { type: Number }, // review interval (in days)
     EF: { type: Number, default: 2.5 }, // SM-2 easiness factor
-    nextReviewDate: { type: Date, default: oneHourFuture },
+    nextReviewDate: { type: Date, required: true },
     repetitions: { type: Number, default: 0 }, // number of review repetitions
     recallRate: { type: Number },
   },

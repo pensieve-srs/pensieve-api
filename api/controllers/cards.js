@@ -2,7 +2,7 @@ const express = require('express');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
-const recallRate = require('../helpers/recallRate');
+const getRecallRate = require('../helpers/getRecallRate');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
         // eslint-disable-next-line no-param-reassign
-        card.recallRate = recallRate.getRecallRate(card);
+        card.recallRate = getRecallRate(card);
         return card;
       });
     } else if (type) {
@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
   Card.create(body, user)
     .then((card) => {
       // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      card.recallRate = getRecallRate(card);
 
       res.status(200).json(card);
     })
@@ -58,7 +58,7 @@ router.get('/:id', async (req, res) => {
     const card = await Card.get(id, user);
 
     // eslint-disable-next-line no-param-reassign
-    card.recallRate = recallRate.getRecallRate(card);
+    card.recallRate = getRecallRate(card);
 
     res.status(200).json(card);
   } catch (error) {
@@ -75,7 +75,7 @@ router.put('/:id', (req, res) => {
   Card.update(id, body, user)
     .then((card) => {
       // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      card.recallRate = getRecallRate(card);
 
       res.status(200).json(card);
     })
@@ -108,7 +108,7 @@ router.post('/:id/review', (req, res) => {
     .then(() => Card.review(cardId, value, user))
     .then((card) => {
       // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      card.recallRate = getRecallRate(card);
 
       res.status(200).json(card);
     })

@@ -4,7 +4,7 @@ const pluralize = require('pluralize');
 const User = require('../db/schemas/user');
 const Deck = require('../api/models/deck');
 const Card = require('../db/schemas/card');
-const recallRate = require('../api/helpers/recallRate');
+const getCardAverage = require('../api/helpers/getCardAverage');
 const expiredDeckEmailText = require('./views/expired_decks_email.text.js');
 const expiredDeckEmailHTML = require('./views/expired_decks_email.html.js');
 
@@ -16,15 +16,13 @@ mailer.setApiKey(process.env.SENDGRID_API_KEY);
 const fromAddress = new EmailAddress({ name: 'Pensieve', email: 'hello@pensieve.space' });
 
 const getIsExpiredAtThreshold = (allCards, expiredCards, threshold) => {
-  console.log('✨ DEBUG -', allCards.length, expiredCards.length);
   if (allCards.length === expiredCards.length) return true;
 
   const activeCards = allCards.filter(card => !expiredCards.find(el => el._id.equals(card._id)));
 
-  const avgRecall = recallRate.getCardAverage(allCards);
-  const avgRecallWithoutExpiredCards = recallRate.getCardAverage(activeCards);
+  const avgRecall = getCardAverage(allCards);
+  const avgRecallWithoutExpiredCards = getCardAverage(activeCards);
 
-  console.log('✨ DEBUG -', avgRecall, threshold, avgRecallWithoutExpiredCards);
   return avgRecall <= threshold && threshold <= avgRecallWithoutExpiredCards;
 };
 

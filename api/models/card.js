@@ -60,6 +60,7 @@ module.exports.getAllForSessionType = function getAllForSessionType(type, user, 
       case Session.types.deck:
         return Card.find({ user, deck })
           .populate('deck')
+          .sort('nextReviewDate')
           .where('nextReviewDate')
           .lt(new Date());
       default:
@@ -69,11 +70,15 @@ module.exports.getAllForSessionType = function getAllForSessionType(type, user, 
 };
 
 module.exports.create = function create(body, user) {
+  const oneHourFuture = new Date();
+  oneHourFuture.setHours(oneHourFuture.getHours() + 1);
+
   return Card.create({
     user,
     front: body.front,
     back: body.back,
     deck: body.deck,
+    nextReviewDate: oneHourFuture,
   });
 };
 
