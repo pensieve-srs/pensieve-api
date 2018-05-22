@@ -39,9 +39,10 @@ router.post('/', (req, res) => {
 
   Card.create(body, user)
     .then((card) => {
-      const response = { ...card, recallRate: getRecallRate(card) };
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = getRecallRate(card);
 
-      res.status(200).json(response);
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
@@ -55,9 +56,11 @@ router.get('/:id', async (req, res) => {
 
   try {
     const card = await Card.get(id, user);
-    const response = { ...card, recallRate: getRecallRate(card) };
 
-    res.status(200).json(response);
+    // eslint-disable-next-line no-param-reassign
+    card.recallRate = getRecallRate(card);
+
+    res.status(200).json(card);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -71,9 +74,10 @@ router.put('/:id', (req, res) => {
 
   Card.update(id, body, user)
     .then((card) => {
-      const response = { ...card, recallRate: getRecallRate(card) };
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = getRecallRate(card);
 
-      res.status(200).json(response);
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
@@ -103,9 +107,10 @@ router.post('/:id/review', (req, res) => {
   Review.create(cardId, value, user)
     .then(() => Card.review(cardId, value, user))
     .then((card) => {
-      const response = { ...card, recallRate: getRecallRate(card) };
+      // eslint-disable-next-line no-param-reassign
+      card.recallRate = getRecallRate(card);
 
-      res.status(200).json(response);
+      res.status(200).json(card);
     })
     .catch((response) => {
       res.status(500).json(response);
