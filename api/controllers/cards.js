@@ -2,7 +2,7 @@ const express = require('express');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
-const recallRate = require('../helpers/recallRate');
+const getRecallRate = require('../helpers/getRecallRate');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
         // eslint-disable-next-line no-param-reassign
-        card.recallRate = recallRate.getRecallRate(card);
+        card.recallRate = getRecallRate(card);
         return card;
       });
     } else if (type) {
@@ -39,10 +39,9 @@ router.post('/', (req, res) => {
 
   Card.create(body, user)
     .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      const response = { ...card, recallRate: getRecallRate(card) };
 
-      res.status(200).json(card);
+      res.status(200).json(response);
     })
     .catch((response) => {
       res.status(500).json(response);
@@ -56,11 +55,9 @@ router.get('/:id', async (req, res) => {
 
   try {
     const card = await Card.get(id, user);
+    const response = { ...card, recallRate: getRecallRate(card) };
 
-    // eslint-disable-next-line no-param-reassign
-    card.recallRate = recallRate.getRecallRate(card);
-
-    res.status(200).json(card);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -74,10 +71,9 @@ router.put('/:id', (req, res) => {
 
   Card.update(id, body, user)
     .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      const response = { ...card, recallRate: getRecallRate(card) };
 
-      res.status(200).json(card);
+      res.status(200).json(response);
     })
     .catch((response) => {
       res.status(500).json(response);
@@ -107,10 +103,9 @@ router.post('/:id/review', (req, res) => {
   Review.create(cardId, value, user)
     .then(() => Card.review(cardId, value, user))
     .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = recallRate.getRecallRate(card);
+      const response = { ...card, recallRate: getRecallRate(card) };
 
-      res.status(200).json(card);
+      res.status(200).json(response);
     })
     .catch((response) => {
       res.status(500).json(response);

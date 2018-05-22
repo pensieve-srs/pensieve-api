@@ -2,7 +2,7 @@ const express = require('express');
 
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const recallRate = require('../helpers/recallRate');
+const getCardAverage = require('../helpers/getCardAverage');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       const cards = await Card.getAllByDeck(deck, user);
 
       // eslint-disable-next-line no-param-reassign
-      deck.recallRate = recallRate.getCardAverage(cards);
+      deck.recallRate = getCardAverage(cards);
       // eslint-disable-next-line no-param-reassign
       deck.cardsCount = cards.length;
 
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
     const cards = await Card.getAllByDeck(deck, user);
 
     // eslint-disable-next-line no-param-reassign
-    deck.recallRate = recallRate.getCardAverage(cards);
+    deck.recallRate = getCardAverage(cards);
     // eslint-disable-next-line no-param-reassign
     deck.cardsCount = cards.length;
 
