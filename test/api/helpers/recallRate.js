@@ -1,4 +1,5 @@
-const recallRate = require('../../../api/helpers/recallRate');
+const getRecallRate = require('../../../api/helpers/getRecallRate');
+const getCardAverage = require('../../../api/helpers/getCardAverage');
 
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -25,15 +26,15 @@ const MOCK_CARDS = [MOCK_CARD, MOCK_CARD2];
 describe('recallRate', () => {
   describe('getRecallRate', () => {
     it('should return rate of 50% for current review date', () => {
-      expect(recallRate.getRecallRate(MOCK_CARD)).to.equal(0.5);
+      expect(getRecallRate(MOCK_CARD)).to.equal(0.5);
     });
     it('should return recall rate of 100% for current reviewed timestamp', () => {
-      expect(recallRate.getRecallRate(MOCK_CARD2)).to.equal(1.0);
+      expect(getRecallRate(MOCK_CARD2)).to.equal(1.0);
     });
   });
   describe('getCardAverage', () => {
     it('should return average recall rate for array of cards', () => {
-      expect(recallRate.getCardAverage(MOCK_CARDS)).to.equal(0.75);
+      expect(getCardAverage(MOCK_CARDS)).to.equal(0.75);
     });
   });
 });
