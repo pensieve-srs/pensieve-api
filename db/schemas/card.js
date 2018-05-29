@@ -8,6 +8,7 @@ const CardSchema = new Schema(
     deck: { type: Schema.Types.ObjectId, ref: 'Deck' },
     front: { type: String, required: true },
     back: { type: String },
+    notes: { type: String },
     reviewedAt: { type: Date }, // last review timestamp
     interval: { type: Number }, // review interval (in days)
     EF: { type: Number, default: 2.5 }, // SM-2 easiness factor

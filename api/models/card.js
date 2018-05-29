@@ -78,6 +78,7 @@ module.exports.create = function create(body, user) {
     front: body.front,
     back: body.back,
     deck: body.deck,
+    notes: body.notes,
     nextReviewDate: oneHourFuture,
   });
 };
