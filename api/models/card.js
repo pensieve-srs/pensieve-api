@@ -86,7 +86,7 @@ module.exports.create = function create(body, user) {
 module.exports.update = function update(id, body, user) {
   return Card.findOneAndUpdate(
     { _id: id, user },
-    removeEmpty({ front: body.front, back: body.back }),
+    removeEmpty({ front: body.front, back: body.back, notes: body.notes }),
     { new: true },
   ).populate('deck');
 };
