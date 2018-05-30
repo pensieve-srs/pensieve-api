@@ -31,17 +31,16 @@ router.get('/', async (req, res) => {
 });
 
 // POST /decks
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
-  Deck.new(body, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const deck = await Deck.new(body, user);
+    res.status(200).json(deck);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // GET /decks/:id

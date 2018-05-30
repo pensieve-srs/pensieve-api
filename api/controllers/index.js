@@ -14,5 +14,6 @@ router.use('/api/decks', auth, require('./decks'));
 router.use('/api/cards', auth, require('./cards'));
 router.use('/api/sessions', auth, require('./sessions'));
 router.use('/api/reviews', auth, require('./reviews'));
+router.use('/api/tags', auth, require('./tags'));
 
 module.exports = router;
