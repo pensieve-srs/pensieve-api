@@ -10,7 +10,7 @@
     "start": "node scripts/start.js",
     "start:prod": "node scripts/prod.js",
     "start:scheduler": "node scripts/scheduler.js",
-	"dev": "yarn start:watch",
+    "dev": "yarn start:watch",
     "jobs": "node scripts/jobs.js",
     "test": "node scripts/test.js",
     "test:watch": "nodemon --watch . --exec 'yarn test'",
@@ -33,6 +33,7 @@
     "moment": "^2.20.1",
     "mongoose": "^4.13.7",
     "morgan": "^1.9.0",
+    "niceware": "^1.0.5",
     "pluralize": "^7.0.0",
     "swagger-ui-express": "^2.0.13"
   },
