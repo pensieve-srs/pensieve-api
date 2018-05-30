@@ -10,6 +10,7 @@ const DeckSchema = new Schema(
     cardsCount: { type: Number },
     recallRate: { type: Number },
     hidden: { type: Boolean, default: false },
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   },
   {
     timestamps: true,

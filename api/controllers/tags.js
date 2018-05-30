@@ -27,7 +27,6 @@ router.post('/', async (req, res) => {
 
     res.status(200).json(tag);
   } catch (error) {
-    console.log('error', error);
     res.status(500).json(error);
   }
 });
