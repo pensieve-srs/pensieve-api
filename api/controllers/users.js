@@ -7,6 +7,7 @@ const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
 const Review = require('../models/review');
+const Invite = require('../../db/schemas/invite');
 
 const router = express.Router();
 
@@ -15,8 +16,20 @@ router.post('/signup', async (req, res) => {
   const { body } = req;
 
   try {
+    const invite = await Invite.findOne({ value: body.invite, isUsed: false });
+
+    if (!invite) {
+      throw Error('Invalid invite phrase');
+    }
+
     const user = await User.create(body);
     const token = await User.generateToken(user);
+
+    // Update invite fields
+    invite.isUsed = true;
+    invite.user = user._id;
+    await invite.save();
+
     await createDefaultDeck(user);
     AdminMailer.sendSignupAlert(user);
     // TODO: move token to request header

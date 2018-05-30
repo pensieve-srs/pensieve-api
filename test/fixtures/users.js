@@ -6,6 +6,18 @@ const User = require('../../api/models/user');
 
 const password1 = (exports.password1 = 'password 1');
 
+const invite1 = (exports.invite1 = {
+  value: 'test123 test456 test567',
+});
+
+const invites = (exports.invites = [
+  {
+    _id: id(),
+    value: 'test invite phrase',
+    isUsed: false,
+  },
+]);
+
 const userWithEmailNotifs = (exports.userWithEmailNotifs = {
   _id: id(),
   name: 'Tester 1',
