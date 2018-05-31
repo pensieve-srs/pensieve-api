@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
-    name: { type: String, required: true },
+    username: { type: String, required: true, index: { unique: true } },
+    name: { type: String },
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     prefs: {
@@ -15,4 +16,4 @@ const UserSchema = new Schema(
   { timestamps: true },
 );
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = UserSchema;
