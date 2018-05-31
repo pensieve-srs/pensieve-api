@@ -6,7 +6,6 @@ const createDefaultDeck = require('../helpers/createDefaultDeck');
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
-const Review = require('../models/review');
 const Invite = require('../../db/schemas/invite');
 
 const router = express.Router();
@@ -22,7 +21,7 @@ router.post('/signup', async (req, res) => {
       throw Error('Invalid invite phrase');
     }
 
-    const user = await User.create(body);
+    const user = await User.new(body);
     const token = await User.generateToken(user);
 
     // Update invite fields
@@ -69,25 +68,9 @@ router.post('/login', (req, res) => {
 // GET /users/profile
 router.get('/profile', auth, async (req, res) => {
   const id = req.user._id;
-  const { fields } = req.query;
 
   try {
     const user = await User.get(id);
-    if (fields && fields.includes('counts')) {
-      user.counts = {
-        cards: {
-          all: await Card.countAll(id),
-          due: await Card.countAllDue(id),
-          new: await Card.countAllNew(id),
-        },
-        decks: {
-          all: await Deck.count({ user: id }),
-        },
-        reviews: {
-          all: await Review.countAll(id),
-        },
-      };
-    }
 
     res.status(200).json(user);
   } catch (error) {

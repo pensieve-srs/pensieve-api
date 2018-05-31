@@ -90,7 +90,7 @@ class UserClass {
     return this.remove({ _id: id });
   }
 
-  static create(body) {
+  static new(body) {
     if (!body.username || !body.email || !body.password) {
       throw Error('Invalid arguments');
     }
@@ -108,9 +108,7 @@ class UserClass {
       email: body.email.trim(),
       password: this.generateHash(body.password.trim()),
     })
-      .then((user) => {
-        this.getCleanUser(user);
-      })
+      .then(user => this.getCleanUser(user))
       .catch((error) => {
         throw Error('Invalid User', error);
       });
