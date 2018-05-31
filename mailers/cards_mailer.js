@@ -1,4 +1,4 @@
-const User = require('../db/schemas/user');
+const User = require('../api/models/user');
 const Card = require('../api/models/card');
 const CardSchema = require('../db/schemas/card');
 const dueCardEmailText = require('./views/due_cards_email.text.js');

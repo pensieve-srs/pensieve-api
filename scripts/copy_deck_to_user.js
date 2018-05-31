@@ -4,7 +4,7 @@ require('../config/env').config();
 
 require('../db').connect();
 
-const User = require('../db/schemas/user');
+const User = require('../api/models/user');
 const Deck = require('../api/models/deck');
 const Card = require('../db/schemas/card');
 

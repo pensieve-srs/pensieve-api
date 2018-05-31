@@ -1,7 +1,7 @@
 const moment = require('moment');
 const pluralize = require('pluralize');
 
-const User = require('../db/schemas/user');
+const User = require('../api/models/user');
 const Deck = require('../api/models/deck');
 const Card = require('../db/schemas/card');
 const getCardAverage = require('../api/helpers/getCardAverage');

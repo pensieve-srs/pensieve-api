@@ -67,28 +67,35 @@ describe('User model', () => {
       });
     });
   });
-  describe('create', () => {
-    it('should create user with matching information', (done) => {
-      const newUser = { name: 'Sue Tester', email: 'sue@example.com', password: '1234h' };
-      User.create(newUser).then((user) => {
-        expect(user.name).to.equal(newUser.name);
-        expect(user.email).to.equal(newUser.email);
+  describe('new', () => {
+    it('should create user with matching information', async () => {
+      const newUser = {
+        username: 'sue-tester',
+        name: 'Sue Tester',
+        email: 'sue@example.com',
+        password: '1234h',
+      };
+      const user = await User.new(newUser);
 
-        done();
-      });
+      expect(user.username).to.equal(newUser.username);
+      expect(user.name).to.equal(newUser.name);
+      expect(user.email).to.equal(newUser.email);
     });
   });
   describe('authenticate', () => {
-    it('should authenticate user with correct information', (done) => {
-      const newUser = { name: 'Sid Tester', email: 'sid@example.com', password: '1234h' };
-      User.create(newUser).then(() => {
-        User.authenticate(newUser.email, newUser.password).then((user) => {
-          expect(user.name).to.equal(newUser.name);
-          expect(user.email).to.equal(newUser.email);
+    it('should authenticate user with correct information', async () => {
+      const newUser = {
+        username: 'sid-tester',
+        name: 'Sid Tester',
+        email: 'sid@example.com',
+        password: '1234h',
+      };
+      // Insert user
+      await User.new(newUser);
+      const user = await User.authenticate(newUser.email, newUser.password);
 
-          done();
-        });
-      });
+      expect(user.name).to.equal(newUser.name);
+      expect(user.email).to.equal(newUser.email);
     });
   });
 });

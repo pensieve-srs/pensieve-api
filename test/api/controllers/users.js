@@ -42,7 +42,7 @@ describe('Users controller', () => {
   describe('POST /api/users/signup', () => {
     it('should create user if signup is valid', (done) => {
       const newUser = {
-        name: 'Jim',
+        username: 'jim',
         email: 'jim@example.com',
         password: 'test password',
         invite: invite1.value,
@@ -53,7 +53,7 @@ describe('Users controller', () => {
         .expect(200)
         .then((response) => {
           const { user } = response.body;
-          expect(user.name).to.equal(newUser.name);
+          expect(user.username).to.equal(newUser.username);
           expect(user.email).to.equal(newUser.email);
 
           done();

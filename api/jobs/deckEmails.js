@@ -1,4 +1,4 @@
-const User = require('../../db/schemas/user');
+const User = require('../../api/models/user');
 const DecksMailer = require('../../mailers/decks_mailer');
 
 module.exports = (agenda) => {
