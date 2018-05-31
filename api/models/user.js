@@ -103,11 +103,14 @@ class UserClass {
       throw Error('Invalid username');
     }
 
-    return this.create({
-      username: body.username.trim(),
-      email: body.email.trim(),
+    const query = removeEmpty({
+      username: body.username,
+      name: body.name,
+      email: body.email,
       password: this.generateHash(body.password.trim()),
-    })
+    });
+
+    return this.create(query)
       .then(user => this.getCleanUser(user))
       .catch((error) => {
         throw Error('Invalid User', error);
