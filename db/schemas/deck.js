@@ -6,6 +6,7 @@ const DeckSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
+    tagline: { type: String },
     description: { type: String },
     cardsCount: { type: Number },
     recallRate: { type: Number },
