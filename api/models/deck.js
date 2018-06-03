@@ -20,7 +20,12 @@ class DeckClass {
   static update(id, body, user) {
     return this.findOneAndUpdate(
       { _id: id, user },
-      removeEmpty({ title: body.title, description: body.description, tags: body.tags }),
+      removeEmpty({
+        title: body.title,
+        description: body.description,
+        tags: body.tags,
+        tagline: body.tagline,
+      }),
       { new: true },
     ).populate('tags');
   }
