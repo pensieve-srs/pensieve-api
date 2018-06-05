@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
   const user = req.user._id;
 
   try {
-    let decks = await Deck.find({ user });
+    let decks = await Deck.find({ user }).populate('tags');
 
     decks = await Promise.all(decks.map(async (deck) => {
       const cards = await Card.getAllByDeck(deck, user);
