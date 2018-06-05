@@ -15,5 +15,6 @@ router.use('/api/cards', auth, require('./cards'));
 router.use('/api/sessions', auth, require('./sessions'));
 router.use('/api/reviews', auth, require('./reviews'));
 router.use('/api/tags', auth, require('./tags'));
+router.use('/api/activity', auth, require('./activity'));
 
 module.exports = router;
