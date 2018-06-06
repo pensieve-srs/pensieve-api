@@ -24,7 +24,7 @@ class DeckClass {
         title: body.title,
         description: body.description,
         tags: body.tags,
-        tagline: body.tagline,
+        notes: body.notes,
       }),
       { new: true },
     ).populate('tags');
