@@ -14,6 +14,7 @@ class DeckClass {
       title: body.title,
       description: body.description,
       tags: body.tags,
+      notes: body.notes,
     });
   }
 
