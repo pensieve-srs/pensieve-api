@@ -3,6 +3,8 @@ const removeEmpty = require('../helpers/removeEmpty');
 
 const mongoose = require('mongoose');
 
+const createDefaultNotes = deck => `## ${deck.title}\n\n${deck.description}`;
+
 class DeckClass {
   static get(id, user) {
     return this.findOne({ _id: id, user }).populate('tags');
@@ -14,7 +16,7 @@ class DeckClass {
       title: body.title,
       description: body.description,
       tags: body.tags,
-      notes: body.notes,
+      notes: body.notes || createDefaultNotes(body),
     });
   }
 
