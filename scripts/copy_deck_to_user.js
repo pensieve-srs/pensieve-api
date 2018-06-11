@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 process.env.NODE_ENV = 'development';
 require('../config/env').config();
-
 require('../db').connect();
 
 const User = require('../db/schemas/user');
