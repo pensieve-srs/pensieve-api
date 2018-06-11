@@ -33,20 +33,19 @@ router.get('/', async (req, res) => {
 });
 
 // POST /cards
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
-  Card.create(body, user)
-    .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = getRecallRate(card);
+  try {
+    const card = await Card.create(body, user);
+    // eslint-disable-next-line no-param-reassign
+    card.recallRate = getRecallRate(card);
 
-      res.status(200).json(card);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+    res.status(200).json(card);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // GET /cards/:id
@@ -67,68 +66,62 @@ router.get('/:id', async (req, res) => {
 });
 
 // PUT /cards/:id
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
 
-  Card.update(id, body, user)
-    .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = getRecallRate(card);
-
-      res.status(200).json(card);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const card = await Card.update(id, body, user);
+    // eslint-disable-next-line no-param-reassign
+    card.recallRate = getRecallRate(card);
+    res.status(200).json(card);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /cards/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Card.delete(id, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const response = await Card.delete(id, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // POST /cards/:id/review
-router.post('/:id/review', (req, res) => {
+router.post('/:id/review', async (req, res) => {
   const user = req.user._id;
   const cardId = req.params.id;
   const { value } = req.body;
 
-  Review.create(cardId, value, user)
-    .then(() => Card.review(cardId, value, user))
-    .then((card) => {
-      // eslint-disable-next-line no-param-reassign
-      card.recallRate = getRecallRate(card);
-
-      res.status(200).json(card);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    await Review.create(cardId, value, user);
+    const card = await Card.review(cardId, value, user);
+    // eslint-disable-next-line no-param-reassign
+    card.recallRate = getRecallRate(card);
+    res.status(200).json(card);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /cards/:id/review
-router.delete('/:id/review', (req, res) => {
+router.delete('/:id/review', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
-  Card.reset(id, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const response = Card.reset(id, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 module.exports = router;
