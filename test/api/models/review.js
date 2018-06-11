@@ -6,25 +6,20 @@ const card1 = id();
 
 describe('Review model', () => {
   describe('create', () => {
-    it('should create new review object for user', (done) => {
-      Review.create(card1, 'hard', user1).then((review) => {
-        expect(review.value).to.equal('hard');
-        expect(review.user).to.deep.equal(user1);
-        expect(review.card).to.deep.equal(card1);
+    it('should create new review object for user', async () => {
+      const review = await Review.create(card1, 'hard', user1);
 
-        done();
-      });
+      expect(review.value).to.equal('hard');
+      expect(review.user).to.deep.equal(user1);
+      expect(review.card).to.deep.equal(card1);
     });
   });
   describe('get', () => {
-    it('should return review object by id', (done) => {
-      Review.create(card1, 'hard', user1).then((newReview) => {
-        Review.get(newReview._id, newReview.user).then((review) => {
-          expect(review._id).to.deep.equal(newReview._id);
+    it('should return review object by id', async () => {
+      const review = await Review.create(card1, 'hard', user1);
+      const response = await Review.get(review._id, review.user);
 
-          done();
-        });
-      });
+      expect(review._id).to.deep.equal(response._id);
     });
   });
 });

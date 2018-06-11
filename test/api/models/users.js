@@ -7,88 +7,73 @@ const user2 = users[1];
 
 describe('User model', () => {
   describe('get', () => {
-    it('should return user with matching id', (done) => {
-      User.get(user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
-        expect(user.name).to.equal(user1.name);
-        expect(user.email).to.equal(user1.email);
+    it('should return user with matching id', async () => {
+      const user = await User.get(user1._id);
 
-        done();
-      });
+      expect(user._id).to.deep.equal(user1._id);
+      expect(user.name).to.equal(user1.name);
+      expect(user.email).to.equal(user1.email);
     });
-    it('should not return `password` field', (done) => {
-      User.get(user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
-        expect(user).to.not.have.property('password');
+    it('should not return `password` field', async () => {
+      const user = await User.get(user1._id);
 
-        done();
-      });
+      expect(user._id).to.deep.equal(user1._id);
+      expect(user).to.not.have.property('password');
     });
   });
   describe('update', () => {
-    it('should update user with matching id', (done) => {
-      const newUser = { name: 'Jon Tester', email: 'jon@example.com' };
-      User.update(newUser, user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
-        expect(user.name).to.equal(newUser.name);
-        expect(user.email).to.equal(newUser.email);
+    it('should update user with matching id', async () => {
+      const body = { name: 'Jon Tester', email: 'jon@example.com' };
+      const user = await User.update(body, user1._id);
 
-        done();
-      });
+      expect(user._id).to.deep.equal(user1._id);
+      expect(user.name).to.equal(body.name);
+      expect(user.email).to.equal(body.email);
     });
-    it('should not update fields that are not defined', (done) => {
-      const newUser = { name: 'Joe Tester', email: undefined };
-      User.update(newUser, user2._id).then((user) => {
-        expect(user._id).to.deep.equal(user2._id);
-        expect(user.name).to.equal(newUser.name);
-        expect(user.email).to.equal(user2.email);
+    it('should not update fields that are not defined', async () => {
+      const body = { name: 'Joe Tester', email: undefined };
+      const user = await User.update(body, user2._id);
 
-        done();
-      });
+      expect(user._id).to.deep.equal(user2._id);
+      expect(user.name).to.equal(body.name);
+      expect(user.email).to.equal(user2.email);
     });
-    it('should not return `password` field', (done) => {
-      const newUser = { name: 'Jon Tester', email: 'jon@example.com' };
-      User.update(newUser, user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
-        expect(user).to.not.have.property('password');
+    it('should not return `password` field', async () => {
+      const body = { name: 'Jon Tester', email: 'jon@example.com' };
+      const user = await User.update(body, user1._id);
 
-        done();
-      });
+      expect(user._id).to.deep.equal(user1._id);
+      expect(user).to.not.have.property('password');
     });
   });
   describe('delete', () => {
-    it('should delete user with matching id', (done) => {
-      User.delete(user2._id).then(() => {
-        User.get(user2._id).then((user) => {
-          expect(user).to.be.false;
+    it('should delete user with matching id', async () => {
+      const user = await User.get(user2._id);
+      expect(user).to.not.be.undefined;
 
-          done();
-        });
-      });
+      await User.delete(user._id);
+
+      const response = await User.get(user2._id);
+      expect(response).to.be.false;
     });
   });
   describe('create', () => {
-    it('should create user with matching information', (done) => {
-      const newUser = { name: 'Sue Tester', email: 'sue@example.com', password: '1234h' };
-      User.create(newUser).then((user) => {
-        expect(user.name).to.equal(newUser.name);
-        expect(user.email).to.equal(newUser.email);
+    it('should create user with matching information', async () => {
+      const body = { name: 'Sue Tester', email: 'sue@example.com', password: '1234h' };
+      const user = await User.create(body);
 
-        done();
-      });
+      expect(user.name).to.equal(body.name);
+      expect(user.email).to.equal(body.email);
     });
   });
   describe('authenticate', () => {
-    it('should authenticate user with correct information', (done) => {
-      const newUser = { name: 'Sid Tester', email: 'sid@example.com', password: '1234h' };
-      User.create(newUser).then(() => {
-        User.authenticate(newUser.email, newUser.password).then((user) => {
-          expect(user.name).to.equal(newUser.name);
-          expect(user.email).to.equal(newUser.email);
+    it('should authenticate user with correct information', async () => {
+      const body = { name: 'Sid Tester', email: 'sid@example.com', password: '1234h' };
+      await User.create(body);
+      const user = await User.authenticate(body.email, body.password);
 
-          done();
-        });
-      });
+      expect(user.name).to.equal(body.name);
+      expect(user.email).to.equal(body.email);
     });
   });
 });
