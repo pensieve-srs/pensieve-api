@@ -5,12 +5,14 @@ const Mocha = require('mocha');
 const chalk = require('chalk');
 const paths = require('../config/paths');
 const glob = require('glob');
-const fixtures = require('pow-mongodb-fixtures').connect('boreas-test');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
+const mongoFixtures = require('pow-mongodb-fixtures');
 
 require('../config/env').config();
 require('chai/register-expect');
+
+const fixtures = mongoFixtures.connect(process.env.MONGODB_URI);
 
 chai.use(sinonChai);
 

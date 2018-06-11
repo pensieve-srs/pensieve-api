@@ -9,8 +9,6 @@ const db = require('../db');
 
 const app = express();
 
-db.connect();
-
 app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -19,12 +17,18 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 app.use(require('./controllers'));
 
-const server = app.listen(process.env.PORT || 5000, (err) => {
-  if (err) {
-    console.error(err);
-  } else if (process.env.NODE_ENV === 'development') {
-    console.log(chalk.cyan('✨  Starting the server...'));
-  }
-});
+let server;
 
-module.exports = server;
+module.exports.start = () =>
+  db.connect().then(() => {
+    server = app.listen(process.env.PORT || 5000, (err) => {
+      if (err) {
+        console.error(err);
+      } else if (process.env.NODE_ENV === 'development') {
+        console.log(chalk.cyan('✨  Starting the server...'));
+      }
+    });
+    return server;
+  });
+
+module.exports.close = () => server.close();

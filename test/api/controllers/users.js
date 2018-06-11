@@ -1,6 +1,6 @@
 const request = require('supertest');
 const User = require('../../../api/models/user');
-const server = require('../../../api/index');
+const api = require('../../../api/index');
 const data = require('../../fixtures/users');
 
 const { users, password1, invites } = data;
@@ -8,7 +8,15 @@ const invite1 = invites[0];
 const user1 = users[0];
 const user3 = users[2];
 
+let server;
 describe('Users controller', () => {
+  before(async () => {
+    server = await api.start();
+  });
+
+  after(async () => {
+    await api.close();
+  });
   describe('POST /api/users/login', () => {
     it('should return user if authentication is valid', (done) => {
       request(server)

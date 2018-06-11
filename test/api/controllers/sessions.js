@@ -1,11 +1,20 @@
 const request = require('supertest');
 const data = require('../../fixtures/sessions');
-const server = require('../../../api/index');
+const api = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { sessions, user1 } = data;
 
+let server;
 describe('Sessions controller', () => {
+  before(async () => {
+    server = await api.start();
+  });
+
+  after(async () => {
+    await api.close();
+  });
+
   describe('GET /api/sessions/:id', () => {
     it('should return a single session for user', (done) => {
       const expectedSession = sessions[0];

@@ -10,12 +10,14 @@ module.exports.connect = () => {
 
   const mongoDB = mongoose.connection;
 
-  if (process.env.NODE_ENV === 'development') {
+  return new Promise((success, failure) => {
     mongoDB.on('error', (err) => {
       console.log(chalk.red('🔺  Connection to database failed', err.message));
+      failure();
     });
     mongoDB.once('open', () => {
       console.log(chalk.cyan('✨  Connection to database established'));
+      success();
     });
-  }
+  });
 };
