@@ -31,7 +31,7 @@
     "glob": "^7.1.2",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
-    "mongoose": "^4.13.7",
+    "mongoose": "^5.1.4",
     "morgan": "^1.9.0",
     "niceware": "^1.0.5",
     "pluralize": "^7.0.0",

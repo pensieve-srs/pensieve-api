@@ -6,7 +6,9 @@ module.exports.connect = () => {
   const mongoURI = process.env.MONGODB_URI;
 
   mongoose.Promise = global.Promise;
-  const mongoDB = mongoose.connect(mongoURI, { useMongoClient: true });
+  mongoose.connect(mongoURI);
+
+  const mongoDB = mongoose.connection;
 
   if (process.env.NODE_ENV === 'development') {
     mongoDB.on('error', (err) => {
