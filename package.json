@@ -46,6 +46,7 @@
     "mocha": "^4.0.1",
     "nodemon": "^1.14.7",
     "pow-mongodb-fixtures": "^0.14.0",
+    "prettier-eslint": "^8.8.1",
     "sinon": "^4.2.0",
     "sinon-chai": "^2.14.0",
     "supertest": "^3.0.0"
