@@ -38,7 +38,7 @@ describe('Users controller', () => {
         .send({ email: user1.email, password: password1 })
         .expect(200)
         .then((response) => {
-          const { token } = response.body;
+          const { authorization: token } = response.headers;
           expect(token).to.exist; // eslint-disable-line no-unused-expressions
 
           done();
