@@ -11,15 +11,13 @@ describe('Server', () => {
     await api.close();
   });
 
-  it('GET / redirects to /docs', (done) => {
-    request(server)
-      .get('/')
-      .expect(302, done);
+  it('GET / redirects to /docs', async () => {
+    const response = await request(server).get('/');
+    expect(response.status).to.equal(302);
   });
 
-  it('response to 404 unsupported routes', (done) => {
-    request(server)
-      .get('/invalid')
-      .expect(404, done);
+  it('response to 404 unsupported routes', async () => {
+    const response = await request(server).get('/invalid');
+    expect(response.status).to.equal(404);
   });
 });
