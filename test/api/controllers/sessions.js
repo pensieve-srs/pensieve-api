@@ -16,21 +16,17 @@ describe('Sessions controller', () => {
   });
 
   describe('GET /api/sessions/:id', () => {
-    it('should return a single session for user', (done) => {
+    it('should return a single session for user', async () => {
       const expectedSession = sessions[0];
       const token = User.generateToken(user1);
-      request(server)
+      const response = await request(server)
         .get(`/api/sessions/${sessions[0]._id}`)
-        .set({ Authorization: token })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.type).to.equal(expectedSession.type);
-          expect(response.body.cards).to.have.lengthOf(expectedSession.cards.length);
-          expect(response.body.user).to.equal(expectedSession.user.toString());
+        .set({ Authorization: token });
 
-          done();
-        })
-        .catch(error => done(error));
+      expect(response.status).to.equal(200);
+      expect(response.body.type).to.equal(expectedSession.type);
+      expect(response.body.cards).to.have.lengthOf(expectedSession.cards.length);
+      expect(response.body.user).to.equal(expectedSession.user.toString());
     });
   });
 });

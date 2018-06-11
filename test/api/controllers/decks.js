@@ -16,54 +16,49 @@ describe('Decks controller', () => {
   });
 
   describe('GET /api/decks', () => {
-    it('should return 400 if no authentication provided', (done) => {
-      request(server)
-        .get('/api/decks')
-        .expect(400, done);
+    it('should return 400 if no authentication provided', async () => {
+      const response = await request(server).get('/api/decks');
+
+      expect(response.status).to.equal(400);
     });
 
-    it('should return decks if token is provided', (done) => {
+    it('should return decks if token is provided', async () => {
       const token = User.generateToken(user1);
       const expectedDecks = decks.filter(deck => deck.user === user1._id);
 
-      request(server)
+      const response = await request(server)
         .get('/api/decks')
-        .set({ Authorization: token })
-        .expect(200)
-        .then((response) => {
-          expect(response.body).to.have.lengthOf(expectedDecks.length);
+        .set({ Authorization: token });
 
-          done();
-        })
-        .catch(error => done(error));
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.lengthOf(expectedDecks.length);
     });
   });
   describe('POST /api/decks', () => {
-    it('should create single deck for user', (done) => {
+    it('should create single deck for user', async () => {
       const token = User.generateToken(user2);
       const newDeck = { title: 'test deck', description: 'test description' };
-      request(server)
+
+      const response = await request(server)
         .post('/api/decks')
         .send(newDeck)
-        .set({ Authorization: token })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.title).to.include(newDeck.title);
-          expect(response.body.description).to.include(newDeck.description);
+        .set({ Authorization: token });
 
-          done();
-        })
-        .catch(error => done(error));
+      expect(response.status).to.equal(200);
+      expect(response.body.title).to.include(newDeck.title);
+      expect(response.body.description).to.include(newDeck.description);
     });
   });
   describe('DELETE /api/decks/:id', () => {
-    it('should delete single deck for user', (done) => {
+    it('should delete single deck for user', async () => {
       const token = User.generateToken(user2);
       const deck = data.decks[2];
-      request(server)
+
+      const response = await request(server)
         .delete(`/api/decks/${deck._id}`)
-        .set({ Authorization: token })
-        .expect(200, done);
+        .set({ Authorization: token });
+
+      expect(response.status).to.equal(200);
     });
   });
 });
