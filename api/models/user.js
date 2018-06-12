@@ -61,20 +61,29 @@ module.exports.delete = function deleteUser(id) {
   return User.remove({ _id: id });
 };
 
-module.exports.create = function create(body) {
-  if (!body.name || !body.email || !body.password || !isValidEmail(body.email)) {
-    return Promise.reject(new Error('Invalid User'));
+module.exports.create = async function create(body) {
+  try {
+    if (!body.name || !body.email || !body.password || !isValidEmail(body.email)) {
+      throw new Error('Invalid User');
+    }
+
+    const user = await User.find({ email: body.email });
+
+    if (user) {
+      throw new Error('User only exists');
+    }
+
+    const query = {
+      name: body.name.trim(),
+      email: body.email.trim(),
+      password: this.generateHash(body.password.trim()),
+    };
+
+    const newUser = await User.create(query);
+    return this.getCleanUser(newUser);
+  } catch (error) {
+    return Promise.reject(new Error('Invalid User', error));
   }
-
-  const query = {
-    name: body.name.trim(),
-    email: body.email.trim(),
-    password: this.generateHash(body.password.trim()),
-  };
-
-  return User.create(query)
-    .then(user => this.getCleanUser(user))
-    .catch(error => Promise.reject(new Error('Invalid User', error)));
 };
 
 module.exports.updatePassword = function updatePassword(id, currentPassword, newPassword) {

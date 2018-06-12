@@ -11,15 +11,20 @@ const Invite = require('../../db/schemas/invite');
 
 const router = express.Router();
 
+const ErrorInvalidInvite = 'Invalid invite code';
+const ErrorUsedInvite = 'Used invite code';
+
 // POST /users/signup
 router.post('/signup', async (req, res) => {
   const { body } = req;
 
   try {
-    const invite = await Invite.findOne({ value: body.invite, isUsed: false });
+    const invite = await Invite.findOne({ value: body.invite });
 
     if (!invite) {
-      throw Error('Invalid invite phrase');
+      throw Error(ErrorInvalidInvite);
+    } else if (invite.isUsed) {
+      throw Error(ErrorUsedInvite);
     }
 
     const user = await User.create(body);
@@ -35,10 +40,15 @@ router.post('/signup', async (req, res) => {
     res.set('Authorization', `Bearer ${token}`);
     res.status(200).json({ user });
   } catch (error) {
-    if (error.message === 'Invalid User') {
-      res.status(400).json(error);
-    } else {
-      res.status(500).json(error);
+    switch (error.message) {
+      case 'Invalid User':
+      case ErrorInvalidInvite:
+      case ErrorUsedInvite:
+        res.status(400).json({ message: error.message });
+        break;
+      default:
+        res.status(500).json({ message: error.message });
+        break;
     }
   }
 });
