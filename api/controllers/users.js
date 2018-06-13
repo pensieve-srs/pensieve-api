@@ -1,39 +1,35 @@
 const express = require('express');
 const auth = require('../middlewares/auth');
 const AdminMailer = require('../../mailers/admin_mailer');
+const validators = require('../helpers/validators');
 const createDefaultDeck = require('../helpers/createDefaultDeck');
 
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
 const Review = require('../models/review');
-const Invite = require('../../db/schemas/invite');
 
 const router = express.Router();
-
-const ErrorInvalidInvite = 'Invalid invite code';
-const ErrorUsedInvite = 'Used invite code';
 
 // POST /users/signup
 router.post('/signup', async (req, res) => {
   const { body } = req;
 
+  const { name, email, password } = body;
+
+  if (!name || !email || !password) {
+    res.status(400).json({ message: 'Required user information not provided' });
+  }
+  if (!validators.checkEmail(email)) {
+    res.status(400).json({ message: 'Invalid email provided' });
+  }
+  if (!validators.checkPassword(password)) {
+    res.status(400).json({ message: 'Invalid password provided' });
+  }
+
   try {
-    const invite = await Invite.findOne({ value: body.invite });
-
-    if (!invite) {
-      throw Error(ErrorInvalidInvite);
-    } else if (invite.isUsed) {
-      throw Error(ErrorUsedInvite);
-    }
-
     const user = await User.create(body);
     const token = await User.generateToken(user);
-
-    // Update invite fields
-    invite.isUsed = true;
-    invite.user = user._id;
-    await invite.save();
 
     await createDefaultDeck(user);
     AdminMailer.sendSignupAlert(user);
@@ -41,9 +37,10 @@ router.post('/signup', async (req, res) => {
     res.status(200).json({ user });
   } catch (error) {
     switch (error.message) {
+      case 'User already exists':
+        res.status(409).json({ message: error.message });
+        break;
       case 'Invalid User':
-      case ErrorInvalidInvite:
-      case ErrorUsedInvite:
         res.status(400).json({ message: error.message });
         break;
       default:
