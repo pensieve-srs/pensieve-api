@@ -101,7 +101,7 @@ router.put('/profile', auth, async (req, res) => {
   const { body } = req;
 
   if (!body.email) {
-    res.status(400).json('Email is required');
+    res.status(400).json({ message: 'Email is required' });
   } else {
     try {
       const user = await User.update(body, id);

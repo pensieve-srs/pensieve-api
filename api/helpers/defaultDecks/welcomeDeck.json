@@ -1,0 +1,30 @@
+{
+  "title": "Welcome to Pensieve",
+  "description": "This is an example deck to show you how Pensieve works.",
+  "tags": [{ "value": "Pensieve 101" }],
+  "cards": [
+    {
+      "front": "Every deck has a set of cards with a front side...",
+      "back": "...and a back side."
+    },
+    {
+      "front": "Your card's strength will decrease over time.",
+      "back": "Studying the cards will replenish their strength."
+    },
+    {
+      "front": "Try to keep a card's strength above 50%.",
+      "back":
+        "If you have notifications on, you will notified when one of your decks drops below 50%."
+    },
+    {
+      "front": "You can review cards again from this page.",
+      "back": "You can also edit and delete these cards from here."
+    },
+    {
+      "front": "If you have any issues, feel free to contact me at niko@pensieve.space.",
+      "back": "That's all! Thanks for trying it out 👋."
+    }
+  ],
+  "notes":
+    "### 🚀Welcome to Pensieve\n\nPensieve is a spaced repetition tool that keeps your ability to remember anything sharp.\n\n> \"I use Pensieve. One simply siphons the excess thoughts from one's mind, pours them into the basin, and examines them at one's leisure. It becomes easier to spot patterns and links, you understand, when they are in this form.\"\n>\n> _Albus Dumbledore_\n\n\n### 👾Use it or lose it\n\nOver time your memory of anything fades. By using that material, you will restrengthen your memory of it and keep it in your memory longer.\n\n### ⚡️How it works\nYour deck's recall bar will decrease over time. Studying these decks will replenish their strength. After repeated reviews, you will see each deck less and less.\n\n### 📬Questions\nFor questions, issues, or feedback, please contact hello@pensieve.space."
+}
