@@ -1,7 +1,7 @@
 {
   "title": "Welcome to Pensieve",
   "description": "This is an example deck to show you how Pensieve works.",
-  "tags": [{ "value": "Pensieve 101" }],
+  "tags": [{ "value": "Getting Started" }],
   "cards": [
     {
       "front": "Every deck has a set of cards with a front side...",

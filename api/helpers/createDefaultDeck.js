@@ -9,7 +9,7 @@ module.exports = async (user) => {
     const tags = await Promise.all(data.tags.map(async ({ value }) => {
       let tag = await Tag.findOne({ value });
       if (!tag) {
-        tag = await Tag.new(tag, user);
+        tag = await Tag.new(value, user);
       }
       return tag;
     }));
