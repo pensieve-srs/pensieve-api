@@ -18,13 +18,13 @@ router.post('/signup', async (req, res) => {
   const { name, email, password } = body;
 
   if (!name || !email || !password) {
-    res.status(400).json({ message: 'Required user information not provided' });
+    return res.status(400).json({ message: 'Required user information not provided' });
   }
   if (!validators.checkEmail(email)) {
-    res.status(400).json({ message: 'Invalid email provided' });
+    return res.status(400).json({ message: 'Invalid email provided' });
   }
   if (!validators.checkPassword(password)) {
-    res.status(400).json({ message: 'Invalid password provided' });
+    return res.status(400).json({ message: 'Invalid password provided' });
   }
 
   try {
@@ -33,19 +33,17 @@ router.post('/signup', async (req, res) => {
 
     await createDefaultDeck(user);
     AdminMailer.sendSignupAlert(user);
+
     res.set('Authorization', `Bearer ${token}`);
-    res.status(200).json({ user });
+    return res.status(200).json({ user });
   } catch (error) {
     switch (error.message) {
       case 'User already exists':
-        res.status(409).json({ message: error.message });
-        break;
+        return res.status(409).json({ message: error.message });
       case 'Invalid User':
-        res.status(400).json({ message: error.message });
-        break;
+        return res.status(400).json({ message: error.message });
       default:
-        res.status(500).json({ message: error.message });
-        break;
+        return res.status(500).json({ message: error.message });
     }
   }
 });
