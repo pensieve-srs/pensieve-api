@@ -43,7 +43,7 @@ describe('Users controller', () => {
       const newUser = {
         name: 'Jim',
         email: 'jim@example.com',
-        password: 'test password',
+        password: 'test password 123',
       };
       const response = await request(server)
         .post('/api/users/signup')
