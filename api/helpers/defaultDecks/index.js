@@ -1,3 +1,4 @@
-const welcomeDeck = require('./welcomeDeck');
+const welcome = require('./welcome.json');
+const artOfWar = require('./artOfWar.json');
 
-module.exports = [welcomeDeck];
+module.exports = [welcome, artOfWar];
