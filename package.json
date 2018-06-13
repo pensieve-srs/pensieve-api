@@ -25,8 +25,8 @@
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
-    "cors": "^2.8.4",
     "console.table": "^0.10.0",
+    "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "glob": "^7.1.2",
@@ -34,7 +34,6 @@
     "moment": "^2.22.2",
     "mongoose": "^5.1.4",
     "morgan": "^1.9.0",
-    "niceware": "^1.0.5",
     "pluralize": "^7.0.0",
     "swagger-ui-express": "^3.0.9"
   },

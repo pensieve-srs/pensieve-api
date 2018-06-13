@@ -3,8 +3,7 @@ const User = require('../../../api/models/user');
 const api = require('../../../api/index');
 const data = require('../../fixtures/users');
 
-const { users, password1, invites } = data;
-const invite1 = invites[0];
+const { users, password1 } = data;
 const user1 = users[0];
 const user3 = users[2];
 
@@ -44,8 +43,7 @@ describe('Users controller', () => {
       const newUser = {
         name: 'Jim',
         email: 'jim@example.com',
-        password: 'test password',
-        invite: invite1.value,
+        password: 'test password 123',
       };
       const response = await request(server)
         .post('/api/users/signup')

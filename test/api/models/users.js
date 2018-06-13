@@ -59,7 +59,7 @@ describe('User model', () => {
   });
   describe('create', () => {
     it('should create user with matching information', async () => {
-      const body = { name: 'Sue Tester', email: 'sue@example.com', password: '1234h' };
+      const body = { name: 'Sue Tester', email: 'sue@example.com', password: 'password1234h' };
       const user = await User.create(body);
 
       expect(user.name).to.equal(body.name);
@@ -68,7 +68,7 @@ describe('User model', () => {
   });
   describe('authenticate', () => {
     it('should authenticate user with correct information', async () => {
-      const body = { name: 'Sid Tester', email: 'sid@example.com', password: '1234h' };
+      const body = { name: 'Sid Tester', email: 'sid@example.com', password: 'password1234h' };
       await User.create(body);
       const user = await User.authenticate(body.email, body.password);
 

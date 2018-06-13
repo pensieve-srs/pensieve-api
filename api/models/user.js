@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const jwtSecret = process.env.JWT_SECRET;
 const User = require('../../db/schemas/user');
-const isValidEmail = require('../helpers/isValidEmail');
+const validators = require('../helpers/validators');
 const removeEmpty = require('../helpers/removeEmpty');
 
 module.exports.getCleanUser = function getCleanUser(user) {
@@ -61,20 +61,34 @@ module.exports.delete = function deleteUser(id) {
   return User.remove({ _id: id });
 };
 
-module.exports.create = function create(body) {
-  if (!body.name || !body.email || !body.password || !isValidEmail(body.email)) {
-    return Promise.reject(new Error('Invalid User'));
+module.exports.create = async function create(body) {
+  try {
+    const { name, email, password } = body;
+
+    if (!name || !email || !password) {
+      throw new Error('User arguments not provided');
+    }
+    if (!validators.checkEmail(email)) {
+      throw new Error('Invalid user email');
+    }
+    if (!validators.checkPassword(password)) {
+      throw new Error('Invalid user password');
+    }
+    if (await User.findOne({ email })) {
+      throw new Error('User already exists');
+    }
+
+    const query = {
+      name: name.trim(),
+      email: email.trim(),
+      password: this.generateHash(password.trim()),
+    };
+
+    const user = await User.create(query);
+    return this.getCleanUser(user);
+  } catch (error) {
+    return Promise.reject(error || new Error('Invalid User'));
   }
-
-  const query = {
-    name: body.name.trim(),
-    email: body.email.trim(),
-    password: this.generateHash(body.password.trim()),
-  };
-
-  return User.create(query)
-    .then(user => this.getCleanUser(user))
-    .catch(error => Promise.reject(new Error('Invalid User', error)));
 };
 
 module.exports.updatePassword = function updatePassword(id, currentPassword, newPassword) {
