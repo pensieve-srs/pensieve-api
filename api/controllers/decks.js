@@ -1,8 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const Deck = require('../models/deck');
 const Card = require('../models/card');
 const getCardAverage = require('../helpers/getCardAverage');
+
+const { Types } = mongoose;
 
 const router = express.Router();
 
@@ -48,8 +51,19 @@ router.get('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
+  if (!id) {
+    return res.status(400).json({ message: 'Required id not provided' });
+  }
+  if (!Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Required id is not valid' });
+  }
+
   try {
     const deck = await Deck.get(id, user);
+
+    if (!deck) {
+      return res.status(403).json({ message: 'Cannot access deck' });
+    }
 
     const cards = await Card.getAllByDeck(deck, user);
 
@@ -58,9 +72,9 @@ router.get('/:id', async (req, res) => {
     // eslint-disable-next-line no-param-reassign
     deck.cardsCount = cards.length;
 
-    res.status(200).json(deck);
+    return res.status(200).json(deck);
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json(error);
   }
 });
 
