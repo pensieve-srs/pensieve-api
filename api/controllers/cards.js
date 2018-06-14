@@ -1,9 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
 const getRecallRate = require('../helpers/getRecallRate');
 
+const { Types } = mongoose;
 const router = express.Router();
 
 // GET /cards
@@ -14,6 +16,10 @@ router.get('/', async (req, res) => {
   try {
     let cards;
     if (deck) {
+      if (!Types.ObjectId.isValid(deck)) {
+        return res.status(400).json({ message: 'Deck id is not valid' });
+      }
+
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
         // eslint-disable-next-line no-param-reassign
@@ -26,9 +32,9 @@ router.get('/', async (req, res) => {
       cards = await Card.getAll(user);
     }
 
-    res.status(200).json(cards);
+    return res.status(200).json(cards);
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json(error);
   }
 });
 
