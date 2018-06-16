@@ -6,7 +6,7 @@ const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
 
-module.exports.signupUser = async (req, res) => {
+module.exports.signupUser = async (req, res, next) => {
   const { body } = req;
 
   const { name, email, password } = body;
@@ -37,12 +37,12 @@ module.exports.signupUser = async (req, res) => {
       case 'Invalid User':
         return res.status(400).json({ message: error.message });
       default:
-        return res.status(500).json({ message: error.message });
+        return next(error);
     }
   }
 };
 
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -54,24 +54,23 @@ module.exports.loginUser = async (req, res) => {
     if (error.message === 'Invalid User') {
       res.status(400).json(error);
     } else {
-      res.status(500).json(error);
+      next(error);
     }
   }
 };
 
-module.exports.findUser = async (req, res) => {
+module.exports.findUser = async (req, res, next) => {
   const id = req.user._id;
 
   try {
     const user = await User.get(id);
-
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(user);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.updateUser = async (req, res) => {
+module.exports.updateUser = async (req, res, next) => {
   const id = req.user._id;
   const { body } = req;
 
@@ -80,26 +79,26 @@ module.exports.updateUser = async (req, res) => {
   } else {
     try {
       const user = await User.update(body, id);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(500).json(error);
+      res.send(user);
+    } catch (err) {
+      next(err);
     }
   }
 };
 
-module.exports.updatePassword = async (req, res) => {
+module.exports.updatePassword = async (req, res, next) => {
   const id = req.user._id;
   const { body } = req;
 
   try {
     const user = await User.updatePassword(id, body.currentPassword, body.newPassword);
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(user);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.deleteUser = async (req, res) => {
+module.exports.deleteUser = async (req, res, next) => {
   const user = req.user._id;
 
   try {
@@ -108,7 +107,8 @@ module.exports.deleteUser = async (req, res) => {
     const response = await User.delete(user);
 
     res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(response);
+  } catch (err) {
+    next(err);
   }
 };

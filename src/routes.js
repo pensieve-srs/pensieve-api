@@ -10,6 +10,7 @@ const cards = require('./controllers/cards');
 const sessions = require('./controllers/sessions');
 const reviews = require('./controllers/reviews');
 const tags = require('./controllers/tags');
+const { NotFoundError } = require('./utils/errors');
 
 const router = express.Router();
 
@@ -48,5 +49,26 @@ router.get('/api/reviews', auth, reviews.find);
 
 router.get('/api/tags', auth, tags.find);
 router.post('/api/ags', auth, tags.create);
+
+router.use((req, res) =>
+  res.status(404).send({
+    url: req.originalUrl,
+    error: 'Not found',
+  }));
+
+router.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  if (err instanceof NotFoundError) {
+    return res.status(404).send({
+      url: req.originalUrl,
+      error: err.message,
+    });
+  }
+
+  return res.status(500).send({ error: err.stack });
+});
 
 module.exports = router;

@@ -6,7 +6,7 @@ const getRecallRate = require('../helpers/getRecallRate');
 
 const { Types } = mongoose;
 
-module.exports.find = async (req, res) => {
+module.exports.find = async (req, res, next) => {
   const user = req.user._id;
   const { type, deck } = req.query;
 
@@ -29,13 +29,13 @@ module.exports.find = async (req, res) => {
       cards = await Card.getAll(user);
     }
 
-    return res.status(200).json(cards);
-  } catch (error) {
-    return res.status(500).json(error);
+    return res.send(cards);
+  } catch (err) {
+    return next(err);
   }
 };
 
-module.exports.create = async (req, res) => {
+module.exports.create = async (req, res, next) => {
   const user = req.user._id;
   const { body } = req;
 
@@ -44,13 +44,13 @@ module.exports.create = async (req, res) => {
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
 
-    res.status(200).json(card);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(card);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.findCard = async (req, res) => {
+module.exports.findCard = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -60,13 +60,13 @@ module.exports.findCard = async (req, res) => {
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
 
-    res.status(200).json(card);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(card);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.updateCard = async (req, res) => {
+module.exports.updateCard = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
@@ -76,24 +76,25 @@ module.exports.updateCard = async (req, res) => {
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
     res.status(200).json(card);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(card);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
   try {
     const response = await Card.delete(id, user);
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(response);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.reviewCard = async (req, res) => {
+module.exports.reviewCard = async (req, res, next) => {
   const user = req.user._id;
   const cardId = req.params.id;
   const { value } = req.body;
@@ -103,20 +104,20 @@ module.exports.reviewCard = async (req, res) => {
     const card = await Card.review(cardId, value, user);
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
-    res.status(200).json(card);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(card);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.resetCard = async (req, res) => {
+module.exports.resetCard = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
   try {
-    const response = Card.reset(id, user);
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json(error);
+    const response = await Card.reset(id, user);
+    res.send(response);
+  } catch (err) {
+    next(err);
   }
 };

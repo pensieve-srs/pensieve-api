@@ -6,7 +6,7 @@ const getCardAverage = require('../helpers/getCardAverage');
 
 const { Types } = mongoose;
 
-module.exports.find = async (req, res) => {
+module.exports.find = async (req, res, next) => {
   const user = req.user._id;
 
   try {
@@ -23,25 +23,25 @@ module.exports.find = async (req, res) => {
       return deck;
     }));
 
-    res.status(200).json(decks);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(decks);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.create = async (req, res) => {
+module.exports.create = async (req, res, next) => {
   const user = req.user._id;
   const { body } = req;
 
   try {
     const deck = await Deck.new(body, user);
-    res.status(200).json(deck);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(deck);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.findDeck = async (req, res) => {
+module.exports.findDeck = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -66,47 +66,47 @@ module.exports.findDeck = async (req, res) => {
     // eslint-disable-next-line no-param-reassign
     deck.cardsCount = cards.length;
 
-    return res.status(200).json(deck);
-  } catch (error) {
-    return res.status(500).json(error);
+    return res.send(deck);
+  } catch (err) {
+    return next(err);
   }
 };
 
-module.exports.updateDeck = async (req, res) => {
+module.exports.updateDeck = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
 
   try {
     const deck = await Deck.update(id, body, user);
-    res.status(200).json(deck);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(deck);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.deleteDeck = async (req, res) => {
+module.exports.deleteDeck = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
   try {
     let response = await Deck.remove({ _id: id, user });
     response = await Card.deleteAllByDeck(id, user);
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(response);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.resetDeck = async (req, res) => {
+module.exports.resetDeck = async (req, res, next) => {
   const deckId = req.params.id;
   const user = req.user._id;
 
   try {
     await Card.resetAllByDeck(deckId, user);
     const cards = await Card.getAllByDeck(deckId, user);
-    return res.status(200).json(cards);
-  } catch (error) {
-    return res.status(500).json(error);
+    res.send(cards);
+  } catch (err) {
+    next(err);
   }
 };

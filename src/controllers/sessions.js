@@ -1,7 +1,7 @@
 const Session = require('../models/session');
 const Card = require('../models/card');
 
-module.exports.create = async (req, res) => {
+module.exports.create = async (req, res, next) => {
   const user = req.user._id;
   const { type, deck } = req.body;
 
@@ -14,21 +14,21 @@ module.exports.create = async (req, res) => {
     } else {
       const session = await Session.create(type, user, cards);
 
-      res.status(200).json(session);
+      res.send(session);
     }
-  } catch (error) {
-    res.status(500).json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-module.exports.findSession = async (req, res) => {
+module.exports.findSession = async (req, res, next) => {
   const user = req.user._id;
   const { id } = req.params;
 
   try {
     const session = await Session.get(id, user);
-    res.status(200).json(session);
-  } catch (error) {
-    res.status(500).json(error);
+    res.send(session);
+  } catch (err) {
+    next(err);
   }
 };
