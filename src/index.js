@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const routes = require('./routes');
 
 const mongoose = require('../mongoose/config/database');
 
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
-app.use(require('./controllers'));
+app.use(routes);
 
 let server;
 

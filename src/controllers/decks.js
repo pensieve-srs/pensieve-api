@@ -1,4 +1,3 @@
-const express = require('express');
 const mongoose = require('mongoose');
 
 const Deck = require('../models/deck');
@@ -7,10 +6,7 @@ const getCardAverage = require('../helpers/getCardAverage');
 
 const { Types } = mongoose;
 
-const router = express.Router();
-
-// GET /decks
-router.get('/', async (req, res) => {
+module.exports.find = async (req, res) => {
   const user = req.user._id;
 
   try {
@@ -31,10 +27,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// POST /decks
-router.post('/', async (req, res) => {
+module.exports.create = async (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
@@ -44,10 +39,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// GET /decks/:id
-router.get('/:id', async (req, res) => {
+module.exports.findDeck = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -76,10 +70,9 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
-});
+};
 
-// PUT /decks/:id
-router.put('/:id', async (req, res) => {
+module.exports.updateDeck = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
@@ -90,10 +83,9 @@ router.put('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// DELETE /deck/:id
-router.delete('/:id', async (req, res) => {
+module.exports.deleteDeck = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -104,10 +96,9 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// DELETE /decks/:id/review
-router.delete('/:id/review', async (req, res) => {
+module.exports.resetDeck = async (req, res) => {
   const deckId = req.params.id;
   const user = req.user._id;
 
@@ -118,6 +109,4 @@ router.delete('/:id/review', async (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
-});
-
-module.exports = router;
+};

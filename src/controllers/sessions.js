@@ -1,12 +1,7 @@
-const express = require('express');
-
 const Session = require('../models/session');
 const Card = require('../models/card');
 
-const router = express.Router();
-
-// POST /sessions
-router.post('/', async (req, res) => {
+module.exports.create = async (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.body;
 
@@ -24,10 +19,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// GET /sessions/:id
-router.get('/:id', async (req, res) => {
+module.exports.findSession = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -37,6 +31,4 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
-
-module.exports = router;
+};

@@ -1,11 +1,6 @@
-const express = require('express');
-
 const Tag = require('../models/tag');
 
-const router = express.Router();
-
-// GET /tags
-router.get('/', async (req, res) => {
+module.exports.find = async (req, res) => {
   const user = req.user._id;
 
   try {
@@ -15,10 +10,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// POST /tags
-router.post('/', async (req, res) => {
+module.exports.create = async (req, res) => {
   const user = req.user._id;
   const { value } = req.body;
 
@@ -29,6 +23,4 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
-
-module.exports = router;
+};

@@ -1,4 +1,3 @@
-const express = require('express');
 const mongoose = require('mongoose');
 
 const Card = require('../models/card');
@@ -6,10 +5,8 @@ const Review = require('../models/review');
 const getRecallRate = require('../helpers/getRecallRate');
 
 const { Types } = mongoose;
-const router = express.Router();
 
-// GET /cards
-router.get('/', async (req, res) => {
+module.exports.find = async (req, res) => {
   const user = req.user._id;
   const { type, deck } = req.query;
 
@@ -36,10 +33,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
-});
+};
 
-// POST /cards
-router.post('/', async (req, res) => {
+module.exports.create = async (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
@@ -52,10 +48,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// GET /cards/:id
-router.get('/:id', async (req, res) => {
+module.exports.findCard = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -69,10 +64,9 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// PUT /cards/:id
-router.put('/:id', async (req, res) => {
+module.exports.updateCard = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
@@ -85,10 +79,9 @@ router.put('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// DELETE /cards/:id
-router.delete('/:id', async (req, res) => {
+module.exports.deleteCard = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -98,10 +91,9 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// POST /cards/:id/review
-router.post('/:id/review', async (req, res) => {
+module.exports.reviewCard = async (req, res) => {
   const user = req.user._id;
   const cardId = req.params.id;
   const { value } = req.body;
@@ -115,10 +107,9 @@ router.post('/:id/review', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// DELETE /cards/:id/review
-router.delete('/:id/review', async (req, res) => {
+module.exports.resetCard = async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
 
@@ -128,6 +119,4 @@ router.delete('/:id/review', async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
-
-module.exports = router;
+};

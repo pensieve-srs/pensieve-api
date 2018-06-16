@@ -1,5 +1,3 @@
-const express = require('express');
-const auth = require('../middlewares/auth');
 const AdminMailer = require('../../mailers/admin_mailer');
 const validators = require('../helpers/validators');
 const createDefaultDeck = require('../helpers/createDefaultDeck');
@@ -7,12 +5,8 @@ const createDefaultDeck = require('../helpers/createDefaultDeck');
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
-const Review = require('../models/review');
 
-const router = express.Router();
-
-// POST /users/signup
-router.post('/signup', async (req, res) => {
+module.exports.signupUser = async (req, res) => {
   const { body } = req;
 
   const { name, email, password } = body;
@@ -46,10 +40,9 @@ router.post('/signup', async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
   }
-});
+};
 
-// POST /users/login
-router.post('/login', async (req, res) => {
+module.exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -64,39 +57,21 @@ router.post('/login', async (req, res) => {
       res.status(500).json(error);
     }
   }
-});
+};
 
-// GET /users/profile
-router.get('/profile', auth, async (req, res) => {
+module.exports.findUser = async (req, res) => {
   const id = req.user._id;
-  const { fields } = req.query;
 
   try {
     const user = await User.get(id);
-    if (fields && fields.includes('counts')) {
-      user.counts = {
-        cards: {
-          all: await Card.countAll(id),
-          due: await Card.countAllDue(id),
-          new: await Card.countAllNew(id),
-        },
-        decks: {
-          all: await Deck.count({ user: id }),
-        },
-        reviews: {
-          all: await Review.countAll(id),
-        },
-      };
-    }
 
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// PUT /users/profile
-router.put('/profile', auth, async (req, res) => {
+module.exports.updateUser = async (req, res) => {
   const id = req.user._id;
   const { body } = req;
 
@@ -110,9 +85,9 @@ router.put('/profile', auth, async (req, res) => {
       res.status(500).json(error);
     }
   }
-});
+};
 
-router.put('/profile/security', auth, async (req, res) => {
+module.exports.updatePassword = async (req, res) => {
   const id = req.user._id;
   const { body } = req;
 
@@ -122,10 +97,9 @@ router.put('/profile/security', auth, async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
+};
 
-// DELETE /users/profile
-router.delete('/profile', auth, async (req, res) => {
+module.exports.deleteUser = async (req, res) => {
   const user = req.user._id;
 
   try {
@@ -137,6 +111,4 @@ router.delete('/profile', auth, async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
-
-module.exports = router;
+};
