@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const jwtSecret = process.env.JWT_SECRET;
+const config = require('../../config');
 
 function authenticate(req, res, next) {
   let token = req.headers.authorization;
@@ -13,7 +13,7 @@ function authenticate(req, res, next) {
 
   token = token.replace('Bearer ', '');
 
-  return jwt.verify(token, jwtSecret, (err, user) => {
+  return jwt.verify(token, config.jwt, (err, user) => {
     if (err) {
       return res.status(401).json({
         message: 'Invalid authentication. Please log in to make requests',

@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
 const chalk = require('chalk');
 const mongoose = require('mongoose');
+const config = require('../../config');
 
 module.exports.connect = () => {
-  const mongoURI = process.env.MONGODB_URI;
-
   mongoose.Promise = global.Promise;
-  mongoose.connect(mongoURI);
+  mongoose.connect(config.database.uri);
 
   const mongoDB = mongoose.connection;
 

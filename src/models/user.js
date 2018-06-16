@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
+const config = require('../../config');
 
-const jwtSecret = process.env.JWT_SECRET;
 const User = require('../../mongoose/schemas/user');
 const validators = require('../helpers/validators');
 const removeEmpty = require('../helpers/removeEmpty');
@@ -27,7 +27,7 @@ module.exports.generateToken = function generateToken(user) {
       name: user.name,
       email: user.email,
     },
-    jwtSecret,
+    config.jwt,
     {
       expiresIn: 60 * 60 * 72, // expires in 72 hours
     },
