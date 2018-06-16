@@ -1,12 +1,14 @@
-const User = require('../db/schemas/user');
-const Card = require('../api/models/card');
-const CardSchema = require('../db/schemas/card');
+const User = require('../mongoose/schemas/user');
+const Card = require('../src/models/card');
+const CardSchema = require('../mongoose/schemas/card');
 const dueCardEmailText = require('./views/due_cards_email.text.js');
 const dueCardEmailHtml = require('./views/due_cards_email.html.js');
 const newCardEmailText = require('./views/new_cards_email.text.js');
 const newCardEmailHtml = require('./views/new_cards_email.html.js');
 const mailer = require('@sendgrid/mail');
-const { classes: { EmailAddress } } = require('@sendgrid/helpers');
+const {
+  classes: { EmailAddress },
+} = require('@sendgrid/helpers');
 
 mailer.setApiKey(process.env.SENDGRID_API_KEY);
 

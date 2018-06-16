@@ -1,5 +1,5 @@
-const getRecallRate = require('../../../api/helpers/getRecallRate');
-const getCardAverage = require('../../../api/helpers/getCardAverage');
+const getRecallRate = require('../../../src/helpers/getRecallRate');
+const getCardAverage = require('../../../src/helpers/getCardAverage');
 
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);

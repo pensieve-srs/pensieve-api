@@ -1,4 +1,4 @@
-const Session = require('../../../api/models/session');
+const Session = require('../../../src/models/session');
 const fixtures = require('../../fixtures/sessions');
 
 const { cards, user1, sessions } = fixtures;

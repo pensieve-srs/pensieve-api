@@ -1,15 +1,17 @@
 const moment = require('moment');
 const pluralize = require('pluralize');
 
-const User = require('../db/schemas/user');
-const Deck = require('../api/models/deck');
-const Card = require('../db/schemas/card');
-const getCardAverage = require('../api/helpers/getCardAverage');
+const User = require('../mongoose/schemas/user');
+const Deck = require('../src/models/deck');
+const Card = require('../mongoose/schemas/card');
+const getCardAverage = require('../src/helpers/getCardAverage');
 const expiredDeckEmailText = require('./views/expired_decks_email.text.js');
 const expiredDeckEmailHTML = require('./views/expired_decks_email.html.js');
 
 const mailer = require('@sendgrid/mail');
-const { classes: { EmailAddress } } = require('@sendgrid/helpers');
+const {
+  classes: { EmailAddress },
+} = require('@sendgrid/helpers');
 
 mailer.setApiKey(process.env.SENDGRID_API_KEY);
 

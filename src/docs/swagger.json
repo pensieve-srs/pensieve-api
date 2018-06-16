@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "title": "Pensieve API"
   },
-  "host": "localhost:5000",
+  "host": "https://api.pensieve.app",
   "basePath": "/",
   "schemes": ["http", "https"],
   "consumes": ["application/json"],

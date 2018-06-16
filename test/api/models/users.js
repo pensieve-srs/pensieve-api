@@ -1,4 +1,4 @@
-const User = require('../../../api/models/user');
+const User = require('../../../src/models/user');
 const data = require('../../fixtures/users');
 
 const { users } = data;

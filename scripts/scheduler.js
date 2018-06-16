@@ -7,13 +7,16 @@ const mongoose = require('mongoose');
 
 async function run() {
   mongoose.Promise = global.Promise;
-  const db = await mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true });
+  const db = await mongoose.connect(
+    process.env.MONGODB_URI,
+    { useMongoClient: true },
+  );
 
   const agenda = new Agenda().mongo(db, 'jobs');
 
   /* Define jobs */
   // eslint-disable-next-line global-require
-  require('../api/jobs')(agenda);
+  require('../src/jobs')(agenda);
 
   await new Promise(resolve => agenda.once('ready', resolve));
 

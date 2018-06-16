@@ -8,7 +8,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 module.exports = {
   dotenv: resolveApp('.env'),
-  db: resolveApp('db'),
+  mongoose: resolveApp('mongoose'),
   server: resolveApp('server'),
   test: resolveApp('test/api'),
   fixtures: resolveApp('test/fixtures'),

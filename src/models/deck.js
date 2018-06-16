@@ -1,4 +1,4 @@
-const DeckSchema = require('../../db/schemas/deck');
+const DeckSchema = require('../../mongoose/schemas/deck');
 const removeEmpty = require('../helpers/removeEmpty');
 
 const mongoose = require('mongoose');

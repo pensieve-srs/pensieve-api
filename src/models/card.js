@@ -1,5 +1,5 @@
 const Session = require('./session');
-const Card = require('../../db/schemas/card');
+const Card = require('../../mongoose/schemas/card');
 const User = require('./user');
 
 const SM2 = require('../helpers/sm2');

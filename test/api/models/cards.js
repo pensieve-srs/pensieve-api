@@ -1,4 +1,4 @@
-const Card = require('../../../api/models/card');
+const Card = require('../../../src/models/card');
 const data = require('../../fixtures/cards');
 
 const {

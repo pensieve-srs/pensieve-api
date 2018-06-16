@@ -1,4 +1,4 @@
-const Review = require('../../../api/models/review');
+const Review = require('../../../src/models/review');
 const id = require('pow-mongodb-fixtures').createObjectId;
 
 const user1 = id();

@@ -1,4 +1,4 @@
-const Review = require('../../db/schemas/review');
+const Review = require('../../mongoose/schemas/review');
 const mongoose = require('mongoose');
 
 module.exports.create = (card, value, user) => Review.create({ user, card, value });

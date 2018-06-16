@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const db = require('../db');
+const mongoose = require('../mongoose/config/database');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(require('./controllers'));
 let server;
 
 module.exports.start = () =>
-  db.connect().then(() => {
+  mongoose.connect().then(() => {
     server = app.listen(process.env.PORT || 5000, (err) => {
       if (err) {
         console.error(err);

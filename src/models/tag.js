@@ -1,4 +1,4 @@
-const TagSchema = require('../../db/schemas/tag');
+const TagSchema = require('../../mongoose/schemas/tag');
 
 const mongoose = require('mongoose');
 

@@ -1,4 +1,4 @@
-const Session = require('../../db/schemas/session');
+const Session = require('../../mongoose/schemas/session');
 const shuffle = require('../helpers/shuffle');
 const mongoose = require('mongoose');
 
