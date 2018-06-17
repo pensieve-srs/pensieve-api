@@ -1,28 +1,20 @@
+const Joi = require('joi');
+
 const AdminMailer = require('../../mailers/admin_mailer');
-const validators = require('../helpers/validators');
 const createDefaultDeck = require('../helpers/createDefaultDeck');
+
+const userSchemas = require('./validation/users');
 
 const User = require('../models/user');
 const Card = require('../models/card');
 const Deck = require('../models/deck');
 
 module.exports.signupUser = async (req, res, next) => {
-  const { body } = req;
-
-  const { name, email, password } = body;
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Required user information not provided' });
-  }
-  if (!validators.checkEmail(email)) {
-    return res.status(400).json({ message: 'Invalid email provided' });
-  }
-  if (!validators.checkPassword(password)) {
-    return res.status(400).json({ message: 'Invalid password provided' });
-  }
-
   try {
-    const user = await User.create(body);
+    await Joi.validate(req, userSchemas.signupUser, { allowUnknown: true });
+
+    const { name, email, password } = req.body;
+    const user = await User.create({ name, email, password });
     const token = await User.generateToken(user);
 
     await createDefaultDeck(user);
@@ -43,11 +35,13 @@ module.exports.signupUser = async (req, res, next) => {
 };
 
 module.exports.loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
-
   try {
+    await Joi.validate(req, userSchemas.loginUser, { allowUnknown: true });
+    const { email, password } = req.body;
+
     const user = await User.authenticate(email, password);
     const token = await User.generateToken(user);
+
     res.set('Authorization', `Bearer ${token}`);
     res.status(200).json({ user });
   } catch (error) {
@@ -72,26 +66,26 @@ module.exports.findUser = async (req, res, next) => {
 
 module.exports.updateUser = async (req, res, next) => {
   const id = req.user._id;
-  const { body } = req;
 
-  if (!body.email) {
-    res.status(400).json({ message: 'Email is required' });
-  } else {
-    try {
-      const user = await User.update(body, id);
-      res.send(user);
-    } catch (err) {
-      next(err);
-    }
+  try {
+    await Joi.validate(req, userSchemas.updateUser, { allowUnknown: true });
+    const { name, email, prefs } = req.body;
+
+    const user = await User.update({ name, email, prefs }, id);
+    res.send(user);
+  } catch (err) {
+    next(err);
   }
 };
 
 module.exports.updatePassword = async (req, res, next) => {
   const id = req.user._id;
-  const { body } = req;
 
   try {
-    const user = await User.updatePassword(id, body.currentPassword, body.newPassword);
+    await Joi.validate(req, userSchemas.updatePassword, { allowUnknown: true });
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.updatePassword(id, currentPassword, newPassword);
     res.send(user);
   } catch (err) {
     next(err);
@@ -106,7 +100,6 @@ module.exports.deleteUser = async (req, res, next) => {
     await Card.deleteAll(user);
     const response = await User.delete(user);
 
-    res.status(200).json(response);
     res.send(response);
   } catch (err) {
     next(err);

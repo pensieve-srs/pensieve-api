@@ -28,10 +28,11 @@ describe('Cards controller', () => {
       expect(response.body).to.have.lengthOf(2);
     });
   });
+
   describe('POST /api/cards', () => {
     it('should create single card for user', async () => {
       const token = await User.generateToken(user2);
-      const newCard = { front: 'Test front', back: 'Test back' };
+      const newCard = { front: 'Test front', back: 'Test back', deck: data.deck1 };
       const response = await request(server)
         .post('/api/cards')
         .send(newCard)
@@ -42,6 +43,7 @@ describe('Cards controller', () => {
       expect(response.body.back).to.include(newCard.back);
     });
   });
+
   describe('DELETE /api/cards/:id', () => {
     it('should delete single card for user', async () => {
       const token = await User.generateToken(user2);
