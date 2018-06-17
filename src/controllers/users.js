@@ -54,10 +54,8 @@ module.exports.loginUser = async (req, res, next) => {
 };
 
 module.exports.findUser = async (req, res, next) => {
-  const id = req.user._id;
-
   try {
-    const user = await User.get(id);
+    const user = await User.get(req.user);
     res.send(user);
   } catch (err) {
     next(err);
@@ -65,13 +63,11 @@ module.exports.findUser = async (req, res, next) => {
 };
 
 module.exports.updateUser = async (req, res, next) => {
-  const id = req.user._id;
-
   try {
     await Joi.validate(req, userSchemas.updateUser, { allowUnknown: true });
     const { name, email, prefs } = req.body;
 
-    const user = await User.update({ name, email, prefs }, id);
+    const user = await User.update({ name, email, prefs }, req.user);
     res.send(user);
   } catch (err) {
     next(err);
@@ -79,13 +75,11 @@ module.exports.updateUser = async (req, res, next) => {
 };
 
 module.exports.updatePassword = async (req, res, next) => {
-  const id = req.user._id;
-
   try {
     await Joi.validate(req, userSchemas.updatePassword, { allowUnknown: true });
     const { currentPassword, newPassword } = req.body;
 
-    const user = await User.updatePassword(id, currentPassword, newPassword);
+    const user = await User.updatePassword(req.user, currentPassword, newPassword);
     res.send(user);
   } catch (err) {
     next(err);
@@ -93,12 +87,10 @@ module.exports.updatePassword = async (req, res, next) => {
 };
 
 module.exports.deleteUser = async (req, res, next) => {
-  const user = req.user._id;
-
   try {
-    await Deck.remove({ user });
-    await Card.deleteAll(user);
-    const response = await User.delete(user);
+    await Deck.remove({ user: req.user });
+    await Card.deleteAll(req.user);
+    const response = await User.delete(req.user);
 
     res.send(response);
   } catch (err) {

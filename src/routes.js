@@ -1,7 +1,7 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
-const auth = require('./middlewares/auth');
+const getUser = require('./middlewares/getUser');
 const docs = require('./docs/swagger.json');
 
 const users = require('./controllers/users');
@@ -18,37 +18,37 @@ router.get('/', (req, res) => res.redirect('/docs'));
 
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(docs));
 
-router.get('/api/cards', auth, cards.find);
-router.post('/api/cards', auth, cards.create);
-router.get('/api/cards/:id', auth, cards.findCard);
-router.put('/api/cards/:id', auth, cards.updateCard);
-router.delete('/api/cards/:id', auth, cards.deleteCard);
+router.get('/api/cards', getUser, cards.find);
+router.post('/api/cards', getUser, cards.create);
+router.get('/api/cards/:id', getUser, cards.findCard);
+router.put('/api/cards/:id', getUser, cards.updateCard);
+router.delete('/api/cards/:id', getUser, cards.deleteCard);
 
-router.post('/api/cards/:id/review', auth, cards.reviewCard);
-router.delete('/api/cards/:id/review', auth, cards.resetCard);
+router.post('/api/cards/:id/review', getUser, cards.reviewCard);
+router.delete('/api/cards/:id/review', getUser, cards.resetCard);
 
-router.get('/api/decks', auth, decks.find);
-router.post('/api/decks', auth, decks.create);
-router.get('/api/decks/:id', auth, decks.findDeck);
-router.put('/api/decks/:id', auth, decks.updateDeck);
-router.delete('/api/decks/:id', auth, decks.deleteDeck);
+router.get('/api/decks', getUser, decks.find);
+router.post('/api/decks', getUser, decks.create);
+router.get('/api/decks/:id', getUser, decks.findDeck);
+router.put('/api/decks/:id', getUser, decks.updateDeck);
+router.delete('/api/decks/:id', getUser, decks.deleteDeck);
 
-router.delete('/api/decks/:id/review', auth, decks.resetDeck);
+router.delete('/api/decks/:id/review', getUser, decks.resetDeck);
 
 router.post('/api/users/signup', users.signupUser);
 router.post('/api/users/login', users.loginUser);
-router.get('/api/users/profile', auth, users.findUser);
-router.put('/api/users/profile', auth, users.updateUser);
-router.put('/api/users/profile/security', auth, users.updatePassword);
-router.delete('/api/users/profile', auth, users.deleteUser);
+router.get('/api/users/profile', getUser, users.findUser);
+router.put('/api/users/profile', getUser, users.updateUser);
+router.put('/api/users/profile/security', getUser, users.updatePassword);
+router.delete('/api/users/profile', getUser, users.deleteUser);
 
-router.post('/api/sessions', auth, sessions.create);
-router.get('/api/sessions/:id', auth, sessions.findSession);
+router.post('/api/sessions', getUser, sessions.create);
+router.get('/api/sessions/:id', getUser, sessions.findSession);
 
-router.get('/api/reviews', auth, reviews.find);
+router.get('/api/reviews', getUser, reviews.find);
 
-router.get('/api/tags', auth, tags.find);
-router.post('/api/ags', auth, tags.create);
+router.get('/api/tags', getUser, tags.find);
+router.post('/api/ags', getUser, tags.create);
 
 router.use((req, res) =>
   res.status(404).send({
@@ -68,7 +68,6 @@ router.use((err, req, res, next) => {
     });
   }
 
-  console.log('❌', err);
   return res.status(500).send({ error: err.stack });
 });
 

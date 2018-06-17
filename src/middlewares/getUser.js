@@ -7,7 +7,7 @@ function authenticate(req, res, next) {
 
   if (!token) {
     return res.status(400).json({
-      message: 'Invalid authentication. Please include a JWT token',
+      message: 'Invalid authentication. Please include an access token',
     });
   }
 
@@ -16,11 +16,11 @@ function authenticate(req, res, next) {
   return jwt.verify(token, config.jwt, (err, user) => {
     if (err) {
       return res.status(401).json({
-        message: 'Invalid authentication. Please log in to make requests',
+        message: 'Invalid authentication. Please use a valid access token to make requests',
       });
     }
 
-    req.user = user;
+    req.user = user._id;
     return next();
   });
 }
