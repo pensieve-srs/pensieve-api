@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 
 const id = require('pow-mongodb-fixtures').createObjectId;
-const User = require('../../api/models/user');
+const User = require('../../src/models/user');
 
 const password1 = (exports.password1 = 'password1');
 

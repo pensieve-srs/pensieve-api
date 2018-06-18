@@ -1,0 +1,243 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Pensieve API"
+  },
+  "host": "https://api.pensieve.app",
+  "basePath": "/",
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "parameters": {
+    "id": {
+      "name": "id",
+      "in": "path",
+      "description": "Unique object identifier",
+      "type": "string"
+    }
+  },
+  "paths": {
+    "/cards": {
+      "get": {
+        "description": "Returns all cards",
+        "parameters": [
+          {
+            "name": "deck",
+            "in": "query",
+            "description": "The id of the deck which the card belongs to",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetCardsListResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized Error",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedError"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create new card",
+        "parameters": [
+          {
+            "name": "front",
+            "in": "body",
+            "description": "The front side of the new card",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "back",
+            "in": "body",
+            "description": "The back side of the new card",
+            "type": "string",
+            "required": false
+          }
+        ]
+      }
+    },
+    "/cards/{id}": {
+      "get": {
+        "description": "Get single card object",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      },
+      "put": {
+        "description": "Update individual card",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      },
+      "delete": {
+        "description": "Delete a card object",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      }
+    },
+    "/cards/{id}/review": {
+      "post": {
+        "description": "Creates a review for a card object. Indicates progress in studying.",
+        "parameters": [
+          { "$ref": "#/parameters/id" },
+          {
+            "name": "value",
+            "in": "body",
+            "type": "string"
+          }
+        ]
+      },
+      "delete": {
+        "description": "Resets a card's study progress",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      }
+    },
+    "/decks": {
+      "get": {
+        "description": "Returns all decks for authorized user"
+      },
+      "post": {
+        "description": "Creates new deck for user"
+      }
+    },
+    "/decks/{id}": {
+      "get": {
+        "description": "Returns a single deck object",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      },
+      "put": {
+        "description": "Updates an existing deck object",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      },
+      "delete": {
+        "description": "Deletes an existing deck object",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      }
+    },
+    "/decks/{id}/review": {
+      "delete": {
+        "description": "Resets studying progress for entire deck",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      }
+    },
+    "/sessions": {
+      "post": {
+        "description": "Creates new study session to cards to study"
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "description": "Retrieves existing study session with cards to study",
+        "parameters": [{ "$ref": "#/parameters/id" }]
+      }
+    },
+    "/users/signup": {
+      "post": {
+        "description": "Creates new user object. Returns a user object and access token."
+      }
+    },
+    "/users/login": {
+      "post": {
+        "description": "Authenticates user login. Returns a user object and access token."
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "description": "Retrieves current authenticated user profile information."
+      },
+      "put": {
+        "description": "Updates current authenticated user profile information."
+      },
+      "delete": {
+        "description": "Deletes current authenticated user and notes including decks and cards."
+      }
+    }
+  },
+  "definitions": {
+    "ObjectId": {
+      "definition": "Unique identifier for resource",
+      "type": "string"
+    },
+    "Card": {
+      "type": "object",
+      "properties": {
+        "front": {
+          "type": "string",
+          "description": "task object name"
+        },
+        "back": {
+          "type": "string",
+          "description": "task description",
+          "required": false
+        }
+      },
+      "required": ["front", "back"]
+    },
+    "GetCardResponse": {
+      "required": ["id", "front"],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/ObjectId"
+        },
+        "front": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        }
+      }
+    },
+    "GetCardsListResponse": {
+      "required": ["cards"],
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Card"
+          }
+        }
+      }
+    },
+    "GeneralResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "number",
+          "description": "returns 1 if successful"
+        },
+        "description": {
+          "type": "string",
+          "description": "a short comment"
+        }
+      }
+    },
+    "UnauthorizedError": {
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

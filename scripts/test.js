@@ -3,16 +3,15 @@ process.env.NODE_ENV = 'test';
 
 const Mocha = require('mocha');
 const chalk = require('chalk');
-const paths = require('../config/paths');
 const glob = require('glob');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
 const mongoFixtures = require('pow-mongodb-fixtures');
-
-require('../config/env').config();
 require('chai/register-expect');
 
-const fixtures = mongoFixtures.connect(process.env.MONGODB_URI);
+const config = require('../config');
+
+const fixtures = mongoFixtures.connect(config.database.uri);
 
 chai.use(sinonChai);
 
@@ -23,7 +22,7 @@ const fileName = process.argv.slice(2)[0];
 
 const fileExp = fileName ? `test/**/${fileName}.js` : 'test/**/*.js';
 
-fixtures.clearAllAndLoad(paths.fixtures, () => {
+fixtures.clearAllAndLoad(config.paths.fixtures, () => {
   console.log(chalk.cyan('✨  Test database loaded'));
 
   // Add each .js file to the mocha instance

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const api = require('../../api/index');
+const api = require('../../src/index');
 
 let server;
 describe('Server', () => {

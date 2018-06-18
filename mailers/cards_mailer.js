@@ -1,12 +1,13 @@
-const User = require('../db/schemas/user');
-const Card = require('../api/models/card');
-const CardSchema = require('../db/schemas/card');
+const User = require('../src/models/user');
+const Card = require('../src/models/card');
 const dueCardEmailText = require('./views/due_cards_email.text.js');
 const dueCardEmailHtml = require('./views/due_cards_email.html.js');
 const newCardEmailText = require('./views/new_cards_email.text.js');
 const newCardEmailHtml = require('./views/new_cards_email.html.js');
 const mailer = require('@sendgrid/mail');
-const { classes: { EmailAddress } } = require('@sendgrid/helpers');
+const {
+  classes: { EmailAddress },
+} = require('@sendgrid/helpers');
 
 mailer.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -39,7 +40,7 @@ module.exports.sendNewCardsEmail = async (userId) => {
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
   const url = 'https://www.pensieve.space/sessions/new';
-  const numCards = await CardSchema.count({ user: userId })
+  const numCards = await Card.count({ user: userId })
     .where('createdAt')
     .gt(oneDayAgo);
 

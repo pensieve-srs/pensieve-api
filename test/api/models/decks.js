@@ -1,17 +1,10 @@
-const Deck = require('../../../api/models/deck');
+const Deck = require('../../../src/models/deck');
 const data = require('../../fixtures/decks');
 
 const deck1 = data.decks[0];
 const { user1 } = data;
 
 describe('Deck model', () => {
-  describe('get', () => {
-    it('should return single deck for user', async () => {
-      const deck = await Deck.get(deck1._id, user1._id);
-      expect(deck._id).to.deep.equal(deck1._id);
-      expect(deck.title).to.deep.equal(deck.title);
-    });
-  });
   describe('new', () => {
     it('should create single deck for user', async () => {
       const newDeck = { title: 'New deck', description: 'New description' };

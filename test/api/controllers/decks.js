@@ -1,7 +1,7 @@
 const request = require('supertest');
 const data = require('../../fixtures/decks');
-const api = require('../../../api/index');
-const User = require('../../../api/models/user');
+const api = require('../../../src/index');
+const User = require('../../../src/models/user');
 
 const { decks, user1, user2 } = data;
 
@@ -45,8 +45,25 @@ describe('Decks controller', () => {
         .set({ Authorization: token });
 
       expect(response.status).to.equal(200);
-      expect(response.body.title).to.include(newDeck.title);
-      expect(response.body.description).to.include(newDeck.description);
+      expect(response.body.title).to.equal(newDeck.title);
+      expect(response.body.description).to.equal(newDeck.description);
+    });
+  });
+  describe('PUT /api/deck/:id', () => {
+    it('should update single deck for user', async () => {
+      const token = User.generateToken(user2);
+      const deck = data.decks[2];
+      const expected = { title: 'New title', description: 'New description', notes: 'New notes' };
+
+      const response = await request(server)
+        .put(`/api/decks/${deck._id}`)
+        .send(expected)
+        .set({ Authorization: token });
+
+      expect(response.status).to.equal(200);
+      expect(response.body.title).to.equal(expected.title);
+      expect(response.body.description).to.equal(expected.description);
+      expect(response.body.notes).to.equal(expected.notes);
     });
   });
   describe('DELETE /api/decks/:id', () => {
