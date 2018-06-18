@@ -21,10 +21,6 @@ const DeckSchema = new mongoose.Schema(
 );
 
 class DeckClass {
-  static get(id, user) {
-    return this.findOne({ _id: id, user }).populate('tags');
-  }
-
   static new(body, user) {
     return this.create({
       user,

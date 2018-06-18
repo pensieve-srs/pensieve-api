@@ -44,7 +44,8 @@ module.exports.findDeck = async (req, res, next) => {
   try {
     const { id } = req.params;
     await Joi.validate(req, deckSchemas.findDeck, { allowUnknown: true });
-    const deck = await Deck.get(id, req.user);
+
+    const deck = await Deck.findOne({ _id: id, user: req.user }).populate('tags');
 
     if (!deck) {
       return res.status(403).json({ message: 'Cannot access deck' });

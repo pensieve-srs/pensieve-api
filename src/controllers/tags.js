@@ -5,7 +5,7 @@ const tagSchemas = require('./validation/tags');
 
 module.exports.find = async (req, res, next) => {
   try {
-    const tags = await Tag.getAll(req.user);
+    const tags = await Tag.find({ user: req.user });
     res.send(tags);
   } catch (err) {
     next(err);
@@ -17,7 +17,7 @@ module.exports.create = async (req, res, next) => {
     await Joi.validate(req, tagSchemas.create, { allowUnknown: true });
     const { value } = req.body;
 
-    const tag = await Tag.new(value, req.user);
+    const tag = await Tag.create({ value, user: req.user });
     res.send(tag);
   } catch (err) {
     next(err);

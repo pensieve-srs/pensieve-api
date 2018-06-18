@@ -7,9 +7,9 @@ module.exports = async (user) => {
   await Promise.all(decks.map(async (data) => {
     // Build default tags
     const tags = await Promise.all(data.tags.map(async ({ value }) => {
-      let tag = await Tag.findOne({ value });
+      let tag = await Tag.findOne({ value, user });
       if (!tag) {
-        tag = await Tag.new(value, user);
+        tag = await Tag.create({ value, user });
       }
       return tag;
     }));

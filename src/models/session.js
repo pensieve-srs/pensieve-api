@@ -14,14 +14,6 @@ const SessionSchema = new Schema(
 );
 
 class SessionClass {
-  static get(id, user) {
-    return this.findOne({ _id: id, user }).populate({
-      path: 'cards',
-      model: 'Card',
-      populate: { path: 'deck', model: 'Deck' },
-    });
-  }
-
   static new(type, user, cards) {
     const cardIds = shuffle(cards).map(card => card._id);
     return this.findOneAndUpdate(

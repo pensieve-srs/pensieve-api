@@ -50,7 +50,12 @@ module.exports.findSession = async (req, res, next) => {
     const { id } = req.params;
     await Joi.validate(req, sessionSchemas.findSession, { allowUnknown: true });
 
-    const session = await Session.get(id, req.user);
+    const session = await Session.findOne({ _id: id, user: req.user }).populate({
+      path: 'cards',
+      model: 'Card',
+      populate: { path: 'deck', model: 'Deck' },
+    });
+
     res.send(session);
   } catch (err) {
     next(err);
