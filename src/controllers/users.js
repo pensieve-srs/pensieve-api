@@ -89,7 +89,7 @@ module.exports.updatePassword = async (req, res, next) => {
 module.exports.deleteUser = async (req, res, next) => {
   try {
     await Deck.remove({ user: req.user });
-    await Card.deleteAll(req.user);
+    await Card.remove({ user: req.user });
     const response = await User.delete(req.user);
 
     res.send(response);

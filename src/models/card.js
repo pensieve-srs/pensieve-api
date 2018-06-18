@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 
-const User = require('./user');
-
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
-const sessionTypes = require('../utils/sessionTypes');
 
 const CardSchema = new mongoose.Schema(
   {
@@ -24,30 +21,18 @@ const CardSchema = new mongoose.Schema(
 );
 
 class CardClass {
-  static get(id, user) {
-    return this.findOne({ _id: id, user }).populate('deck');
-  }
-  static getAll(user) {
-    return this.find({ user });
-  }
+  static new(body, user) {
+    const oneHourFuture = new Date();
+    oneHourFuture.setHours(oneHourFuture.getHours() + 1);
 
-  static countAll(user) {
-    return this.count({ user });
-  }
-
-  static countAllForDeck(deck, user) {
-    return this.count({ user, deck });
-  }
-
-  static getAllForType(type, user) {
-    switch (type) {
-      case 'due':
-        return this.getAllDue(user);
-      case 'learn':
-        return this.getAllNew(user);
-      default:
-        return this.find({ user });
-    }
+    return this.create({
+      user,
+      front: body.front,
+      back: body.back,
+      deck: body.deck,
+      notes: body.notes,
+      nextReviewDate: body.nextReviewDate || oneHourFuture,
+    });
   }
 
   static getAllNew(user) {
@@ -70,64 +55,11 @@ class CardClass {
       .lt(new Date());
   }
 
-  static getAllByDeck(deck, user) {
-    return this.find({ user, deck });
-  }
-
-  static getAllForSessionType(type, user, deck) {
-    return User.getSessionSize(user).then((maxSize) => {
-      switch (type) {
-        case sessionTypes.learn:
-          return this.find({ user, repetitions: 0 })
-            .populate('deck')
-            .limit(maxSize);
-        case sessionTypes.review:
-          return this.find({ user })
-            .populate('deck')
-            .where('nextReviewDate')
-            .lt(new Date())
-            .limit(maxSize);
-        case sessionTypes.deck:
-          return this.find({ user, deck })
-            .populate('deck')
-            .sort('nextReviewDate')
-            .where('nextReviewDate')
-            .lt(new Date());
-        default:
-          return false;
-      }
-    });
-  }
-  static new(body, user) {
-    const oneHourFuture = new Date();
-    oneHourFuture.setHours(oneHourFuture.getHours() + 1);
-
-    return this.create({
-      user,
-      front: body.front,
-      back: body.back,
-      deck: body.deck,
-      notes: body.notes,
-      nextReviewDate: body.nextReviewDate || oneHourFuture,
-    });
-  }
-
   static update(id, body, user) {
     const { front, back, notes } = body;
     return this.findOneAndUpdate({ _id: id, user }, removeEmpty({ front, back, notes }), {
       new: true,
     }).populate('deck');
-  }
-  static delete(id, user) {
-    return this.remove({ _id: id, user });
-  }
-
-  static deleteAll(user) {
-    return this.remove({ user });
-  }
-
-  static deleteAllByDeck(deckId, user) {
-    return this.remove({ deck: deckId, user });
   }
 
   static resetAllByDeck(deckId, user) {

@@ -11,7 +11,7 @@ module.exports.find = async (req, res, next) => {
     let decks = await Deck.find({ user: req.user }).populate('tags');
 
     decks = await Promise.all(decks.map(async (deck) => {
-      const cards = await Card.getAllByDeck(deck, req.user);
+      const cards = await Card.find({ user: req.user, deck });
 
       // eslint-disable-next-line no-param-reassign
       deck.recallRate = getCardAverage(cards);
@@ -50,7 +50,7 @@ module.exports.findDeck = async (req, res, next) => {
       return res.status(403).json({ message: 'Cannot access deck' });
     }
 
-    const cards = await Card.getAllByDeck(deck, req.user);
+    const cards = await Card.find({ user: req.user, deck });
 
     // eslint-disable-next-line no-param-reassign
     deck.recallRate = getCardAverage(cards);
@@ -83,7 +83,7 @@ module.exports.deleteDeck = async (req, res, next) => {
     await Joi.validate(req, deckSchemas.deleteDeck, { allowUnknown: true });
 
     await Deck.remove({ _id: id, user: req.user });
-    const response = await Card.deleteAllByDeck(id, req.user);
+    const response = await Card.remove({ user: req.user, deck: id });
 
     res.send(response);
   } catch (err) {
@@ -97,7 +97,7 @@ module.exports.resetDeck = async (req, res, next) => {
     await Joi.validate(req, deckSchemas.resetDeck, { allowUnknown: true });
 
     await Card.resetAllByDeck(id, req.user);
-    const cards = await Card.getAllByDeck(id, req.user);
+    const cards = await Card.find({ user: req.user, deck: id });
 
     res.send(cards);
   } catch (err) {

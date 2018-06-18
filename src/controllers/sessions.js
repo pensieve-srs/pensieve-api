@@ -3,13 +3,34 @@ const Joi = require('joi');
 const Session = require('../models/session');
 const Card = require('../models/card');
 const sessionSchemas = require('./validation/sessions');
+const sessionTypes = require('../utils/sessionTypes');
 
 module.exports.create = async (req, res, next) => {
   try {
     await Joi.validate(req, sessionSchemas.create, { allowUnknown: true });
 
     const { type, deck } = req.body;
-    const cards = await Card.getAllForSessionType(type, req.user, deck);
+    let cards;
+    switch (type) {
+      case sessionTypes.learn:
+        cards = await Card.find({ user: req.user, repetitions: 0 }).populate('deck');
+        break;
+      case sessionTypes.review:
+        cards = await Card.find({ user: req.user })
+          .populate('deck')
+          .where('nextReviewDate')
+          .lt(new Date());
+        break;
+      case sessionTypes.deck:
+      default:
+        cards = await Card.find({ user: req.user, deck })
+          .populate('deck')
+          .sort('nextReviewDate')
+          .where('nextReviewDate')
+          .lt(new Date());
+        break;
+    }
+
     if (!cards.length > 0) {
       res.status(400).json({
         message: 'No cards available to create session.',

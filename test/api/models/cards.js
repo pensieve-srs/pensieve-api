@@ -1,28 +1,9 @@
 const Card = require('../../../src/models/card');
 const data = require('../../fixtures/cards');
 
-const { cards, deck1, deck3, user1, user2 } = data;
+const { cards, deck1, user1 } = data;
 
 describe('Card model', () => {
-  describe('get', () => {
-    it('should return single card for user', async () => {
-      const card = await Card.get(cards[0]._id, user1);
-      expect(card._id).to.deep.equal(cards[0]._id);
-      expect(card.front).to.deep.equal(cards[0].front);
-    });
-  });
-  describe('getAll', () => {
-    it('should return all cards for user', async () => {
-      const response = await Card.getAll(user1);
-      expect(response).to.have.lengthOf(2);
-    });
-  });
-  describe('countAll', () => {
-    it('should return the length of all cards for a user', async () => {
-      const response = await Card.countAll(user1);
-      expect(response).to.equal(2);
-    });
-  });
   describe('new', () => {
     it('should create single card for user', async () => {
       const newCard = { front: 'New card front', back: 'New card back', deck: deck1 };
@@ -42,17 +23,9 @@ describe('Card model', () => {
   });
   describe('delete', () => {
     it('should delete single card for user', async () => {
-      const prevCards = await Card.getAll(user1);
-      await Card.delete(prevCards[0]._id, user1);
-      const newCards = await Card.getAll(user1);
-      expect(newCards.length).to.equal(prevCards.length - 1);
-    });
-  });
-  describe('deleteAllByDeck', () => {
-    it('should delete all cards for a deck', async () => {
-      const prevCards = await Card.getAllByDeck(deck3, user2);
-      await Card.deleteAllByDeck(deck3, user2);
-      const newCards = await Card.getAllByDeck(deck3, user2);
+      const prevCards = await Card.find({ user: user1 });
+      await Card.remove({ _id: prevCards[0]._id, user: user1 });
+      const newCards = await Card.find({ user: user1 });
       expect(newCards.length).to.equal(prevCards.length - 1);
     });
   });

@@ -19,16 +19,18 @@ module.exports.find = async (req, res, next) => {
         return res.status(400).json({ message: 'Deck id is not valid' });
       }
 
-      cards = await Card.getAllByDeck(deck, req.user);
+      cards = await Card.find({ user: req.user, deck });
       cards = cards.map((card) => {
         // eslint-disable-next-line no-param-reassign
         card.recallRate = getRecallRate(card);
         return card;
       });
-    } else if (type) {
-      cards = await Card.getAllForType(type, req.user);
+    } else if (type === 'due') {
+      cards = await Card.getAllDue(req.user);
+    } else if (type === 'learn') {
+      cards = await Card.getAllNew(req.user);
     } else {
-      cards = await Card.getAll(req.user);
+      cards = await Card.find({ user: req.user });
     }
 
     return res.send(cards);
@@ -57,7 +59,7 @@ module.exports.findCard = async (req, res, next) => {
     const { id } = req.params;
     await Joi.validate(req, cardSchemas.findCard, { allowUnknown: true });
 
-    const card = await Card.get(id, req.user);
+    const card = await Card.findOne({ _id: id, user: req.user }).populate('deck');
 
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
@@ -88,7 +90,8 @@ module.exports.deleteCard = async (req, res, next) => {
     const { id } = req.params;
     await Joi.validate(req, cardSchemas.deleteCard, { allowUnknown: true });
 
-    const response = await Card.delete(id, req.user);
+    const response = await Card.remove({ _id: id, user: req.user });
+
     res.send(response);
   } catch (err) {
     next(err);
