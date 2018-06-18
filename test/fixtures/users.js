@@ -58,6 +58,12 @@ const users = (exports.users = [
     email: 'sarah@example.com',
     password: User.generateHash('password1234'),
   },
+  {
+    _id: id(),
+    name: 'Juice Tester',
+    email: 'juice@example.com',
+    password: User.generateHash('password1234'),
+  },
   userWithEmailNotifs,
   userWithoutEmailNotifs,
   userWithoutCards,
