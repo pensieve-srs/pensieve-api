@@ -17,12 +17,13 @@ describe('Session model', () => {
       expect(session.cards[1]._id).to.deep.equal(cards[1]._id);
     });
   });
-  describe('create', () => {
+  describe('new', () => {
     it('should create single session object for user', async () => {
-      const session = await Session.create(Session.types.learn, user1, cards);
+      const type = 'learn';
+      const session = await Session.new(type, user1, cards);
 
       expect(session.cards[0]._id).to.exist;
-      expect(session.type).to.equal(Session.types.learn);
+      expect(session.type).to.equal(type);
       expect(session.user).to.deep.equal(user1._id);
     });
   });

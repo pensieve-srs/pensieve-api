@@ -14,7 +14,7 @@ module.exports.signupUser = async (req, res, next) => {
     await Joi.validate(req, userSchemas.signupUser, { allowUnknown: true });
 
     const { name, email, password } = req.body;
-    const user = await User.create({ name, email, password });
+    const user = await User.new({ name, email, password });
     const token = await User.generateToken(user);
 
     await createDefaultDeck(user);

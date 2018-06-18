@@ -1,6 +1,5 @@
-const User = require('../mongoose/schemas/user');
+const User = require('../src/models/user');
 const Card = require('../src/models/card');
-const CardSchema = require('../mongoose/schemas/card');
 const dueCardEmailText = require('./views/due_cards_email.text.js');
 const dueCardEmailHtml = require('./views/due_cards_email.html.js');
 const newCardEmailText = require('./views/new_cards_email.text.js');
@@ -41,7 +40,7 @@ module.exports.sendNewCardsEmail = async (userId) => {
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
   const url = 'https://www.pensieve.space/sessions/new';
-  const numCards = await CardSchema.count({ user: userId })
+  const numCards = await Card.count({ user: userId })
     .where('createdAt')
     .gt(oneDayAgo);
 

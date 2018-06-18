@@ -42,7 +42,7 @@ module.exports.create = async (req, res, next) => {
     const { front, back, deck, notes } = req.body;
     await Joi.validate(req, cardSchemas.create, { allowUnknown: true });
 
-    const card = await Card.create({ front, back, deck, notes }, req.user);
+    const card = await Card.new({ front, back, deck, notes }, req.user);
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
 
@@ -102,7 +102,7 @@ module.exports.reviewCard = async (req, res, next) => {
 
     const { value } = req.body;
 
-    await Review.create(id, value, req.user);
+    await Review.create({ user: req.user, card: id, value });
     const card = await Card.review(id, value, req.user);
 
     card.recallRate = getRecallRate(card); // eslint-disable-line no-param-reassign

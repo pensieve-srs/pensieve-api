@@ -1,159 +1,191 @@
-const Session = require('./session');
-const Card = require('../../mongoose/schemas/card');
+const mongoose = require('mongoose');
+
 const User = require('./user');
 
 const SM2 = require('../helpers/sm2');
 const removeEmpty = require('../helpers/removeEmpty');
+const sessionTypes = require('../utils/sessionTypes');
 
-module.exports.get = (id, user) => Card.findOne({ _id: id, user }).populate('deck');
+const CardSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    deck: { type: mongoose.Schema.Types.ObjectId, ref: 'Deck' },
+    front: { type: String, required: true },
+    back: { type: String },
+    notes: { type: String },
+    reviewedAt: { type: Date }, // last review timestamp
+    interval: { type: Number }, // review interval (in days)
+    EF: { type: Number, default: 2.5 }, // SM-2 easiness factor
+    nextReviewDate: { type: Date, required: true },
+    repetitions: { type: Number, default: 0 }, // number of review repetitions
+    recallRate: { type: Number },
+  },
+  { timestamps: true },
+);
 
-module.exports.getAll = user => Card.find({ user });
-
-module.exports.countAll = user => Card.count({ user });
-
-module.exports.countAllForDeck = (deck, user) => Card.count({ user, deck });
-
-module.exports.getAllForType = (type, user) => {
-  switch (type) {
-    case 'due':
-      return this.getAllDue(user);
-    case 'learn':
-      return this.getAllNew(user);
-    default:
-      return Card.find({ user });
+class CardClass {
+  static get(id, user) {
+    return this.findOne({ _id: id, user }).populate('deck');
   }
-};
+  static getAll(user) {
+    return this.find({ user });
+  }
 
-module.exports.getAllNew = function getAllNew(user) {
-  return Card.find({ user, repetitions: 0 });
-};
+  static countAll(user) {
+    return this.count({ user });
+  }
 
-module.exports.countAllNew = user => Card.count({ user, repetitions: 0 });
+  static countAllForDeck(deck, user) {
+    return this.count({ user, deck });
+  }
 
-module.exports.getAllDue = user =>
-  Card.find({ user })
-    .where('nextReviewDate')
-    .lt(new Date());
-
-module.exports.countAllDue = user =>
-  Card.count({ user })
-    .where('nextReviewDate')
-    .lt(new Date());
-
-module.exports.getAllByDeck = function getAllByDeck(deck, user) {
-  return Card.find({ user, deck });
-};
-
-module.exports.getAllForSessionType = function getAllForSessionType(type, user, deck) {
-  return User.getSessionSize(user).then((maxSize) => {
+  static getAllForType(type, user) {
     switch (type) {
-      case Session.types.learn:
-        return Card.find({ user, repetitions: 0 })
-          .populate('deck')
-          .limit(maxSize);
-      case Session.types.review:
-        return Card.find({ user })
-          .populate('deck')
-          .where('nextReviewDate')
-          .lt(new Date())
-          .limit(maxSize);
-      case Session.types.deck:
-        return Card.find({ user, deck })
-          .populate('deck')
-          .sort('nextReviewDate')
-          .where('nextReviewDate')
-          .lt(new Date());
+      case 'due':
+        return this.getAllDue(user);
+      case 'learn':
+        return this.getAllNew(user);
       default:
-        return false;
+        return this.find({ user });
     }
-  });
-};
+  }
 
-module.exports.create = function create(body, user) {
-  const oneHourFuture = new Date();
-  oneHourFuture.setHours(oneHourFuture.getHours() + 1);
+  static getAllNew(user) {
+    return this.find({ user, repetitions: 0 });
+  }
 
-  return Card.create({
-    user,
-    front: body.front,
-    back: body.back,
-    deck: body.deck,
-    notes: body.notes,
-    nextReviewDate: body.nextReviewDate || oneHourFuture,
-  });
-};
+  static countAllNew(user) {
+    return this.count({ user, repetitions: 0 });
+  }
 
-module.exports.update = function update(id, body, user) {
-  return Card.findOneAndUpdate(
-    { _id: id, user },
-    removeEmpty({ front: body.front, back: body.back, notes: body.notes }),
-    { new: true },
-  ).populate('deck');
-};
+  static getAllDue(user) {
+    return this.find({ user })
+      .where('nextReviewDate')
+      .lt(new Date());
+  }
 
-module.exports.delete = function deleteCard(id, user) {
-  return Card.remove({ _id: id, user });
-};
+  static countAllDue(user) {
+    return this.count({ user })
+      .where('nextReviewDate')
+      .lt(new Date());
+  }
 
-module.exports.deleteAll = function deleteAll(user) {
-  return Card.remove({ user });
-};
+  static getAllByDeck(deck, user) {
+    return this.find({ user, deck });
+  }
 
-module.exports.deleteAllByDeck = function deleteAllByDeck(deckId, user) {
-  return Card.remove({ deck: deckId, user });
-};
-
-module.exports.resetAllByDeck = function resetAllByDeck(deckId, user) {
-  return Card.update(
-    { deck: deckId, user },
-    {
-      $set: {
-        repetitions: 0,
-        EF: 2.5,
-      },
-      $unset: {
-        nextReviewDate: 1,
-        interval: 1,
-        reviewedAt: 1,
-      },
-    },
-    { multi: true, new: true },
-  );
-};
-
-module.exports.review = function review(id, value, user) {
-  return Card.findOne({ _id: id, user })
-    .populate('deck')
-    .then((card) => {
-      const grade = SM2.getGrade(value);
-      card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign
-
-      if (grade < 3) {
-        card.repetitions = 0; // eslint-disable-line no-param-reassign
-        card.interval = 0; // eslint-disable-line no-param-reassign
-      } else {
-        card.repetitions += 1; // eslint-disable-line no-param-reassign
-        card.EF = SM2.getEF(card.EF, grade); // eslint-disable-line no-param-reassign
-        card.interval = SM2.getNextInterval(card, grade); // eslint-disable-line no-param-reassign
+  static getAllForSessionType(type, user, deck) {
+    return User.getSessionSize(user).then((maxSize) => {
+      switch (type) {
+        case sessionTypes.learn:
+          return this.find({ user, repetitions: 0 })
+            .populate('deck')
+            .limit(maxSize);
+        case sessionTypes.review:
+          return this.find({ user })
+            .populate('deck')
+            .where('nextReviewDate')
+            .lt(new Date())
+            .limit(maxSize);
+        case sessionTypes.deck:
+          return this.find({ user, deck })
+            .populate('deck')
+            .sort('nextReviewDate')
+            .where('nextReviewDate')
+            .lt(new Date());
+        default:
+          return false;
       }
-      const nextReviewDate = new Date();
-      nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
-      card.nextReviewDate = nextReviewDate; // eslint-disable-line no-param-reassign
-
-      return card.save();
     });
-};
+  }
+  static new(body, user) {
+    const oneHourFuture = new Date();
+    oneHourFuture.setHours(oneHourFuture.getHours() + 1);
 
-module.exports.reset = function reset(id, user) {
-  return Card.findOne({ _id: id, user })
-    .populate('deck')
-    .then((card) => {
-      card.repetitions = 0; // eslint-disable-line no-param-reassign
-      card.EF = 2.5; // eslint-disable-line no-param-reassign
-      card.nextReviewDate = undefined; // eslint-disable-line no-param-reassign
-      card.interval = undefined; // eslint-disable-line no-param-reassign
-      card.reviewedAt = undefined; // eslint-disable-line no-param-reassign
-
-      return card.save();
+    return this.create({
+      user,
+      front: body.front,
+      back: body.back,
+      deck: body.deck,
+      notes: body.notes,
+      nextReviewDate: body.nextReviewDate || oneHourFuture,
     });
-};
+  }
+
+  static update(id, body, user) {
+    const { front, back, notes } = body;
+    return this.findOneAndUpdate({ _id: id, user }, removeEmpty({ front, back, notes }), {
+      new: true,
+    }).populate('deck');
+  }
+  static delete(id, user) {
+    return this.remove({ _id: id, user });
+  }
+
+  static deleteAll(user) {
+    return this.remove({ user });
+  }
+
+  static deleteAllByDeck(deckId, user) {
+    return this.remove({ deck: deckId, user });
+  }
+
+  static resetAllByDeck(deckId, user) {
+    return this.update(
+      { deck: deckId, user },
+      {
+        $set: {
+          repetitions: 0,
+          EF: 2.5,
+        },
+        $unset: {
+          nextReviewDate: 1,
+          interval: 1,
+          reviewedAt: 1,
+        },
+      },
+      { multi: true, new: true },
+    );
+  }
+
+  static review(id, value, user) {
+    return this.findOne({ _id: id, user })
+      .populate('deck')
+      .then((card) => {
+        const grade = SM2.getGrade(value);
+        card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign
+
+        if (grade < 3) {
+          card.repetitions = 0; // eslint-disable-line no-param-reassign
+          card.interval = 0; // eslint-disable-line no-param-reassign
+        } else {
+          card.repetitions += 1; // eslint-disable-line no-param-reassign
+          card.EF = SM2.getEF(card.EF, grade); // eslint-disable-line no-param-reassign
+          card.interval = SM2.getNextInterval(card, grade); // eslint-disable-line no-param-reassign
+        }
+        const nextReviewDate = new Date();
+        nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
+        card.nextReviewDate = nextReviewDate; // eslint-disable-line no-param-reassign
+
+        return card.save();
+      });
+  }
+
+  static reset(id, user) {
+    return this.findOne({ _id: id, user })
+      .populate('deck')
+      .then((card) => {
+        card.repetitions = 0; // eslint-disable-line no-param-reassign
+        card.EF = 2.5; // eslint-disable-line no-param-reassign
+        card.nextReviewDate = undefined; // eslint-disable-line no-param-reassign
+        card.interval = undefined; // eslint-disable-line no-param-reassign
+        card.reviewedAt = undefined; // eslint-disable-line no-param-reassign
+
+        return card.save();
+      });
+  }
+}
+
+CardSchema.loadClass(CardClass);
+
+module.exports = mongoose.model('Card', CardSchema);

@@ -1,4 +1,4 @@
-const User = require('../../mongoose/schemas/user');
+const User = require('../../src/models/user');
 const DecksMailer = require('../../mailers/decks_mailer');
 
 module.exports = (agenda) => {

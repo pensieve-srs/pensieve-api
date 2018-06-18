@@ -27,7 +27,7 @@ module.exports = async (user) => {
 
       // Build default cards
     const cards = await Promise.all(data.cards.map(async ({ front, back }) => {
-      const card = await Card.create(
+      const card = await Card.new(
         {
           front,
           back,

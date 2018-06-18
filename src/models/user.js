@@ -1,68 +1,84 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const config = require('../../config');
 
-const User = require('../../mongoose/schemas/user');
 const validators = require('../helpers/validators');
 const removeEmpty = require('../helpers/removeEmpty');
 
-module.exports.getCleanUser = function getCleanUser(user) {
-  if (!user) return false;
-  return {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    prefs: user.prefs,
-  };
-};
+const { Schema } = mongoose;
 
-module.exports.generateHash = function generateHash(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+const UserSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, index: { unique: true } },
+    password: { type: String, required: true },
+    prefs: {
+      emailNotifs: { type: Boolean, default: true },
+      sessionSize: { type: Number, default: 30 },
+    },
+  },
+  { timestamps: true },
+);
 
-module.exports.generateToken = function generateToken(user) {
-  return jwt.sign(
-    {
+class UserClass {
+  static getCleanUser(user) {
+    if (!user) return false;
+    return {
       _id: user._id,
       name: user.name,
       email: user.email,
-    },
-    config.jwt,
-    {
-      expiresIn: 60 * 60 * 72, // expires in 72 hours
-    },
-  );
-};
+      prefs: user.prefs,
+    };
+  }
 
-module.exports.validPassword = function validPassword(password, user) {
-  return password && user && bcrypt.compareSync(password, user.password);
-};
+  static generateHash(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  }
 
-module.exports.get = function get(id) {
-  return User.findOne({ _id: id }).then(user => this.getCleanUser(user));
-};
+  static generateToken(user) {
+    return jwt.sign(
+      {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      config.jwt,
+      {
+        expiresIn: 60 * 60 * 72, // expires in 72 hours
+      },
+    );
+  }
 
-module.exports.getSessionSize = function getSessionSize(id) {
-  return User.findOne({ _id: id }).then(user => user.prefs.sessionSize);
-};
+  static validPassword(password, user) {
+    return password && user && bcrypt.compareSync(password, user.password);
+  }
 
-module.exports.update = function update(body, id) {
-  const query = removeEmpty({
-    name: body.name,
-    email: body.email,
-    prefs: body.prefs,
-  });
+  static get(id) {
+    return this.findOne({ _id: id }).then(user => this.getCleanUser(user));
+  }
 
-  return User.findOneAndUpdate({ _id: id }, query, { new: true }).then(user =>
-    this.getCleanUser(user));
-};
+  static getSessionSize(id) {
+    return this.findOne({ _id: id }).then(user => user.prefs.sessionSize);
+  }
 
-module.exports.delete = function deleteUser(id) {
-  return User.remove({ _id: id });
-};
+  static update(body, id) {
+    return this.findOneAndUpdate(
+      { _id: id },
+      removeEmpty({
+        name: body.name,
+        email: body.email,
+        prefs: body.prefs,
+      }),
+      { new: true },
+    ).then(user => this.getCleanUser(user));
+  }
 
-module.exports.create = async function create(body) {
-  try {
+  static delete(id) {
+    return this.remove({ _id: id });
+  }
+
+  static new(body) {
     const { name, email, password } = body;
 
     if (!name || !email || !password) {
@@ -74,43 +90,39 @@ module.exports.create = async function create(body) {
     if (!validators.checkPassword(password)) {
       throw new Error('Invalid user password');
     }
-    if (await User.findOne({ email })) {
-      throw new Error('User already exists');
-    }
 
-    const query = {
+    return this.create({
       name: name.trim(),
       email: email.trim(),
       password: this.generateHash(password.trim()),
-    };
-
-    const user = await User.create(query);
-    return this.getCleanUser(user);
-  } catch (error) {
-    return Promise.reject(error || new Error('Invalid User'));
+    }).then(user => this.getCleanUser(user));
   }
-};
 
-module.exports.updatePassword = function updatePassword(id, currentPassword, newPassword) {
-  // eslint-disable-next-line consistent-return
-  return User.findOne({ _id: id }).then((user) => {
-    if (this.validPassword(currentPassword, user)) {
+  static updatePassword(id, currentPassword, newPassword) {
+    return this.findOne({ _id: id }).then((user) => {
+      if (!this.validPassword(currentPassword, user)) {
+        return Promise.reject(new Error('Invalid User'));
+      }
+
       user.set({ password: this.generateHash(newPassword) });
-      user.save((err, updatedUser) => {
+      return user.save((err, updatedUser) => {
         if (err) return Promise.reject(new Error('Invalid Password'));
         return this.getCleanUser(updatedUser);
       });
-    } else {
-      return Promise.reject(new Error('Invalid User'));
-    }
-  });
-};
+    });
+  }
 
-module.exports.authenticate = function authenticate(email, password) {
-  return User.findOne({ email }).then((user) => {
-    if (this.validPassword(password, user)) {
+  static authenticate(email, password) {
+    return this.findOne({ email }).then((user) => {
+      if (!this.validPassword(password, user)) {
+        return Promise.reject(new Error('Invalid User'));
+      }
+
       return this.getCleanUser(user);
-    }
-    return Promise.reject(new Error('Invalid User'));
-  });
-};
+    });
+  }
+}
+
+UserSchema.loadClass(UserClass);
+
+module.exports = mongoose.model('User', UserSchema);

@@ -1,35 +1,47 @@
-const Session = require('../../mongoose/schemas/session');
-const shuffle = require('../helpers/shuffle');
 const mongoose = require('mongoose');
+const shuffle = require('../helpers/shuffle');
+const sessionTypes = require('../utils/sessionTypes');
 
-module.exports.types = {
-  learn: 'learn',
-  review: 'review',
-  deck: 'deck',
-};
+const { Schema } = mongoose;
 
-module.exports.get = function get(id, user) {
-  return Session.findOne({ _id: id, user }).populate({
-    path: 'cards',
-    model: 'Card',
-    populate: { path: 'deck', model: 'Deck' },
-  });
-};
+const SessionSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    cards: [{ type: Schema.ObjectId, ref: 'Card', required: true }],
+    type: { type: String, enum: sessionTypes, required: true },
+  },
+  { timestamps: true },
+);
 
-module.exports.create = function create(type, user, cards) {
-  const cardIds = shuffle(cards).map(card => card._id);
+class SessionClass {
+  static get(id, user) {
+    return this.findOne({ _id: id, user }).populate({
+      path: 'cards',
+      model: 'Card',
+      populate: { path: 'deck', model: 'Deck' },
+    });
+  }
 
-  const data = {
-    user,
-    type,
-    cards: cardIds,
-  };
+  static new(type, user, cards) {
+    const cardIds = shuffle(cards).map(card => card._id);
+    return this.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId() },
+      {
+        user,
+        type,
+        cards: cardIds,
+      },
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+        setDefaultsOnInsert: true,
+        populate: 'cards',
+      },
+    );
+  }
+}
 
-  return Session.findOneAndUpdate({ _id: mongoose.Types.ObjectId() }, data, {
-    new: true,
-    upsert: true,
-    runValidators: true,
-    setDefaultsOnInsert: true,
-    populate: 'cards',
-  });
-};
+SessionSchema.loadClass(SessionClass);
+
+module.exports = mongoose.model('Session', SessionSchema);

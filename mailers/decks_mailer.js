@@ -1,9 +1,9 @@
 const moment = require('moment');
 const pluralize = require('pluralize');
 
-const User = require('../mongoose/schemas/user');
+const User = require('../src/models/user');
 const Deck = require('../src/models/deck');
-const Card = require('../mongoose/schemas/card');
+const Card = require('../src/models/card');
 const getCardAverage = require('../src/helpers/getCardAverage');
 const expiredDeckEmailText = require('./views/expired_decks_email.text.js');
 const expiredDeckEmailHTML = require('./views/expired_decks_email.html.js');

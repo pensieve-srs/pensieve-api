@@ -1,9 +1,7 @@
 const Card = require('../../../src/models/card');
 const data = require('../../fixtures/cards');
 
-const {
-  cards, deck1, deck3, user1, user2,
-} = data;
+const { cards, deck1, deck3, user1, user2 } = data;
 
 describe('Card model', () => {
   describe('get', () => {
@@ -25,10 +23,10 @@ describe('Card model', () => {
       expect(response).to.equal(2);
     });
   });
-  describe('create', () => {
+  describe('new', () => {
     it('should create single card for user', async () => {
       const newCard = { front: 'New card front', back: 'New card back', deck: deck1 };
-      const card = await Card.create(newCard, user1);
+      const card = await Card.new(newCard, user1);
       expect(card.front).to.equal(newCard.front);
       expect(card.back).to.equal(newCard.back);
       expect(card.deck).to.deep.equal(deck1);

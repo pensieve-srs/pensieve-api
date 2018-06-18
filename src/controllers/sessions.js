@@ -15,7 +15,7 @@ module.exports.create = async (req, res, next) => {
         message: 'No cards available to create session.',
       });
     } else {
-      const session = await Session.create(type, req.user, cards);
+      const session = await Session.new(type, req.user, cards);
 
       res.send(session);
     }

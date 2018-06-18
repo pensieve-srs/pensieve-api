@@ -1,9 +1,24 @@
-const DeckSchema = require('../../mongoose/schemas/deck');
-const removeEmpty = require('../helpers/removeEmpty');
-
 const mongoose = require('mongoose');
 
+const removeEmpty = require('../helpers/removeEmpty');
+
 const createDefaultNotes = deck => `## ${deck.title}\n\n${deck.description}`;
+
+const DeckSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    title: { type: String, required: true },
+    notes: { type: String },
+    description: { type: String },
+    cardsCount: { type: Number },
+    recallRate: { type: Number },
+    hidden: { type: Boolean, default: false },
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
+  },
+  {
+    timestamps: true,
+  },
+);
 
 class DeckClass {
   static get(id, user) {
