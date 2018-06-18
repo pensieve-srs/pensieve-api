@@ -39,7 +39,7 @@ module.exports.loginUser = async (req, res, next) => {
     await Joi.validate(req, userSchemas.loginUser, { allowUnknown: true });
     const { email, password } = req.body;
 
-    const user = await User.authenticate(email, password);
+    const user = await User.authenticateUser(email, password);
     const token = await User.generateToken(user);
 
     res.set('Authorization', `Bearer ${token}`);
@@ -55,7 +55,7 @@ module.exports.loginUser = async (req, res, next) => {
 
 module.exports.findUser = async (req, res, next) => {
   try {
-    const user = await User.get(req.user);
+    const user = await User.findOne({ _id: req.user });
     res.send(user);
   } catch (err) {
     next(err);
@@ -90,7 +90,7 @@ module.exports.deleteUser = async (req, res, next) => {
   try {
     await Deck.remove({ user: req.user });
     await Card.remove({ user: req.user });
-    const response = await User.delete(req.user);
+    const response = await User.remove({ _id: req.user });
 
     res.send(response);
   } catch (err) {

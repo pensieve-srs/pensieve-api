@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../../config');
 
-function authenticate(req, res, next) {
+function getUser(req, res, next) {
   let token = req.headers.authorization;
 
   if (!token) {
@@ -25,4 +25,4 @@ function authenticate(req, res, next) {
   });
 }
 
-module.exports = authenticate;
+module.exports = getUser;

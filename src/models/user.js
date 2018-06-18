@@ -12,7 +12,7 @@ const UserSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, index: { unique: true } },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     prefs: {
       emailNotifs: { type: Boolean, default: true },
       sessionSize: { type: Number, default: 30 },
@@ -22,16 +22,6 @@ const UserSchema = new Schema(
 );
 
 class UserClass {
-  static getCleanUser(user) {
-    if (!user) return false;
-    return {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      prefs: user.prefs,
-    };
-  }
-
   static generateHash(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
   }
@@ -54,10 +44,6 @@ class UserClass {
     return password && user && bcrypt.compareSync(password, user.password);
   }
 
-  static get(id) {
-    return this.findOne({ _id: id }).then(user => this.getCleanUser(user));
-  }
-
   static getSessionSize(id) {
     return this.findOne({ _id: id }).then(user => user.prefs.sessionSize);
   }
@@ -71,11 +57,7 @@ class UserClass {
         prefs: body.prefs,
       }),
       { new: true },
-    ).then(user => this.getCleanUser(user));
-  }
-
-  static delete(id) {
-    return this.remove({ _id: id });
+    );
   }
 
   static new(body) {
@@ -95,7 +77,7 @@ class UserClass {
       name: name.trim(),
       email: email.trim(),
       password: this.generateHash(password.trim()),
-    }).then(user => this.getCleanUser(user));
+    });
   }
 
   static updatePassword(id, currentPassword, newPassword) {
@@ -105,21 +87,21 @@ class UserClass {
       }
 
       user.set({ password: this.generateHash(newPassword) });
-      return user.save((err, updatedUser) => {
-        if (err) return Promise.reject(new Error('Invalid Password'));
-        return this.getCleanUser(updatedUser);
-      });
+      return user.save();
     });
   }
 
-  static authenticate(email, password) {
-    return this.findOne({ email }).then((user) => {
-      if (!this.validPassword(password, user)) {
-        return Promise.reject(new Error('Invalid User'));
-      }
+  static authenticateUser(userEmail, password) {
+    return this.findOne({ email: userEmail })
+      .select('+password')
+      .then((user) => {
+        const { _id, name, email, prefs } = user;
+        if (!this.validPassword(password, user)) {
+          return Promise.reject(new Error('Invalid User'));
+        }
 
-      return this.getCleanUser(user);
-    });
+        return { _id, name, email, prefs };
+      });
   }
 }
 

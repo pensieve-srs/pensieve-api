@@ -6,21 +6,6 @@ const user1 = users[0];
 const user2 = users[1];
 
 describe('User model', () => {
-  describe('get', () => {
-    it('should return user with matching id', async () => {
-      const user = await User.get(user1._id);
-
-      expect(user._id).to.deep.equal(user1._id);
-      expect(user.name).to.equal(user1.name);
-      expect(user.email).to.equal(user1.email);
-    });
-    it('should not return `password` field', async () => {
-      const user = await User.get(user1._id);
-
-      expect(user._id).to.deep.equal(user1._id);
-      expect(user).to.not.have.property('password');
-    });
-  });
   describe('update', () => {
     it('should update user with matching id', async () => {
       const body = { name: 'Jon Tester', email: 'jon@example.com' };
@@ -43,21 +28,10 @@ describe('User model', () => {
       const user = await User.update(body, user1._id);
 
       expect(user._id).to.deep.equal(user1._id);
-      expect(user).to.not.have.property('password');
+      expect(user.password).to.be.undefined;
     });
   });
-  describe('delete', () => {
-    it('should delete user with matching id', async () => {
-      const user = await User.get(user2._id);
-      expect(user).to.not.be.undefined;
-
-      await User.delete(user._id);
-
-      const response = await User.get(user2._id);
-      expect(response).to.be.false;
-    });
-  });
-  describe('create', () => {
+  describe('new', () => {
     it('should create user with matching information', async () => {
       const body = { name: 'Sue Tester', email: 'sue@example.com', password: 'password1234h' };
       const user = await User.new(body);
@@ -66,11 +40,11 @@ describe('User model', () => {
       expect(user.email).to.equal(body.email);
     });
   });
-  describe('authenticate', () => {
+  describe('authenticateUser', () => {
     it('should authenticate user with correct information', async () => {
       const body = { name: 'Sid Tester', email: 'sid@example.com', password: 'password1234h' };
       await User.new(body);
-      const user = await User.authenticate(body.email, body.password);
+      const user = await User.authenticateUser(body.email, body.password);
 
       expect(user.name).to.equal(body.name);
       expect(user.email).to.equal(body.email);
