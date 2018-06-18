@@ -7,7 +7,7 @@ module.exports = {
   create: {
     body: Joi.object().keys({
       title: Joi.string().required(),
-      description: Joi.string(),
+      description: Joi.string().allow(''),
       notes: Joi.string().allow(''),
       tags: Joi.array().items(Joi.objectId()),
     }),
