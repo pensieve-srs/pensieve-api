@@ -6,14 +6,50 @@
 
 This project contains the backend for Pensieve providing the API for accessing data using NodeJS and MongoDB.
 
-## Installing
+## Getting Started
+
+### Dependencies
+
+- Node 4+
+- MongoDB
+- SendGrid
+
+### Installing
 
 Clone this project and update path accordingly:
 
 ```sh
-$ git clone git@github.com:pensieve-srs/pensieve-api.git
-$ cd pensieve-api/
+git clone git@github.com:pensieve-srs/pensieve-api.git
+cd pensieve-api/
 ```
+
+Install the dependencies:
+
+```sh
+yarn install
+```
+
+Copy the `.env.example` and update the variables to your settings:
+
+```sh
+cp .env.example .env.development.local
+```
+
+Start MongoDB instance:
+
+```sh
+mongod
+```
+
+Finally, start the server and watch for changes:
+
+```sh
+yarn run start:watch
+```
+
+Open up your browser and navigate to
+[http://localhost:5000/docs/](http://localhost:5000/docs/). You should see a
+Swagger API Docs interface.
 
 ## Contributing
 
