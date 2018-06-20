@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
-const SM2 = require('../helpers/sm2');
+const SRS = require('../../srs/sm2-plus');
 const removeEmpty = require('../helpers/removeEmpty');
+const calcReviewGrade = require('../helpers/calcReviewGrade');
+
+const { DEFAULT_DIFFICULTY } = SRS;
 
 const CardSchema = new mongoose.Schema(
   {
@@ -13,8 +16,8 @@ const CardSchema = new mongoose.Schema(
     reviewedAt: { type: Date }, // last review timestamp
     interval: { type: Number }, // review interval (in days)
     EF: { type: Number, default: 2.5 }, // SM-2 easiness factor
+    difficulty: { type: Number, default: DEFAULT_DIFFICULTY },
     nextReviewDate: { type: Date, required: true },
-    repetitions: { type: Number, default: 0 }, // number of review repetitions
     recallRate: { type: Number },
   },
   { timestamps: true },
@@ -80,27 +83,30 @@ class CardClass {
     );
   }
 
-  static review(id, value, user) {
-    return this.findOne({ _id: id, user })
-      .populate('deck')
-      .then((card) => {
-        const grade = SM2.getGrade(value);
-        card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign
+  static async review(id, value, user) {
+    const card = await this.findOne({ _id: id, user });
 
-        if (grade < 3) {
-          card.repetitions = 0; // eslint-disable-line no-param-reassign
-          card.interval = 0; // eslint-disable-line no-param-reassign
-        } else {
-          card.repetitions += 1; // eslint-disable-line no-param-reassign
-          card.EF = SM2.getEF(card.EF, grade); // eslint-disable-line no-param-reassign
-          card.interval = SM2.getNextInterval(card, grade); // eslint-disable-line no-param-reassign
-        }
-        const nextReviewDate = new Date();
-        nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
-        card.nextReviewDate = nextReviewDate; // eslint-disable-line no-param-reassign
+    const performanceGrade = calcReviewGrade(value);
+    const result = SRS.calculate(
+      card.reviewedAt,
+      card.difficulty || DEFAULT_DIFFICULTY,
+      card.interval || 1,
+      performanceGrade,
+      new Date(),
+    );
 
-        return card.save();
-      });
+    return this.findOneAndUpdate(
+      { _id: id, user },
+      {
+        reviewedAt: result.reviewedAt,
+        difficulty: result.difficulty,
+        interval: result.interval,
+        nextReviewDate: result.nextReviewDate,
+      },
+      {
+        new: true,
+      },
+    ).populate('deck');
   }
 
   static reset(id, user) {
@@ -109,6 +115,7 @@ class CardClass {
       .then((card) => {
         card.repetitions = 0; // eslint-disable-line no-param-reassign
         card.EF = 2.5; // eslint-disable-line no-param-reassign
+        card.difficulty = 0.3; // eslint-disable-line no-param-reassign
         card.nextReviewDate = undefined; // eslint-disable-line no-param-reassign
         card.interval = undefined; // eslint-disable-line no-param-reassign
         card.reviewedAt = undefined; // eslint-disable-line no-param-reassign

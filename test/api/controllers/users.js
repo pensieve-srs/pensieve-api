@@ -6,6 +6,7 @@ const data = require('../../fixtures/users');
 const { users, password1 } = data;
 const user1 = users[0];
 const user3 = users[2];
+const user4 = users[3];
 
 let server;
 describe('Users controller', () => {
@@ -37,7 +38,6 @@ describe('Users controller', () => {
       expect(token).to.exist;
     });
   });
-
   describe('POST /api/users/signup', () => {
     it('should create user if signup is valid', async () => {
       const newUser = {
@@ -55,7 +55,6 @@ describe('Users controller', () => {
       expect(user.email).to.equal(newUser.email);
     });
   });
-
   describe('GET /api/users/profile', () => {
     it('should return user for valid token', async () => {
       const token = User.generateToken(user1);
@@ -83,6 +82,23 @@ describe('Users controller', () => {
       expect(response.status).to.equal(200);
       expect(user.name).to.equal(newUser.name);
       expect(user.email).to.equal(newUser.email);
+    });
+  });
+  describe('DELETE /api/user/profile', () => {
+    it('should remove the user by id', async () => {
+      const token = User.generateToken(user4);
+
+      const user = await User.findOne({ _id: user4._id });
+      expect(user.email).to.deep.equal(user4.email);
+
+      const response = await request(server)
+        .delete('/api/users/profile')
+        .set({ Authorization: token });
+
+      const expected = await User.findOne({ _id: user4._id });
+      expect(expected).to.be.null;
+
+      expect(response.status).to.equal(200);
     });
   });
 });
