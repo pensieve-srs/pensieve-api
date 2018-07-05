@@ -63,21 +63,27 @@ class CardClass {
   }
 
   static resetAllByDeck(deckId, user) {
-    return this.update(
-      { deck: deckId, user },
+    return this.bulkWrite([
       {
-        $set: {
-          repetitions: 0,
-          EF: 2.5,
-        },
-        $unset: {
-          nextReviewDate: 1,
-          interval: 1,
-          reviewedAt: 1,
+        updateMany: {
+          filter: {
+            deck: deckId,
+            user,
+          },
+          update: {
+            $set: {
+              repetitions: 0,
+              EF: 2.5,
+            },
+            $unset: {
+              nextReviewDate: 1,
+              interval: 1,
+              reviewedAt: 1,
+            },
+          },
         },
       },
-      { multi: true, new: true },
-    );
+    ]);
   }
 
   static review(id, value, user) {
