@@ -76,7 +76,7 @@ module.exports.updateCard = async (req, res, next) => {
     await Joi.validate(req, cardSchemas.updateCard, { allowUnknown: true });
 
     const { front, back, notes } = req.body;
-    const card = await Card.update(id, { front, back, notes }, req.user);
+    const card = await Card.updateCard(id, { front, back, notes }, req.user);
     // eslint-disable-next-line no-param-reassign
     card.recallRate = getRecallRate(card);
     res.send(card);

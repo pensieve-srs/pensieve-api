@@ -31,7 +31,7 @@ class DeckClass {
     });
   }
 
-  static update(id, body, user) {
+  static updateDeck(id, body, user) {
     return this.findOneAndUpdate(
       { _id: id, user },
       removeEmpty({
