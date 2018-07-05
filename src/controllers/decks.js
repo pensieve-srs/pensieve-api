@@ -83,10 +83,12 @@ module.exports.deleteDeck = async (req, res, next) => {
     const { id } = req.params;
     await Joi.validate(req, deckSchemas.deleteDeck, { allowUnknown: true });
 
-    console.log('❌ deleteDeck');
-    await Deck.remove({ _id: id, user: req.user });
-    console.log('✅ deleteDeck');
-    const response = await Card.remove({ user: req.user, deck: id });
+    await Deck.deleteOne({ _id: id, user: req.user });
+    const response = await Card.bulkWrite([
+      {
+        deleteMany: { filter: { user: req.user, deck: id } },
+      },
+    ]);
 
     res.send(response);
   } catch (err) {
