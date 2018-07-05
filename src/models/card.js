@@ -63,7 +63,7 @@ class CardClass {
   }
 
   static resetAllByDeck(deckId, user) {
-    return this.update(
+    return this.updateMany(
       { deck: deckId, user },
       {
         $set: {
