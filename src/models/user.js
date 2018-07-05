@@ -17,6 +17,7 @@ const UserSchema = new Schema(
       emailNotifs: { type: Boolean, default: true },
       sessionSize: { type: Number, default: 30 },
     },
+    reset_password_token: { type: String },
   },
   { timestamps: true },
 );
@@ -36,6 +37,19 @@ class UserClass {
       config.jwt,
       {
         expiresIn: 60 * 60 * 72, // expires in 72 hours
+      },
+    );
+  }
+
+  static generateResetToken(user) {
+    return jwt.sign(
+      {
+        _id: user._id,
+        email: user.email,
+      },
+      config.jwt,
+      {
+        expiresIn: 60 * 60 * 24, // expires in 24 hours
       },
     );
   }
@@ -80,17 +94,6 @@ class UserClass {
     });
   }
 
-  static updatePassword(id, currentPassword, newPassword) {
-    return this.findOne({ _id: id }).then((user) => {
-      if (!this.validPassword(currentPassword, user)) {
-        return Promise.reject(new Error('Invalid User'));
-      }
-
-      user.set({ password: this.generateHash(newPassword) });
-      return user.save();
-    });
-  }
-
   static authenticateUser(userEmail, password) {
     return this.findOne({ email: userEmail })
       .select('+password')
@@ -102,6 +105,38 @@ class UserClass {
 
         return { _id, name, email, prefs };
       });
+  }
+
+  static updatePassword(id, currentPassword, newPassword) {
+    return this.findOne({ _id: id }).then((user) => {
+      if (!this.validPassword(currentPassword, user)) {
+        return Promise.reject(new Error('Invalid User'));
+      }
+
+      user.set({ password: this.generateHash(newPassword) });
+      return user.save();
+    });
+  }
+
+  static setResetPasswordToken(user) {
+    return this.findOne({ _id: user._id }).then((newUser) => {
+      const token = this.generateResetToken(user);
+      newUser.set({ reset_password_token: token });
+      return newUser.save();
+    });
+  }
+
+  static resetPassword({ id, token, newPassword, verifyPassword }) {
+    return this.findOne({ _id: id, reset_password_token: token }).then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Invalid token for user'));
+      } else if (newPassword !== verifyPassword) {
+        return Promise.reject(new Error('Passwords do not match.'));
+      }
+
+      user.set({ password: this.generateHash(newPassword), reset_password_token: undefined });
+      return user.save();
+    });
   }
 }
 
