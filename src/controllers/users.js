@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const AdminMailer = require('../../mailers/admin_mailer');
+
 const createDefaultDeck = require('../helpers/createDefaultDeck');
 
 const userSchemas = require('./validation/users');
@@ -93,6 +94,35 @@ module.exports.deleteUser = async (req, res, next) => {
     const response = await User.remove({ _id: req.user });
 
     res.send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.forgotPassword = async (req, res, next) => {
+  try {
+    await Joi.validate(req, userSchemas.forgotPassword, { allowUnknown: true });
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(422).json({ message: 'User not found' });
+    }
+
+    await User.setResetPasswordToken(user._id);
+
+    return res.send({ message: 'Check your email to reset your password' });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+module.exports.resetPassword = async (req, res, next) => {
+  try {
+    await Joi.validate(req, userSchemas.resetPassword, { allowUnknown: true });
+
+    await User.resetPassword(req.user, req.body.newPassword, req.body.verifyPassword);
+
+    res.send({ message: 'Password reset!' });
   } catch (err) {
     next(err);
   }

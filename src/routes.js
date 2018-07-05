@@ -37,6 +37,9 @@ router.delete('/api/decks/:id/review', getUser, decks.resetDeck);
 
 router.post('/api/users/signup', users.signupUser);
 router.post('/api/users/login', users.loginUser);
+router.post('/api/users/forgot_password', users.forgotPassword);
+router.post('/api/users/reset_password', getUser, users.resetPassword);
+
 router.get('/api/users/profile', getUser, users.findUser);
 router.put('/api/users/profile', getUser, users.updateUser);
 router.put('/api/users/profile/security', getUser, users.updatePassword);

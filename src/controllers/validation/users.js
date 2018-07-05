@@ -5,14 +5,18 @@ module.exports = {
   signupUser: {
     body: Joi.object().keys({
       name: Joi.string().required(),
-      email: Joi.string().required(),
+      email: Joi.string()
+        .email()
+        .required(),
       password: Joi.string().required(),
     }),
   },
 
   loginUser: {
     body: Joi.object().keys({
-      email: Joi.string().required(),
+      email: Joi.string()
+        .email()
+        .required(),
       password: Joi.string().required(),
     }),
   },
@@ -20,7 +24,7 @@ module.exports = {
   updateUser: {
     body: Joi.object().keys({
       name: Joi.string(),
-      email: Joi.string(),
+      email: Joi.string().email(),
       prefs: Joi.any(),
     }),
   },
@@ -29,6 +33,21 @@ module.exports = {
     body: Joi.object().keys({
       currentPassword: Joi.string().required(),
       newPassword: Joi.string().required(),
+    }),
+  },
+
+  forgotPassword: {
+    body: Joi.object().keys({
+      email: Joi.string()
+        .email()
+        .required(),
+    }),
+  },
+
+  resetPassword: {
+    body: Joi.object().keys({
+      newPassword: Joi.string().required(),
+      verifyPassword: Joi.string().required(),
     }),
   },
 };
