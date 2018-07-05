@@ -55,7 +55,7 @@ class CardClass {
       .lt(new Date());
   }
 
-  static update(id, body, user) {
+  static updateCard(id, body, user) {
     const { front, back, notes } = body;
     return this.findOneAndUpdate({ _id: id, user }, removeEmpty({ front, back, notes }), {
       new: true,

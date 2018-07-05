@@ -16,7 +16,7 @@ describe('Card model', () => {
   describe('update', () => {
     it('should update single card for user', async () => {
       const newCard = { front: 'New card front', back: 'New card back' };
-      const card = await Card.update(cards[0]._id, newCard, user1);
+      const card = await Card.updateCard(cards[0]._id, newCard, user1);
       expect(card.front).to.equal(newCard.front);
       expect(card.back).to.equal(newCard.back);
     });

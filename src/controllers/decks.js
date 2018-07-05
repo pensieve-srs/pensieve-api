@@ -70,7 +70,7 @@ module.exports.updateDeck = async (req, res, next) => {
     await Joi.validate(req, deckSchemas.updateDeck, { allowUnknown: true });
 
     const { title, description, notes, tags } = req.body;
-    const deck = await Deck.update(id, { title, description, notes, tags }, req.user);
+    const deck = await Deck.updateDeck(id, { title, description, notes, tags }, req.user);
 
     res.send(deck);
   } catch (err) {
@@ -95,6 +95,7 @@ module.exports.deleteDeck = async (req, res, next) => {
 module.exports.resetDeck = async (req, res, next) => {
   try {
     const { id } = req.params;
+
     await Joi.validate(req, deckSchemas.resetDeck, { allowUnknown: true });
 
     await Card.resetAllByDeck(id, req.user);
