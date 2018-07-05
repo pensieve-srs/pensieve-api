@@ -120,7 +120,12 @@ module.exports.resetPassword = async (req, res, next) => {
   try {
     await Joi.validate(req, userSchemas.resetPassword, { allowUnknown: true });
 
-    await User.resetPassword(req.user, req.body.newPassword, req.body.verifyPassword);
+    await User.resetPassword({
+      id: req.user,
+      token: req.headers.authorization,
+      newPassword: req.body.newPassword,
+      verifyPassword: req.body.verifyPassword,
+    });
 
     res.send({ message: 'Password reset!' });
   } catch (err) {

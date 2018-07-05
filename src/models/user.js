@@ -126,9 +126,11 @@ class UserClass {
     });
   }
 
-  static resetPassword(id, newPassword, verifyPassword) {
-    return this.findOne({ _id: id }).then((user) => {
-      if (newPassword !== verifyPassword) {
+  static resetPassword({ id, token, newPassword, verifyPassword }) {
+    return this.findOne({ _id: id, reset_password_token: token }).then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Invalid token for user'));
+      } else if (newPassword !== verifyPassword) {
         return Promise.reject(new Error('Passwords do not match.'));
       }
 

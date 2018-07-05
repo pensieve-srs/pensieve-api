@@ -45,6 +45,9 @@ module.exports = {
   },
 
   resetPassword: {
+    headers: Joi.object().keys({
+      authorization: Joi.string().required(),
+    }),
     body: Joi.object().keys({
       newPassword: Joi.string().required(),
       verifyPassword: Joi.string().required(),
