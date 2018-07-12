@@ -1,6 +1,9 @@
 const moment = require('moment');
 
 module.exports = (card) => {
+  if (!card.nextReviewDate) {
+    return 0;
+  }
   const anchorDate = card.reviewedAt || card.createdAt;
 
   const delta = moment().diff(moment(anchorDate));

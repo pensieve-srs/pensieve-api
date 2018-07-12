@@ -26,8 +26,9 @@ module.exports.create = async (req, res, next) => {
         cards = await Card.find({ user: req.user, deck })
           .populate('deck')
           .sort('nextReviewDate')
-          .where('nextReviewDate')
-          .lt(new Date());
+          .find({
+            $or: [{ nextReviewDate: null }, { nextReviewDate: { $lte: new Date() } }],
+          });
         break;
     }
 

@@ -90,7 +90,7 @@ module.exports.deleteCard = async (req, res, next) => {
     const { id } = req.params;
     await Joi.validate(req, cardSchemas.deleteCard, { allowUnknown: true });
 
-    const response = await Card.remove({ _id: id, user: req.user });
+    const response = await Card.deleteOne({ _id: id, user: req.user });
 
     res.send(response);
   } catch (err) {

@@ -13,7 +13,7 @@ const CardSchema = new mongoose.Schema(
     reviewedAt: { type: Date }, // last review timestamp
     interval: { type: Number }, // review interval (in days)
     EF: { type: Number, default: 2.5 }, // SM-2 easiness factor
-    nextReviewDate: { type: Date, required: true },
+    nextReviewDate: { type: Date },
     repetitions: { type: Number, default: 0 }, // number of review repetitions
     recallRate: { type: Number },
   },
