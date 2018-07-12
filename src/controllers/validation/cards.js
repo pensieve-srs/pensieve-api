@@ -13,7 +13,7 @@ module.exports = {
     body: Joi.object()
       .keys({
         front: Joi.string().required(),
-        back: Joi.string(),
+        back: Joi.string().allow(''),
         deck: Joi.objectId().required(),
         notes: Joi.string().allow(''),
         nextReviewDate: Joi.date(),
