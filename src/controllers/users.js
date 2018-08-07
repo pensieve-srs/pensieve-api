@@ -46,7 +46,7 @@ module.exports.loginUser = async (req, res, next) => {
     res.set('Authorization', `Bearer ${token}`);
     res.status(200).json({ user });
   } catch (error) {
-    if (error.message === 'Invalid User') {
+    if (error.message === 'Invalid User' || error.message === 'User does not exist.') {
       res.status(400).json(error);
     } else {
       next(error);
