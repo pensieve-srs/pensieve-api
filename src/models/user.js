@@ -98,6 +98,9 @@ class UserClass {
     return this.findOne({ email: userEmail })
       .select('+password')
       .then((user) => {
+        if (!user) {
+          return Promise.reject(new Error('User does not exist.'));
+        }
         const { _id, name, email, prefs } = user;
         if (!this.validPassword(password, user)) {
           return Promise.reject(new Error('Invalid User'));
