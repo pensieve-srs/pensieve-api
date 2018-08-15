@@ -5,7 +5,7 @@ const config = require('../../config');
 
 module.exports.connect = () => {
   mongoose.Promise = global.Promise;
-  mongoose.connect(config.database.uri);
+  mongoose.connect(config.database.uri, { family: 4 });
 
   const mongoDB = mongoose.connection;
 
